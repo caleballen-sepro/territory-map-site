@@ -95,15 +95,13 @@ territories:
         phone: "810-618-5414"
         email: "jgoidosik@sepro.com"
   - id: mid-atlantic
-    name: "Mid-Atlantic"
+    name: "Mid-Atlantic (Open)"
     group: "South Region"
     color: "#ab97c0"
     states: [WV, VA, NC, MD, DE, DC]
     contacts:
-      - name: "Rory Roten"
-        title: "Technical Specialist"
-        phone: "321-890-4367"
-        email: "roryr@sepro.com"
+      - name: "Open position"
+        title: "Please contact the Regional Manager - South"
     managers:
       - name: "Todd Horton"
         title: "Regional Manager - South"
