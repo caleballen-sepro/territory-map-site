@@ -1,0 +1,8 @@
+# Netlify build settings
+[build]
+  command = "hugo --gc --minify -b $URL"
+  publish = "public"
+
+[build.environment]
+  # Use the same version as on your computer (run: hugo version). 0.158.0 is the minimum this site's config needs.
+  HUGO_VERSION = "0.158.0"
