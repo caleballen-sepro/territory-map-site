@@ -27,7 +27,7 @@ national:   # always visible under the map
 territories:
   - id: west
     name: "West"
-    color: "#B9DB9F"
+    color: "#EE8866"
     states: [WA, OR, ID, NV, CA, UT, AZ, AK, HI]
     contacts:
       - name: "Marc Snyder"
@@ -36,7 +36,7 @@ territories:
         email: "marc.snyder@sepro.com"
   - id: north-central
     name: "North Central"
-    color: "#7FA66A"
+    color: "#44BB99"
     states: [MT, ND, SD, NE, MN, WI, IA, IL]
     contacts:
       - name: "Nick Bannach"
@@ -45,7 +45,7 @@ territories:
         email: "nick.bannach@sepro.com"
   - id: midwest
     name: "Midwest"
-    color: "#CFE1C3"
+    color: "#eeee88"
     states: [MI, IN, OH, KY, WV]
     contacts:
       - name: "Troy Coker"
@@ -54,7 +54,7 @@ territories:
         email: "troyc@sepro.com"
   - id: northeast
     name: "Northeast"
-    color: "#5E9C83"
+    color: "#ffaabb"
     states: [PA, NY, NJ, DE, MD, DC, CT, RI, MA, VT, NH, ME]
     contacts:
       - name: "Joe Lynch"
@@ -63,7 +63,7 @@ territories:
         email: "josephl@sepro.com"
   - id: south-central
     name: "South Central"
-    color: "#6DB86A"
+    color: "#bbcc33"
     states: [WY, CO, NM, KS, OK, TX, MO, AR, LA]
     contacts:
       - name: "Clint Formby"
@@ -72,14 +72,14 @@ territories:
         email: "clintf@sepro.com"
   - id: southeast
     name: "Southeast (Open)"
-    color: "#A5CF84"
+    color: "#ab97c0"
     states: [VA, NC, SC, GA, AL, MS, TN]
     contacts:
       - name: "Open position"
         title: "Please contact Joe Lynch"
   - id: florida
     name: "Florida"
-    color: "#4F9E78"
+    color: "#6b9b6a"
     states: [FL]
     contacts:
       - name: "Mark Prospect"

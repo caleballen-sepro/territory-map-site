@@ -23,7 +23,7 @@ national:   # always visible under the map
 territories:
   - id: west
     name: "West"
-    color: "#B9DB9F"
+    color: "#44bb99"
     states: [WA, OR, ID, NV, CA, UT, AZ, AK, HI]
     contacts:
       - name: "Cameron Smith"
@@ -32,7 +32,7 @@ territories:
         email: "cameron.smith@sepro.com"
   - id: central
     name: "Central"
-    color: "#7FA66A"
+    color: "#ab97c0"
     states: [MT, WY, ND, SD, NE, KS, CO, NM, OK, TX, MN, IA, MO, WI, IL, AR, LA, MS, TN, KY]
     contacts:
       - name: "Todd Stassel"
@@ -41,7 +41,7 @@ territories:
         email: "todds@sepro.com"
   - id: northeast
     name: "Northeast"
-    color: "#CFE1C3"
+    color: "#ee8866"
     states: [MI, IN, OH, PA, NY, VT, NH, MA, RI, CT, ME, NJ, DE, MD, DC, WV, VA]
     contacts:
       - name: "Billy Morrow"
@@ -50,7 +50,7 @@ territories:
         email: "billy.morrow@sepro.com"
   - id: southeast
     name: "Southeast"
-    color: "#A5CF84"
+    color: "#6b9b6a"
     states: [NC, SC, GA, AL, FL]
     contacts:
       - name: "Ben Keyes"

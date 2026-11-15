@@ -7,7 +7,7 @@ territories:
   - id: northwest
     name: "Northwest"
     group: "West Region"
-    color: "#D5C9E3"
+    color: "#77aadd"
     states: [WA, OR, ID, MT, AK]
     contacts:
       - name: "Travis Fuller"
@@ -22,7 +22,7 @@ territories:
   - id: southwest
     name: "Southwest"
     group: "West Region"
-    color: "#B7A5D1"
+    color: "#ee8866"
     states: [CA, NV, AZ, HI]
     contacts:
       - name: "Jeremey Varley"
@@ -37,7 +37,7 @@ territories:
   - id: mountain-plains
     name: "Mountain & Plains"
     group: "West Region"
-    color: "#9B84BC"
+    color: "#44bb99"
     states: [UT, CO, NM, WY, ND, SD, NE, KS]
     contacts:
       - name: "Kyra Florea"
@@ -52,7 +52,7 @@ territories:
   - id: upper-midwest
     name: "Upper Midwest"
     group: "North Region"
-    color: "#D9DCE1"
+    color: "#eeee88"
     states: [MN, WI, IA, MO, IL]
     contacts:
       - name: "Bill Ratajczyk"
@@ -67,7 +67,7 @@ territories:
   - id: great-lakes
     name: "Great Lakes"
     group: "North Region"
-    color: "#A0A6B0"
+    color: "#ffaabb"
     states: [MI, IN, OH, KY]
     contacts:
       - name: "McKenna Hinz"
@@ -82,7 +82,7 @@ territories:
   - id: northeast
     name: "Northeast"
     group: "North Region"
-    color: "#C4C8CF"
+    color: "#bbcc33"
     states: [PA, NY, VT, NH, MA, RI, CT, ME, NJ]
     contacts:
       - name: "Josh Burnside"
@@ -97,7 +97,7 @@ territories:
   - id: mid-atlantic
     name: "Mid-Atlantic"
     group: "South Region"
-    color: "#A9D8F5"
+    color: "#ab97c0"
     states: [WV, VA, NC, MD, DE, DC]
     contacts:
       - name: "Rory Roten"
@@ -112,7 +112,7 @@ territories:
   - id: southeast-open
     name: "Southeast (Open)"
     group: "South Region"
-    color: "#84C8F0"
+    color: "#6b9b6a"
     states: [TN, AL, GA, SC]
     contacts:
       - name: "Open position"
@@ -125,7 +125,7 @@ territories:
   - id: south-central
     name: "South Central"
     group: "South Region"
-    color: "#2C9ADB"
+    color: "#A9D8F5"
     states: [TX, OK, AR, LA, MS]
     contacts:
       - name: "Joey Kauppi"
@@ -140,7 +140,7 @@ territories:
   - id: florida
     name: "Florida"
     group: "South Region"
-    color: "#4AAAE4"
+    color: "#C4C8CF"
     states: [FL]
     contacts:
       - name: "Josh McGarry"
