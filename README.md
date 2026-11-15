@@ -71,3 +71,8 @@ By default the map outlines, d3, topojson and the PDF library load from public C
 
 It saves `d3.min.js`, `topojson-client.min.js`, `us-states.json` (the map outlines) and `jspdf.umd.min.js` into `static/vendor/`. The site uses those files automatically whenever they are there (delete a file to go back to the CDN for it). `d3.min.js` is already included. The only remaining outside request is the DM Mono caption font from Google Fonts; set `monoURL = ""` in `hugo.toml` to drop it and use the system monospace font instead.
 
+## Search engines, favicon and link previews
+- **Hidden from search engines:** every page has a `noindex, nofollow, noarchive` tag (`layouts/partials/head-meta.html`), Netlify sends the same instruction as an `X-Robots-Tag` header (`netlify.toml`), and `static/robots.txt` asks crawlers to stay away. The sitemap, RSS feed and tag pages are switched off (`disableKinds` in `hugo.toml`). This keeps the site out of search results; it is not a lock, since anyone with the link can still open it.
+- **Link-preview bots** (Slack, Teams, Facebook, X, LinkedIn) are allowed in `robots.txt` so shared links still show a title and image. They are not search engines. To block every bot, delete the second group in `robots.txt`.
+- **Favicon:** the SEPRO Scientific circle mark: `static/favicon.svg`, `favicon.ico` and `apple-touch-icon.png` (iPhone/iPad home screen).
+- **Link previews:** the title and description come from each page (`summary` on a division page, `description` on the Directory page, `description` in `[params]` for the home page). The image is `static/og-image.png` (1200 x 630, the full SEPRO Scientific logo). Replace that file to change it.

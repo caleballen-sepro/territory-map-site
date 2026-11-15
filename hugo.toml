@@ -3,9 +3,13 @@ locale = "en-us"
 title = "SEPRO Territory Maps"
 theme = "territory-map"
 
+# Not a public site: no sitemap, RSS feed or tag pages for search engines to find.
+disableKinds = ["sitemap", "rss", "taxonomy", "term"]
+
 [params]
   heading = "Territory Maps"
   intro = "Choose a division to find the contact for your area."
+  description = "Find the SEPRO Scientific specialist for your area. Territory maps and contacts for Water, Municipal & Industrial, EutroPHIX, Turf & Landscape and Ornamental."   # shown in link previews
   # Pre-projected US states TopoJSON. To self-host: save this file to static/us-states.json
   # and change this to "/us-states.json"
   mapDataURL = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"

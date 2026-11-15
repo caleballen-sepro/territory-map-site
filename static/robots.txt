@@ -1,0 +1,14 @@
+# Internal tool: ask search engines not to crawl or list this site.
+User-agent: *
+Disallow: /
+
+# Link-preview bots (not search engines) may still read the page so shared links show a title and image.
+# The pages themselves carry a "noindex" tag, so these bots do not add the site to any search index.
+User-agent: Slackbot
+User-agent: Slackbot-LinkExpanding
+User-agent: Slack-ImgProxy
+User-agent: SkypeUriPreview
+User-agent: Twitterbot
+User-agent: facebookexternalhit
+User-agent: LinkedInBot
+Allow: /

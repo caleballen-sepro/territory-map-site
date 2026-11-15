@@ -6,3 +6,9 @@
 [build.environment]
   # Use the same version as on your computer (run: hugo version). 0.158.0 is the minimum this site's config needs.
   HUGO_VERSION = "0.158.0"
+
+# Tell search engines not to index any page or file on this site.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
