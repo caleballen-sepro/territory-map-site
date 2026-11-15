@@ -15,16 +15,20 @@
     .replace(/[\u201C\u201D]/g, '"').replace(/[^\x20-\x7E\u00A0-\u00FF]/g, '');
   const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
 
-  const loadLogo = url => new Promise((res, rej) => {
+  // Every division logo is the same 1400 x 419 drawing: the round mark on the left, the SEPRO + division wordmark on the right.
+  // The PDF header splits them (mark left, title in between, wordmark right), so each piece is cropped out of the one file.
+  const LOGO_MARK = { x: 53, y: 42, w: 320, h: 320 }, LOGO_WORD = { x: 445, y: 87, w: 927, h: 290 };
+  const loadLogo = (url, crop) => new Promise((res, rej) => {
     const im = new Image();
     im.onload = () => {
       try {
-        const nw = im.naturalWidth || 300, nh = im.naturalHeight || 100;
-        const sc = Math.min(4, Math.max(1, 1000 / nw));
+        const nw = im.naturalWidth || 1400, nh = im.naturalHeight || 419, f = nw / 1400;   // f: file pixels per logo unit
+        const cr = crop || { x: 0, y: 0, w: 1400, h: 419 };
+        const sc = crop ? 1.5 : Math.min(4, Math.max(1, 1000 / nw));
         const cv = document.createElement('canvas');
-        cv.width = Math.round(nw * sc); cv.height = Math.round(nh * sc);
-        cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
-        res({ data: cv.toDataURL('image/png'), w: nw, h: nh });
+        cv.width = Math.round(cr.w * sc); cv.height = Math.round(cr.h * sc);
+        cv.getContext('2d').drawImage(im, -cr.x * sc, -cr.y * sc, nw / f * sc, nh / f * sc);
+        res({ data: cv.toDataURL('image/png'), w: cr.w, h: cr.h });
       } catch (e) { rej(e); }
     };
     im.onerror = () => rej(new Error('logo failed to load'));
@@ -33,7 +37,8 @@
 
   window.TerritoryPDF = async function (c) {
     await load(c.data.jspdfURL);
-    const logo = c.data.logo ? await loadLogo(c.data.logo).catch(() => null) : null;
+    const mark = c.data.logo ? await loadLogo(c.data.logo, LOGO_MARK).catch(() => null) : null;
+    const word = c.data.logo ? await loadLogo(c.data.logo, LOGO_WORD).catch(() => null) : null;
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
     const PW = 612, PH = 792, M = 24;
@@ -47,12 +52,17 @@
     const fullW = PW - 2 * M;
 
     // ---- Header: title left, logo right; revised date in the footer ----
-    doc.setFont('helvetica', 'normal').setFontSize(24).setTextColor(INK).text(clean(c.data.title), M, 46);
-    doc.setFillColor(c.data.brandColor || '#51544a').rect(M, 70, PW - 2 * M, 2, 'F');   // water blue / land green rule, like the line under each page title
-    if (logo) {
-      const r = Math.min(170 / logo.w, 38 / logo.h), dw = logo.w * r, dh = logo.h * r;
-      doc.addImage(logo.data, 'PNG', PW - M - dw, 28, dw, dh);
-    }
+    // Header: round mark left, title snug beside it, wordmark right (like the SEPRO technical sheets). The rule and everything below stay put.
+    const HT = 26, HH = 38, MID = HT + HH / 2;   // header top, mark height, vertical middle
+    let tx = M, rx = PW - M;
+    if (mark) { const mw = mark.w / mark.h * HH; doc.addImage(mark.data, 'PNG', M, HT, mw, HH); tx = M + mw + 14; }
+    if (word) { const wh = 32, ww = word.w / word.h * wh; doc.addImage(word.data, 'PNG', PW - M - ww, MID - wh / 2, ww, wh); rx = PW - M - ww - 14; }
+    const title = clean(c.data.title);
+    let ts = 26; doc.setFont('helvetica', 'normal').setFontSize(ts);
+    while (ts > 14 && doc.getTextWidth(title) > rx - tx) { ts -= 0.5; doc.setFontSize(ts); }
+    doc.setTextColor(INK);
+    const ty = MID + ts * 0.36;
+    doc.text(title, tx, ty); doc.text(title, tx + ts * 0.012, ty);   // printed twice, a hair apart: gives the regular face a medium weight
     const made = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });   // the day the PDF was created
     doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Generated ' + made, M, PH - 18);
     if (c.data.revised) doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Revised ' + clean(c.data.revised), PW - M, PH - 18, { align: 'right' });   // mono, like the site's detail copy
