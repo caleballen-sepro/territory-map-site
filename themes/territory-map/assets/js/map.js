@@ -11,7 +11,8 @@
   const byId = Object.fromEntries(territories.map(t => [t.id, t]));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  let pinned = null, hovered = null, searchSet = null;   // searchSet: territories on this map matching the search
+  let pinned = null, hovered = null, searchSet = null;
+  let deskOn = false, deskLayer = null;   // Desktop Mode (see below)   // searchSet: territories on this map matching the search
 
   const abbr = d => (data.states[String(d.id).padStart(2, '0')] || {}).abbr;
   const stateName = d => (data.states[String(d.id).padStart(2, '0')] || {}).name || '';
@@ -128,9 +129,9 @@
     else if (FORCED !== 'auto') txt.style('fill', FORCED);
   });
   outside.sort((p, q) => p.cy - q.cy);
-  let lastY = 0;
+  let lastY = 0; const offY = [];   // offY: rows of the offshore labels (RI, CT, NJ...), kept clear in Desktop Mode
   outside.forEach(o => {
-    const y = Math.max(o.cy, lastY + 16); lastY = y;
+    const y = Math.max(o.cy, lastY + 16); lastY = y; offY.push(y);
     const ot = (byAbbr[o.a] || {}).id || null;   // offshore labels (NJ, NH, MA, VT...) join the highlight/dim too
     labelG.append('line').attr('class', 'leader').attr('data-t', ot).attr('x1', o.cx).attr('y1', o.cy).attr('x2', 936).attr('y2', y);
     labelG.append('text').attr('class', 'lbl out').attr('data-t', ot).attr('x', 942).attr('y', y).attr('dy', '0.35em').text(o.a);
@@ -197,11 +198,12 @@
     const id = pinned || hovered;   // pinned wins, so moving the mouse doesn't lose the card
     const t = byId[id], g = gById[id];
     const set = g ? new Set(g.terrs.map(x => x.id)) : t ? new Set([id]) : searchSet;   // a region highlights all its territories
-    mapEl.classList.toggle('has-focus', !!set);
+    mapEl.classList.toggle('has-focus', !!set && !deskOn);   // Desktop Mode: the other regions stay at full color
     svg.selectAll('.state').classed('on', function () { return !!set && set.has(this.dataset.t); });
     svg.selectAll('.lbl[data-t], .leader[data-t]').classed('on', function () { return !!set && set.has(this.dataset.t); });
     const pset = pinned ? (gById[pinned] ? new Set(gById[pinned].terrs.map(x => x.id)) : byId[pinned] ? new Set([pinned]) : null) : null;
     kb.forEach(el => el.setAttribute('aria-pressed', String(!!pset && pset.has(el.dataset.t))));
+    if (deskLayer) deskLayer.querySelectorAll('.desk-card').forEach(el => el.classList.toggle('on', !!set && set.has(el.dataset.id)));
     legend.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === pinned)));
 
     if (!g && !t) {
@@ -240,6 +242,269 @@
   const deep = /^#t=(.+)$/.exec(location.hash);
   if (deep) { const id = decodeURIComponent(deep[1]); if (byId[id] || gById[id]) { pinned = id; render(); } }
 
+  // ---- Desktop Mode (button next to Download PDF) ----
+  // A bigger map with every territory's contacts in a glass card placed over its general region, so the whole team is visible at once.
+  const deskBtn = document.getElementById('desk-btn');
+  const SVGW = 975;
+  const stArea = {}; features.forEach(d => { const a = abbr(d); if (a) stArea[a] = path.area(d); });
+  const anchorFor = t => {   // area-weighted middle of the territory's states (Alaska and Hawaii are tucked in the corner, so they only count when alone)
+    const ab = [...new Set((t.states || []).map(x => String(x).toUpperCase()))].filter(a => lblPos[a]);
+    let use = ab.filter(a => a !== 'AK' && a !== 'HI'); if (!use.length) use = ab;
+    let sx = 0, sy = 0, sw = 0; use.forEach(a => { const w = stArea[a] || 1; sx += lblPos[a][0] * w; sy += lblPos[a][1] * w; sw += w; });
+    return sw ? [sx / sw, sy / sw] : null;
+  };
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  // Placement: the map is shrunk so there is room all around it. Cards go on the side (left, right, top, bottom) their region faces,
+  // in the same order as their regions around the map, each as level with its region as possible, joined to it by a line.
+  // Cards are swapped where two lines would cross, so no lines cross.
+  const DESK_M = 250;   // px of side margin each side (keep in sync with map.css)
+  let lblBase = null, normalW = 0, deskGeom = null;
+  // The layout itself, in any units: W x H is the map, lblPx the size of the state abbreviations, cards need {id, ax, ay, w, h}.
+  // Sets each card's side/position and its line (dot, end); returns the geometry helpers and how much room is needed above and below.
+  function layoutDesk(W, H, k, cards, lblPx, M, GAP) {
+    // which side each card faces: by where its region lies relative to the map's centre (the rectangle's diagonals split the sides)
+    cards.forEach(c => {
+      const dx = (c.ax - W / 2) / W, dy = (c.ay - H / 2) / H;
+      c.side = Math.abs(dy) > Math.abs(dx) ? (dy < 0 ? 'T' : 'B') : (dx < 0 ? 'L' : 'R');
+    });
+    const colH = sd => cards.filter(c => c.side === sd).reduce((n, c) => n + c.h + GAP, 0);
+    // side columns shouldn't be much taller than the map; spill the most central ones into the top/bottom rows
+    ['L', 'R'].forEach(sd => {
+      while (colH(sd) > H * 1.1 + 40) {
+        const mine = cards.filter(c => c.side === sd); if (mine.length < 2) break;
+        const c = mine.sort((p, q) => Math.abs(p.ay - H / 2) - Math.abs(q.ay - H / 2)).pop();   // the one furthest from the middle height
+        c.side = c.ay < H / 2 ? 'T' : 'B';
+      }
+    });
+    const rowCap = Math.max(1, Math.floor((W + 2 * M + GAP) / (cards[0].w + GAP)));
+    ['T', 'B'].forEach(sd => {   // a row can only hold so many; extras fall to the nearest column
+      const mine = cards.filter(c => c.side === sd).sort((p, q) => Math.abs(q.ax - W / 2) - Math.abs(p.ax - W / 2));
+      while (mine.length > rowCap) { const c = mine.shift(); c.side = c.ax < W / 2 ? 'L' : 'R'; }
+    });
+    const group = sd => cards.filter(c => c.side === sd);
+    const vert = sd => sd === 'L' || sd === 'R';
+    const stack = sd => {   // along the side: as close to the region's position as possible, without overlaps
+      const col = group(sd), key = vert(sd) ? 'ay' : 'ax', size = vert(sd) ? 'h' : 'w';
+      col.sort((p, q) => p[key] - q[key]);
+      col.forEach(c => c.pos = c[key]);
+      for (let it = 0; it < 80; it++) {
+        let moved = false;
+        for (let i = 1; i < col.length; i++) {
+          const a = col[i - 1], b = col[i], ov = (a.pos + a[size] / 2 + GAP) - (b.pos - b[size] / 2);
+          if (ov > 0.5) { moved = true; a.pos -= ov / 2; b.pos += ov / 2; }
+        }
+        if (col.length) {
+          const lo = vert(sd) ? 0 : -M + 0, first = col[0], f = first.pos - first[size] / 2; if (f < lo) { col.forEach(c => c.pos += lo - f); moved = true; }
+          if (!vert(sd)) { const last = col[col.length - 1], over = last.pos + last[size] / 2 - (W + M); if (over > 0) { col.forEach(c => c.pos -= over); moved = true; } }
+        }
+        if (!moved) break;
+      }
+    };
+    // card rectangles, with rows placed first so we know how much room the top and bottom need
+    const topH = Math.max(0, ...group('T').map(c => c.h)), botH = Math.max(0, ...group('B').map(c => c.h));
+    const VT = topH ? topH + 24 : 0;
+    const geom = c => {
+      if (c.side === 'L') return { l: -c.w - 10, t: c.pos - c.h / 2 };
+      if (c.side === 'R') return { l: W + 10, t: c.pos - c.h / 2 };
+      if (c.side === 'T') return { l: c.pos - c.w / 2, t: -10 - c.h };
+      return { l: c.pos - c.w / 2, t: c.by };
+    };
+    const attach = c => {   // where the line meets the card
+      const g = geom(c);
+      if (c.side === 'L') return [g.l + c.w, clamp(c.ay, g.t + 14, g.t + c.h - 14)];
+      if (c.side === 'R') return [g.l, clamp(c.ay, g.t + 14, g.t + c.h - 14)];
+      if (c.side === 'T') return [clamp(c.ax, g.l + 14, g.l + c.w - 14), g.t + c.h];
+      return [clamp(c.ax, g.l + 14, g.l + c.w - 14), g.t];
+    };
+    const place = () => {
+      ['L', 'R', 'T', 'B'].forEach(stack);
+      const colBottom = Math.max(H, ...cards.filter(c => vert(c.side)).map(c => c.pos + c.h / 2));
+      group('B').forEach(c => {   // bottom row sits just under the map, or under a side column that reaches there
+        let y = H + 10;
+        cards.filter(o => vert(o.side) && o.pos + o.h / 2 + GAP > H + 10 && Math.abs((o.side === 'L' ? -o.w / 2 - 10 : W + o.w / 2 + 10) - c.pos) < (c.w + o.w) / 2 + GAP).forEach(o => { y = Math.max(y, o.pos + o.h / 2 + GAP); });
+        c.by = y;
+      });
+      return colBottom;
+    };
+    const cross = (p, q) => {
+      const o = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+      const A = attach(p), B = [p.ax, p.ay], C = attach(q), D = [q.ax, q.ay];
+      return o(A, B, C) * o(A, B, D) < 0 && o(C, D, A) * o(C, D, B) < 0;
+    };
+    place();
+    for (let pass = 0; pass < 40; pass++) {   // uncross: swap two cards' order along a side when their lines cross
+      let swapped = false;
+      ['L', 'R', 'T', 'B'].forEach(sd => { const col = group(sd), key = vert(sd) ? 'ay' : 'ax';
+        for (let i = 0; i < col.length; i++) for (let j = i + 1; j < col.length; j++) if (cross(col[i], col[j])) {
+          const t = col[i][key]; col[i][key] = col[j][key]; col[j][key] = t; place(); swapped = true;
+        } });
+      if (!swapped) break;
+    }
+    cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; });   // sort keys were swapped around; restore the real anchors
+    const colBottom = place();
+    const bottomEnd = Math.max(colBottom, ...group('B').map(c => c.by + c.h));
+    // Route each line: choose the dot's spot inside the region and the point on the card where the line lands so that neither the dot
+    // nor the line touches a state abbreviation, and the line crosses no other line.
+    const hw = lblPx * 0.9 + 3, hh = lblPx * 0.6 + 2;
+    const rects = [];
+    Object.keys(lblPos).forEach(a => { if (!OUTSIDE.includes(a)) rects.push([lblPos[a][0] * k - hw, lblPos[a][1] * k - hh, lblPos[a][0] * k + hw, lblPos[a][1] * k + hh]); });
+    outside.forEach(o => rects.push([o.cx * k - 5, o.cy * k - 5, o.cx * k + 5, o.cy * k + 5]));
+    offY.forEach(y => rects.push([942 * k - 3, y * k - hh, 942 * k + lblPx * 1.9 + 4, y * k + hh]));
+    const hits = (x, y, pad) => rects.some(r => x > r[0] - pad && x < r[2] + pad && y > r[1] - pad && y < r[3] + pad);
+    const pc = document.createElement('canvas').getContext('2d');
+    const edgePts = c => {   // candidate landing points along the card's inner edge
+      const g = geom(c), n = 9, out = [];
+      for (let i = 0; i < n; i++) {
+        const f = 14 + (i / (n - 1)) * ((vert(c.side) ? c.h : c.w) - 28);
+        out.push(c.side === 'L' ? [g.l + c.w, g.t + f] : c.side === 'R' ? [g.l, g.t + f] : c.side === 'T' ? [g.l + f, g.t + c.h] : [g.l + f, g.t + 0]);
+      }
+      return out;
+    };
+    cards.forEach(c => {
+      const t = byId[c.id], mine = new Set((t.states || []).map(x => String(x).toUpperCase()));
+      let use = [...mine].filter(x => x !== 'AK' && x !== 'HI'); if (!use.length) use = [...mine];
+      let cand = [];
+      for (const [pad, step] of [[7, 8], [3, 5], [0, 3]]) {   // roomy spots first; in a tiny region settle for closer to the abbreviation
+        features.forEach(d => {
+          const ab = abbr(d); if (!use.includes(ab)) return;
+          const p2 = new Path2D(path(d)), bb = path.bounds(d);
+          for (let y = bb[0][1] * k; y <= bb[1][1] * k; y += step) for (let x = bb[0][0] * k; x <= bb[1][0] * k; x += step)
+            if (!hits(x, y, pad) && pc.isPointInPath(p2, x / k, y / k)) cand.push([x, y]);
+        });
+        if (cand.length) break;
+      }
+      if (!cand.length) cand.push([c.ax, c.ay]);
+      const g = geom(c), cx = g.l + c.w / 2, cy = g.t + c.h / 2;
+      cand.forEach(q => q.pre = Math.hypot(q[0] - c.ax, q[1] - c.ay) + 0.3 * Math.hypot(q[0] - cx, q[1] - cy));
+      c.cand = cand.sort((p, q) => p.pre - q.pre).slice(0, 30); c.edges = edgePts(c);
+    });
+    const segX = (p, q, r, u) => {
+      const o = (a, b, d) => (b[0] - a[0]) * (d[1] - a[1]) - (b[1] - a[1]) * (d[0] - a[0]);
+      return o(p, q, r) * o(p, q, u) < 0 && o(r, u, p) * o(r, u, q) < 0;
+    };
+    const lineCost = (q, e, others) => {
+      let v = 0.02 * Math.hypot(q[0] - e[0], q[1] - e[1]), n = Math.max(2, Math.ceil(Math.hypot(q[0] - e[0], q[1] - e[1]) / 3));
+      for (let i = 1; i < n; i++) if (hits(q[0] + (e[0] - q[0]) * i / n, q[1] + (e[1] - q[1]) * i / n, 2)) v += 60;
+      others.forEach(o => { if (segX(q, e, o.dot, o.end)) v += 800; });
+      return v;
+    };
+    const route = c => {
+      const others = cards.filter(o => o !== c && o.dot);
+      let best = null, bv = Infinity;
+      c.cand.forEach(q => c.edges.forEach(e => {
+        const v = q.pre * 0.1 + lineCost(q, e, others) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
+        if (v < bv) { bv = v; best = [q, e]; }
+      }));
+      c.dot = best[0]; c.end = best[1];
+    };
+    cards.forEach(route);
+    cards.forEach(route); cards.forEach(route);
+    return { geom, VT, bottomEnd };
+  }
+  function placeDesk() {
+    if (!deskOn || !deskLayer) return;
+    const W = mapEl.clientWidth, H = mapEl.clientHeight, k = W / SVGW;
+    if (!W || !H) return;
+    if (lblBase === null) lblBase = parseFloat(getComputedStyle(mapEl).getPropertyValue('--lbl-size')) || 13;
+    if (normalW) mapEl.style.setProperty('--lbl-size', (lblBase * normalW / W) + 'px');   // map text keeps the size it has in the normal view
+    const GAP = 10, M = DESK_M;
+    const cards = [...deskLayer.querySelectorAll('.desk-card')].map(el => {
+      const t = byId[el.dataset.id], a = anchorFor(t); if (!a) { el.style.display = 'none'; return null; }
+      return { el, id: t.id, color: t.color, ax: a[0] * k, ay: a[1] * k, w: el.offsetWidth, h: el.offsetHeight };
+    }).filter(Boolean);
+    const lblPx = lblBase * (normalW || W) / SVGW;
+    const { geom, VT, bottomEnd } = layoutDesk(W, H, k, cards, lblPx, M, GAP);
+    mapEl.style.marginTop = VT + 'px'; mapEl.style.marginBottom = Math.max(0, bottomEnd - H) + 'px';
+    const svgl = deskLayer.querySelector('.desk-lines'); let lines = '';
+    cards.forEach(c => {
+      const g = geom(c);
+      c.el.style.left = g.l + 'px'; c.el.style.top = g.t + 'px';
+      lines += `<line class="dl-h" x1="${c.dot[0]}" y1="${c.dot[1]}" x2="${c.end[0]}" y2="${c.end[1]}"/><line class="dl" x1="${c.dot[0]}" y1="${c.dot[1]}" x2="${c.end[0]}" y2="${c.end[1]}"/><circle class="dl-dot" cx="${c.dot[0]}" cy="${c.dot[1]}" r="4.5"/>`;
+    });
+    const tot = bottomEnd - H > 0 ? bottomEnd - H : 0;
+    svgl.style.top = (-VT) + 'px'; svgl.style.height = (H + VT + tot) + 'px';
+    svgl.setAttribute('viewBox', `${-M} ${-VT} ${W + 2 * M} ${H + VT + tot}`); svgl.innerHTML = lines;
+    deskGeom = {   // what the PDF needs to draw this exact layout
+      W, H, lblPx,
+      cards: cards.map(c => {
+        const g = geom(c), el = c.el, t = byId[c.id];
+        const people = [...el.querySelectorAll('.contact')].map(ct => [...ct.querySelectorAll('strong, span, a')].filter(n => !n.closest('.copy-btn')).map(n => ({
+          t: n.textContent.trim(), b: n.tagName === 'STRONG', url: n.tagName === 'A' ? n.getAttribute('href') : '' })).filter(l => l.t));
+        return { id: c.id, title: t.name, color: t.color, l: g.l, t: g.t, w: c.w, h: c.h, dot: c.dot, end: c.end, people };
+      })
+    };
+  }
+  function buildDesk() {
+    if (deskLayer) deskLayer.remove();
+    deskLayer = document.createElement('div'); deskLayer.className = 'desk-cards';
+    deskLayer.innerHTML = '<svg class="desk-lines" aria-hidden="true"></svg>' + territories.filter(t => (t.contacts || []).length).map(t =>
+      `<section class="desk-card" data-id="${esc(t.id)}" style="--c:${esc(t.color)}"><p class="dc-t"><i></i>${esc(t.name)}</p>${(t.contacts || []).map(c => person(c, t)).join('')}</section>`).join('');
+    mapEl.appendChild(deskLayer);
+    deskLayer.querySelectorAll('.desk-card').forEach(el => {   // hovering a card spotlights its territory on the map
+      el.addEventListener('mouseenter', () => { hovered = el.dataset.id; render(); });
+      el.addEventListener('mouseleave', () => { hovered = null; render(); });
+    });
+    placeDesk(); render();
+  }
+  function applyDesk(on) {
+    if (on) normalW = mapEl.clientWidth;   // the map's normal width, so its text can keep the same size in Desktop Mode
+    deskOn = on; document.body.classList.toggle('desk', on);
+    deskBtn.setAttribute('aria-pressed', String(on)); deskBtn.textContent = on ? 'Exit Desktop Mode' : 'Desktop Mode';
+    const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Download Landscape PDF' : 'Download PDF';
+    if (on) buildDesk();
+    else { if (deskLayer) { deskLayer.remove(); deskLayer = null; } mapEl.style.removeProperty('--lbl-size'); mapEl.style.marginTop = mapEl.style.marginBottom = ''; render(); }
+  }
+  // Switching view: nothing jumps. The map is measured before and after the layout change, then glides from where it was to where it
+  // ends up (scale + move), while the cards fade in (or the side panel fades back in). The page is not scrolled and nothing flashes.
+  function setDesk(on) {
+    if (reduceMotion()) { applyDesk(on); return; }
+    const first = mapEl.getBoundingClientRect(), side = document.querySelector('.side');
+    // the title, the buttons and the sections below the map also move as the page widens: glide them too
+    const head = document.querySelector('.pagehead'), movers = [...(head ? head.querySelectorAll(':scope > div') : []), ...document.querySelectorAll('.national h2, .national .contact, .rev')];   // plus the manager/support sections below the map
+    const firstM = movers.map(e => e.getBoundingClientRect());
+    const pb = document.getElementById('pdf-btn'), pw0 = pb ? pb.getBoundingClientRect().width : 0;   // the Download button changes label, so it grows or shrinks too
+    mapEl.style.transition = 'none'; mapEl.style.transform = '';
+    applyDesk(on);
+    if (deskLayer) { deskLayer.style.opacity = '0'; deskLayer.style.transition = 'none'; }
+    const last = mapEl.getBoundingClientRect();
+    if (!last.width || !first.width) { if (deskLayer) { deskLayer.style.opacity = ''; deskLayer.style.transition = ''; } return; }
+    mapEl.style.transformOrigin = '0 0';
+    mapEl.style.transform = `translate(${first.left - last.left}px, ${first.top - last.top}px) scale(${first.width / last.width})`;
+    if (!on && side) { side.style.opacity = '0'; side.style.transition = 'none'; }
+    void mapEl.offsetWidth;   // commit the starting position
+    const EASE = 'transform .5s cubic-bezier(.4,0,.2,1)';
+    const lastM = movers.map(e => e.getBoundingClientRect());
+    const pw1 = pb ? pb.getBoundingClientRect().width : 0;
+    movers.forEach((e, i) => {   // the buttons are right-aligned, so they glide by their right edge (their own width is animated separately)
+      const dx = e.classList.contains('pagehead-actions') ? firstM[i].right - lastM[i].right : firstM[i].left - lastM[i].left;
+      e.style.transition = 'none'; e.style.transform = `translate(${dx}px, ${firstM[i].top - lastM[i].top}px)`;
+    });
+    if (pb && Math.abs(pw0 - pw1) > 1) { pb.style.transition = 'none'; pb.style.width = pw0 + 'px'; pb.style.overflow = 'hidden'; }
+    void mapEl.offsetWidth;
+    movers.forEach(e => { e.style.transition = EASE; e.style.transform = ''; });
+    mapEl.style.transition = EASE; mapEl.style.transform = '';
+    if (pb && pb.style.width) { void pb.offsetWidth; pb.style.transition = 'width .5s cubic-bezier(.4,0,.2,1), background-color .4s ease, color .4s ease'; pb.style.width = pw1 + 'px'; }
+    if (deskLayer) { deskLayer.style.transition = 'opacity .35s ease .2s'; deskLayer.style.opacity = '1'; }
+    if (!on && side) { side.style.transition = 'opacity .35s ease .15s'; side.style.opacity = '1'; }
+    setTimeout(() => {
+      mapEl.style.transition = mapEl.style.transform = mapEl.style.transformOrigin = '';
+      movers.forEach(e => { e.style.transition = e.style.transform = ''; });
+      if (pb) { pb.style.transition = pb.style.width = pb.style.overflow = ''; }
+      if (deskLayer) { deskLayer.style.transition = deskLayer.style.opacity = ''; }
+      if (side) { side.style.transition = side.style.opacity = ''; }
+    }, 650);
+  }
+  const noDesk = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)');   // phones and tablets never get Desktop Mode (the button is hidden in CSS too)
+  if (deskBtn) {
+    deskBtn.disabled = false;
+    deskBtn.addEventListener('click', () => { if (!noDesk.matches) setDesk(!deskOn); });
+    noDesk.addEventListener && noDesk.addEventListener('change', () => { if (noDesk.matches && deskOn) setDesk(false); });
+    let raf = 0;
+    const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(placeDesk); };
+    if (window.ResizeObserver) new ResizeObserver(again).observe(mapEl); else window.addEventListener('resize', again);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
+  }
+
   // Download PDF (see pdf.js)
   const btn = document.getElementById('pdf-btn');
   if (btn) {
@@ -247,7 +512,7 @@
     btn.addEventListener('click', async () => {
       const label = btn.textContent;
       btn.disabled = true; btn.textContent = 'Preparing PDF…';
-      try { await window.TerritoryPDF({ data, features, path, abbr, byAbbr, OUTSIDE, lblPos }); }
+      try { await window.TerritoryPDF({ data, features, path, abbr, byAbbr, OUTSIDE, lblPos, desk: deskOn ? deskGeom : null, layoutDesk: (W, H, cards, lblPx, M) => { const k = W / SVGW; cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; }); return layoutDesk(W, H, k, cards, lblPx, M, 10); } }); }
       catch (err) { alert('Could not create the PDF: ' + err.message); }
       btn.textContent = label; btn.disabled = false;
     });

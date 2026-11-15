@@ -43,8 +43,9 @@
     const mark = c.data.logo ? await loadLogo(c.data.logo, LOGO_MARK).catch(() => null) : null;
     const word = c.data.logo ? await loadLogo(c.data.logo, logoWord(c.data.logo)).catch(() => null) : null;
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
-    const PW = 612, PH = 792, M = 24;
+    const desk = c.desk;   // Desktop Mode: the PDF is a landscape page of the map with its contact cards around it
+    const doc = new jsPDF({ orientation: desk ? 'landscape' : 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
+    const PW = desk ? 792 : 612, PH = desk ? 612 : 792, M = 24;
     const FMAX = Math.min(12, Number(c.data.pdfMax) || 12);
     const INK = '#0e0906', SUB = '#51544a', MUTED = '#51544a', LIGHT = '#dcdfd7';   // brand: black, dark grey, light grey
     const territories = c.data.territories || [];
@@ -67,8 +68,8 @@
     const ty = MID + ts * 0.36;
     doc.text(title, tx, ty); doc.text(title, tx + ts * 0.012, ty);   // printed twice, a hair apart: gives the regular face a medium weight
     const made = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });   // the day the PDF was created
-    doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Generated ' + made, M, PH - 18);
-    if (c.data.revised) doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Revised ' + clean(c.data.revised), PW - M, PH - 18, { align: 'right' });   // mono, like the site's detail copy
+    doc.setFont('courier', 'normal').setFontSize(10).setTextColor(MUTED).text('Generated ' + made, M, PH - 18);
+    if (c.data.revised) doc.setFont('courier', 'normal').setFontSize(10).setTextColor(MUTED).text('Revised ' + clean(c.data.revised), PW - M, PH - 18, { align: 'right' });   // mono, like the site's detail copy
 
     // ---- Map (vector) ----
     const rings = d => {
@@ -77,7 +78,7 @@
         closePath() {}, arc() {}, rect() {}, bezierCurveTo() {}, quadraticCurveTo() {} })(d);
       return out;
     };
-    const s = MAPW / 975;
+    const drawMap = (MAPX, MAPY, s, fs) => {
     doc.setDrawColor('#ffffff').setLineWidth(1);
     c.features.forEach(d => {
       const t = c.byAbbr[c.abbr(d)];
@@ -91,7 +92,7 @@
         doc.lines(segs, MAPX + pts[0][0] * s, MAPY + pts[0][1] * s, [1, 1], 'FD', true);
       });
     });
-    const fs = Math.max(7, 14 * s), outside = [];
+    const outside = [];
     doc.setFont('helvetica', 'bold');
     c.features.forEach(d => {
       const a = c.abbr(d); if (!a) return;
@@ -108,6 +109,8 @@
       doc.setDrawColor('#51544a').setLineWidth(0.5).line(MAPX + o.cx * s, MAPY + o.cy * s, MAPX + 936 * s, MAPY + y * s);
       doc.setFontSize(fs).setTextColor(INK).text(o.a, MAPX + 942 * s, MAPY + y * s, { baseline: 'middle' });
     });
+    };
+    if (!desk) drawMap(MAPX, MAPY, MAPW / 975, Math.max(7, 14 * MAPW / 975));
 
     // ---- Contact text ----
     const LH = 1.25;
@@ -125,6 +128,76 @@
     const drawStack = (st, x, y) => st.ops.forEach(o => { setF(o.size, o.b); doc.setTextColor(o.c).text(o.t, x, y + o.y + o.size * 0.9); });
     const anchorX = t => { const ps = (t.states || []).map(a => c.lblPos && c.lblPos[a]).filter(Boolean); return ps.length ? ps.reduce((a, p) => a + p[0], 0) / ps.length : 0; };
     const sum = (arr, g) => arr.reduce((t, b) => t + b.h, 0) + Math.max(0, arr.length - 1) * g;
+
+
+    if (desk) {
+      // ---- Desktop Mode PDF: landscape Letter. The cards are laid out afresh at a real type size (10-14 pt), then the map is made as
+      // large as the page allows around them, using the same placement and line routing as on screen. ----
+      const top0 = 84, availW = PW - 2 * M, availH = PH - 34 - top0, PADK = 0.8, MAXF = 14, MINF = 10;
+      const cardsIn = desk.cards;
+      const lay = (k, fz, cw) => {   // text lines of one card, relative to its top-left; returns the lines and the card's height
+        const pad = fz * PADK, out = []; let y = pad;
+        out.push({ t: clean(k.title).toUpperCase(), x: pad + fz * 0.95, y: y + fz * 0.72, size: Math.max(10, fz * 0.9), b: true, c: INK, dot: [pad + fz * 0.28, y + fz * 0.52, fz * 0.3] });
+        y += fz * 1.45;
+        k.people.forEach((ls, pi) => {
+          if (pi) { out.push({ rule: y + fz * 0.2 }); y += fz * 0.55; } else y += fz * 0.2;
+          ls.forEach(l => {
+            const size = fz;
+            wrap(l.t, size, l.b, cw - 2 * pad).forEach(w => { out.push({ t: w, x: pad, y: y + size * 0.85, size, b: l.b, c: l.b || l.url ? INK : SUB, url: l.url }); y += size * 1.22; });
+          });
+        });
+        return { out, h: y + pad * 0.8 };
+      };
+      const cardW = fz => {   // as wide as the longest line needs (within limits), so the map gets the rest of the page
+        let w = 0; cardsIn.forEach(k => { w = Math.max(w, width(k.title.toUpperCase(), Math.max(10, fz * 0.9), true) * 1.08 + fz * 1.6); k.people.forEach(ls => ls.forEach(l => { w = Math.max(w, width(l.t, fz, l.b)); })); });
+        return Math.round(clampN(w + 2 * fz * PADK + 2, fz * 12, fz * 17));
+      };
+      const clampN = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const LBL = 8;   // state abbreviations: small enough not to collide on a map this size
+      let chosen = null;
+      for (const fz of [12, 11, 10]) {
+        const cw = cardW(fz), M2 = cw + 10, boxes = cardsIn.map(k => ({ k, ...lay(k, fz, cw) }));
+        let best = null;
+        for (let Wp = Math.min(availW - 2 * M2, 560); Wp >= 240 && !best; Wp -= 16) {
+          const H = Wp * 610 / 975, cs = boxes.map(b => ({ id: b.k.id, w: cw, h: b.h }));
+          const R = c.layoutDesk(Wp, H, cs, LBL, M2);
+          const x0 = Math.min(0, ...cs.map(q => R.geom(q).l)), x1 = Math.max(Wp, ...cs.map(q => R.geom(q).l + q.w));
+          const y0 = Math.min(0, ...cs.map(q => R.geom(q).t)), y1 = Math.max(H, R.bottomEnd);
+          if (x1 - x0 <= availW && y1 - y0 <= availH) best = { Wp, H, cs, R, x0, x1, y0, y1 };
+        }
+        if (best && (best.Wp >= 380 || fz === MINF)) { chosen = { fz, cw, boxes, ...best }; break; }
+        if (best && fz === MINF) chosen = { fz, cw, boxes, ...best };
+      }
+      if (!chosen) {   // nothing fit even at the smallest size: use the smallest size and let the map be small
+        const fz = MINF, cw = cardW(fz), M2 = cw + 10, boxes = cardsIn.map(k => ({ k, ...lay(k, fz, cw) }));
+        const Wp = 240, H = Wp * 610 / 975, cs = boxes.map(b => ({ id: b.k.id, w: cw, h: b.h })), R = c.layoutDesk(Wp, H, cs, LBL, M2);
+        chosen = { fz, cw, boxes, Wp, H, cs, R, x0: Math.min(0, ...cs.map(q => R.geom(q).l)), x1: Math.max(Wp, ...cs.map(q => R.geom(q).l + q.w)), y0: Math.min(0, ...cs.map(q => R.geom(q).t)), y1: Math.max(H, R.bottomEnd) };
+      }
+      const { Wp, cs, R, boxes, fz } = chosen;
+      const ox = M + (availW - (chosen.x1 - chosen.x0)) / 2 - chosen.x0, oy = top0 + (availH - (chosen.y1 - chosen.y0)) / 2 - chosen.y0;
+      drawMap(ox, oy, Wp / 975, LBL);
+      doc.setLineCap && doc.setLineCap('round');
+      cs.forEach(q => {   // lines first, so cards sit on top
+        const a = [ox + q.dot[0], oy + q.dot[1]], b = [ox + q.end[0], oy + q.end[1]];
+        doc.setDrawColor('#ffffff').setLineWidth(3.5).line(a[0], a[1], b[0], b[1]);
+        doc.setDrawColor(INK).setLineWidth(1.1).line(a[0], a[1], b[0], b[1]);
+        doc.setFillColor(INK).setDrawColor('#ffffff').setLineWidth(1.4).circle(a[0], a[1], 3.4, 'FD');
+      });
+      cs.forEach((q, i) => {
+        const g = R.geom(q), cx = ox + g.l, cy = oy + g.t, bx = boxes[i], k = bx.k;
+        doc.setFillColor('#f1f1ef').setDrawColor('#c9ccc4').setLineWidth(0.6).roundedRect(cx, cy, q.w, q.h, 8, 8, 'FD');
+        bx.out.forEach(o => {
+          if (o.rule) { doc.setDrawColor('#d6d8d0').setLineWidth(0.5).line(cx + fz * PADK, cy + o.rule, cx + q.w - fz * PADK, cy + o.rule); return; }
+          if (o.dot) doc.setFillColor(k.color).circle(cx + o.dot[0], cy + o.dot[1], o.dot[2], 'F');
+          setF(o.size, o.b); doc.setTextColor(o.c);
+          const x = cx + o.x, y = cy + o.y;
+          if (o.url && /^(tel|mailto):/.test(o.url)) { doc.textWithLink(o.t, x, y, { url: o.url }); doc.setDrawColor(INK).setLineWidth(0.4).line(x, y + 1.2, x + doc.getTextWidth(o.t), y + 1.2); }
+          else doc.text(o.t, x, y, o.dot ? { charSpace: o.size * 0.06 } : undefined);
+        });
+      });
+      doc.save(clean(c.data.title).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-Territory-Map-Landscape.pdf');
+      return;
+    }
 
     // National team (no color bullet)
     const secs = [];
@@ -206,7 +279,7 @@
 
     // Largest text size (up to 12pt) that fits below the map.
     let plan = null, last = null;
-    for (let f = FMAX; f >= 6 && !plan; f -= 0.5) { last = build(f); if (last.need <= areaH) plan = last; }
+    for (let f = FMAX; f >= 10 && !plan; f -= 0.5) { last = build(f); if (last.need <= areaH) plan = last; }
     plan = plan || last;
     const columns = [plan.items.slice(0, plan.sp.i), plan.items.slice(plan.sp.i, plan.sp.j), plan.items.slice(plan.sp.j)];
 
