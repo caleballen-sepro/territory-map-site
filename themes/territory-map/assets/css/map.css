@@ -138,7 +138,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 /* legend pills: filled with the territory color, no stroke unless selected */
 .legend .lg-pill{background:var(--c);color:var(--tc,#fff);border:2px solid transparent;box-shadow:none;padding:.3rem .8rem}
 .legend .lg-pill:hover{filter:brightness(1.07)}
-.legend .lg-pill[aria-pressed=true]{border-color:var(--fg);box-shadow:none}
 .legend .lg-head{background:none;border:2px solid transparent;padding:.1rem .4rem .1rem .1rem;margin-left:-.1rem}
 .legend .lg-head[aria-pressed=true]{border-color:var(--fg);box-shadow:none}
 .legend .lg-head:hover{background:var(--line)}
@@ -323,8 +322,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .state[role=button]:focus{outline:none}
 .focus-ring{fill:none;stroke:var(--fg);stroke-width:4px;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 2px var(--bg))}
 .lbl.on{font-weight:900;font-size:calc(var(--lbl-size,13px) * 1.12)}
-.legend .lg-pill[aria-pressed=true]::before,.legend .lg-head[aria-pressed=true]::before{content:"\2713\00a0";font-weight:700}
-.legend .lg-head[aria-pressed=true]::before{margin-right:.15rem}
 /* larger touch targets on phones and tablets */
 @media (pointer:coarse){
   .copy-btn,.res-go,.legend .lg-pill,.legend .lg-head,.btn,.hdr-menu,.panel .contact a{min-height:44px}
@@ -349,3 +346,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .lbl{transition:fill .15s,opacity .15s,font-size .15s}
 .map.has-focus .lbl[data-t]:not(.on){opacity:var(--lbl-dim,.5)}   /* muted abbreviations on the other states */
 .map.has-focus .leader[data-t]:not(.on){opacity:var(--lbl-dim,.5)}
+
+/* pinned territory: the pill just gets the outline (the card shows the pin) */
+.legend .lg-pill{padding:.35rem 1.1rem;gap:.4rem}
+.legend .lg-pill[aria-pressed=true]{border-color:var(--fg);box-shadow:none}
+/* region header buttons: more room around the dots and name, especially when outlined */
+.legend .lg-head{padding:.3rem .8rem .3rem .55rem;margin-left:0;gap:.55rem}
