@@ -44,7 +44,7 @@
           {{ range $d.territories }}{{ range .managers }}{{ if not (in $mnames .name) }}{{ $mnames = $mnames | append .name }}{{ $mlist = $mlist | append . }}{{ end }}{{ end }}{{ end }}
           {{ if $mlist }}
           <tbody>
-            <tr class="grp"><th colspan="5" scope="colgroup">Regional managers</th></tr>
+            <tr class="grp"><th colspan="5" scope="colgroup">Regional Managers</th></tr>
             {{ range $mlist }}
               {{ $m := . }}{{ $st := slice }}
               {{ range $d.territories }}{{ $has := false }}{{ range .managers }}{{ if eq .name $m.name }}{{ $has = true }}{{ end }}{{ end }}{{ if $has }}{{ $st = $st | append .states }}{{ end }}{{ end }}
@@ -55,7 +55,7 @@
 
           {{/* Territory contacts */}}
           <tbody>
-            {{ if or $mlist $d.national }}<tr class="grp"><th colspan="5" scope="colgroup">Territory contacts</th></tr>{{ end }}
+            {{ if or $mlist $d.national }}<tr class="grp"><th colspan="5" scope="colgroup">Territory Contacts</th></tr>{{ end }}
             {{/* Open positions are skipped: a contact named "Open..." (or marked open: true) is hidden until a real person is entered */}}
             {{ range $d.territories }}{{ $t := . }}{{ range .contacts }}
               {{ if not (or .open (findRE "(?i)^\\s*open\\b" .name)) }}
