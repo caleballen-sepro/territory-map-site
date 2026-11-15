@@ -261,7 +261,14 @@
   let lblBase = null, normalW = 0, deskGeom = null;
   // The layout itself, in any units: W x H is the map, lblPx the size of the state abbreviations, cards need {id, ax, ay, w, h}.
   // Sets each card's side/position and its line (dot, end); returns the geometry helpers and how much room is needed above and below.
-  function layoutDesk(W, H, k, cards, lblPx, M, GAP) {
+  const distSeg = (p, a, b) => {   // distance from point p to segment a-b
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy || 1, t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L));
+    return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+  };
+  const segXY = (p, q, r, u) => { const o = (a, b, d) => (b[0] - a[0]) * (d[1] - a[1]) - (b[1] - a[1]) * (d[0] - a[0]); return o(p, q, r) * o(p, q, u) < 0 && o(r, u, p) * o(r, u, q) < 0; };
+  const NEAR = 9;   // a dot and somebody else's line must stay at least this far apart
+  function layoutOnce(W, H, k, cards, lblPx, M, GAP) {
+    cards.forEach(c => { c.lines = null; c.dot = c.end = null; });
     cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; });
     // which side each card faces: by where its region lies relative to the map's centre (the rectangle's diagonals split the sides)
     cards.forEach(c => {
@@ -282,6 +289,7 @@
       const mine = cards.filter(c => c.side === sd).sort((p, q) => Math.abs(q.ax - W / 2) - Math.abs(p.ax - W / 2));
       while (mine.length > rowCap) { const c = mine.shift(); c.side = c.ax < W / 2 ? 'L' : 'R'; }
     });
+    cards.forEach(c => { if (c.force) c.side = c.force; });   // sides chosen by the retry loop below
     const group = sd => cards.filter(c => c.side === sd);
     const vert = sd => sd === 'L' || sd === 'R';
     const stack = sd => {   // along the side: as close to the region's position as possible, without overlaps
@@ -330,7 +338,7 @@
     const cross = (p, q) => {
       const o = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
       const A = attach(p), B = [p.ax, p.ay], C = attach(q), D = [q.ax, q.ay];
-      return o(A, B, C) * o(A, B, D) < 0 && o(C, D, A) * o(C, D, B) < 0;
+      return (o(A, B, C) * o(A, B, D) < 0 && o(C, D, A) * o(C, D, B) < 0) || distSeg(B, C, D) < NEAR || distSeg(D, A, B) < NEAR;   // lines cross, or a dot sits on the other line
     };
     place();
     for (let pass = 0; pass < 40; pass++) {   // uncross: swap two cards' order along a side when their lines cross
@@ -364,17 +372,22 @@
     cards.forEach(c => {
       const t = byId[c.id], mine = new Set((t.states || []).map(x => String(x).toUpperCase()));
       let use = [...mine].filter(x => x !== 'AK' && x !== 'HI'); if (!use.length) use = [...mine];
-      let cand = [];
-      for (const [pad, step] of [[7, 8], [3, 5], [0, 3]]) {   // roomy spots first; in a tiny region settle for closer to the abbreviation
-        features.forEach(d => {
-          const ab = abbr(d); if (!use.includes(ab)) return;
-          const p2 = new Path2D(path(d)), bb = path.bounds(d);
-          for (let y = bb[0][1] * k; y <= bb[1][1] * k; y += step) for (let x = bb[0][0] * k; x <= bb[1][0] * k; x += step)
-            if (!hits(x, y, pad) && pc.isPointInPath(p2, x / k, y / k)) cand.push([x, y]);
-        });
-        if (cand.length) break;
+      const key = W + '|' + H + '|' + lblPx;
+      if (!c._raw || c._raw.key !== key) {   // the spots a dot could go depend only on the map, so they are worked out once
+        let cand = [];
+        for (const [pad, step] of [[7, 8], [3, 5], [0, 3]]) {   // roomy spots first; in a tiny region settle for closer to the abbreviation
+          features.forEach(d => {
+            const ab = abbr(d); if (!use.includes(ab)) return;
+            const p2 = new Path2D(path(d)), bb = path.bounds(d);
+            for (let y = bb[0][1] * k; y <= bb[1][1] * k; y += step) for (let x = bb[0][0] * k; x <= bb[1][0] * k; x += step)
+              if (!hits(x, y, pad) && pc.isPointInPath(p2, x / k, y / k)) cand.push([x, y]);
+          });
+          if (cand.length) break;
+        }
+        c._raw = { key, list: cand };
       }
-      if (!cand.length) cand.push([c.ax, c.ay]);
+      const cand = c._raw.list.map(q => [q[0], q[1]]);
+      if (!cand.length) cand.push([c.ax, c.ay]);   // a region too small to leave a clear spot: use its middle
       const g = geom(c), cx = g.l + c.w / 2, cy = g.t + c.h / 2;
       cand.forEach(q => q.pre = Math.hypot(q[0] - c.ax, q[1] - c.ay) + 0.3 * Math.hypot(q[0] - cx, q[1] - cy));
       c.cand = cand.sort((p, q) => p.pre - q.pre).slice(0, 30); c.edges = edgePts(c);
@@ -383,10 +396,16 @@
       const o = (a, b, d) => (b[0] - a[0]) * (d[1] - a[1]) - (b[1] - a[1]) * (d[0] - a[0]);
       return o(p, q, r) * o(p, q, u) < 0 && o(r, u, p) * o(r, u, q) < 0;
     };
-    const lineCost = (q, e, others) => {
+    const rectOf = c => { const g = geom(c); return [g.l - 2, g.t - 2, g.l + c.w + 2, g.t + c.h + 2]; };
+    const lineCost = (q, e, others, self) => {
+      const boxes = cards.filter(o => o !== self).map(rectOf);
       let v = 0.02 * Math.hypot(q[0] - e[0], q[1] - e[1]), n = Math.max(2, Math.ceil(Math.hypot(q[0] - e[0], q[1] - e[1]) / 3));
-      for (let i = 1; i < n; i++) if (hits(q[0] + (e[0] - q[0]) * i / n, q[1] + (e[1] - q[1]) * i / n, 2)) v += 60;
-      others.forEach(o => { if (segX(q, e, o.dot, o.end)) v += 800; });
+      for (let i = 1; i < n; i++) {
+        const x = q[0] + (e[0] - q[0]) * i / n, y = q[1] + (e[1] - q[1]) * i / n;
+        if (hits(x, y, 2)) v += 60;
+        if (boxes.some(r => x > r[0] && x < r[2] && y > r[1] && y < r[3])) v += 4000;   // a line must never run through another card
+      }
+      others.forEach(o => { if (segX(q, e, o.dot, o.end)) v += 800; if (distSeg(o.dot, q, e) < NEAR || distSeg(q, o.dot, o.end) < NEAR) v += 3000; });
       return v;
     };
     const route = c => {
@@ -395,7 +414,7 @@
       const pick = (cands) => {
         let best = null, bv = Infinity;
         cands.forEach(q => c.edges.forEach(e => {
-          const v = q.pre * 0.1 + lineCost(q, e, others.concat(mine)) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
+          const v = q.pre * 0.1 + lineCost(q, e, others.concat(mine), c) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
           if (v < bv) { bv = v; best = { dot: q, end: e }; }
         }));
         return best;
@@ -406,6 +425,38 @@
     cards.forEach(route);
     cards.forEach(route); cards.forEach(route);
     return { geom, VT, bottomEnd };
+  }
+  // Lays everything out; if any line would still run through another card, move the offending card to another side and try again.
+  function layoutDesk(W, H, k, cards, lblPx, M, GAP) {
+    const through = (R) => {   // cards whose line passes through some other card
+      const bad = new Set();
+      cards.forEach(c => (c.lines || []).forEach(l => cards.forEach(o => {
+        if (o === c || bad.has(c)) return; const g = R.geom(o), r = [g.l - 1, g.t - 1, g.l + o.w + 1, g.t + o.h + 1];
+        const n = Math.max(2, Math.ceil(Math.hypot(l.dot[0] - l.end[0], l.dot[1] - l.end[1]) / 3));
+        for (let i = 1; i < n; i++) { const x = l.dot[0] + (l.end[0] - l.dot[0]) * i / n, y = l.dot[1] + (l.end[1] - l.dot[1]) * i / n; if (x > r[0] && x < r[2] && y > r[1] && y < r[3]) { bad.add(c); break; } }
+      })));
+      cards.forEach(c => cards.forEach(o => { if (o !== c) (c.lines || []).forEach(l => (o.lines || []).forEach(m => { if (segXY(l.dot, l.end, m.dot, m.end) || distSeg(l.dot, m.dot, m.end) < NEAR) bad.add(c); })); }));
+      return bad;
+    };
+    const score = r => { const n = through(r).size; let len = 0; cards.forEach(c => (c.lines || []).forEach(l => { len += Math.hypot(l.dot[0] - l.end[0], l.dot[1] - l.end[1]); })); return n * 1e5 + len; };
+    cards.forEach(c => { c.force = null; });
+    let R = layoutOnce(W, H, k, cards, lblPx, M, GAP), bad = through(R);
+    let sides = cards.map(c => c.side), bestScore = score(R);
+    const apply = ss => cards.forEach((o, i) => { o.force = ss[i]; });
+    for (let it = 0; it < 6 && bad.size; it++) {
+      // try moving an offending card to another side, or swapping its side with a neighbouring card's (the two boxes trade places)
+      const c = [...bad][0], ci = cards.indexOf(c);
+      const near = cards.map((o, i) => ({ i, d: Math.hypot(o.ax - c.ax, o.ay - c.ay) })).filter(x => x.i !== ci).sort((p, q) => p.d - q.d).slice(0, 3);
+      const moves = [];
+      ['L', 'R', 'T', 'B'].filter(sd => sd !== sides[ci]).forEach(sd => { const ss = sides.slice(); ss[ci] = sd; moves.push(ss); });
+      near.forEach(x => { if (sides[x.i] !== sides[ci]) { const ss = sides.slice(); ss[ci] = sides[x.i]; ss[x.i] = sides[ci]; moves.push(ss); } });
+      let pick = null, ps = bestScore;
+      moves.forEach(ss => { apply(ss); const r2 = layoutOnce(W, H, k, cards, lblPx, M, GAP), sc = score(r2); if (sc < ps - 1) { ps = sc; pick = ss; } });
+      if (!pick) break;
+      sides = pick; bestScore = ps; apply(sides); R = layoutOnce(W, H, k, cards, lblPx, M, GAP); bad = through(R);
+    }
+    apply(sides);
+    return layoutOnce(W, H, k, cards, lblPx, M, GAP);
   }
   function placeDesk() {
     if (!deskOn || !deskLayer) return;
@@ -420,7 +471,7 @@
     }).filter(Boolean);
     const lblPx = lblBase * (normalW || W) / SVGW;
     const { geom, VT, bottomEnd } = layoutDesk(W, H, k, cards, lblPx, M, GAP);
-    mapEl.style.marginTop = VT + 'px'; mapEl.style.marginBottom = Math.max(0, bottomEnd - H) + 'px';
+    mapEl.style.marginTop = VT + 'px'; mapEl.style.marginBottom = (Math.max(0, bottomEnd - H) + 44) + 'px';
     const svgl = deskLayer.querySelector('.desk-lines'); let lines = '';
     cards.forEach(c => {
       const g = geom(c);
