@@ -74,17 +74,18 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .site-header{font-family:var(--font,"Helvetica Neue",Helvetica,Arial,sans-serif);font-weight:500;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;position:sticky;top:0;z-index:40;padding:12px clamp(.75rem,2vw,1.5rem);pointer-events:none;color:var(--hdr-fg,#0e0906)}
 .hdr-inner{position:relative;pointer-events:auto;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;min-height:68px;padding:.4rem .75rem .4rem 1.5rem;border-radius:999px}
 /* the pill's glass lives on a pseudo-element so the Maps dropdown can have its own blur of the page behind it */
-.hdr-inner::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:linear-gradient(180deg,var(--hdr-sheen,rgba(255,255,255,.45)),rgba(255,255,255,0) 60%),color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
+.hdr-inner::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   border:1px solid var(--hdr-edge,rgba(255,255,255,.65));
-  box-shadow:0 8px 32px rgba(0,0,0,.14),inset 0 1px 0 var(--hdr-edge,rgba(255,255,255,.8)),inset 0 -1px 0 rgba(0,0,0,.04)}
+  box-shadow:none}   /* flat glass: no gradient, highlight lines or shadow, just the blur, tint and a thin edge */
 .hdr-logo{display:flex;align-items:center;color:inherit;text-decoration:none;font-weight:500;font-size:1.2rem}
 .hdr-logo img{display:block;height:var(--hdr-logo-h,40px);width:auto;max-width:60vw}
 .hdr-collapse{display:flex;align-items:center;gap:1.25rem;margin-left:auto}
 .hdr-menu{display:none;padding:.45rem 1rem;border:1px solid var(--hdr-line);border-radius:999px;background:none;color:inherit;font-family:inherit;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 @media (max-width:900px){
   .hdr-menu{display:block}
-  .hdr-inner{flex-wrap:wrap;border-radius:30px;padding:.4rem .6rem .4rem 1.1rem}
+  .hdr-inner{flex-wrap:wrap;border-radius:30px;padding:.4rem .6rem .4rem 1.1rem;align-content:flex-start}
+  .hdr-logo{min-height:calc(68px - .8rem)}   /* the logo row keeps the same height open or closed, so the logo doesn't jump when the menu opens */
   .hdr-collapse{display:none;flex-basis:100%;flex-direction:column;align-items:stretch;gap:.75rem;margin:0 0 .5rem;padding-top:.5rem;border-top:1px solid var(--hdr-line)}
   .site-header.open .hdr-collapse{display:flex}
 }
@@ -171,7 +172,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-search .ico-search{position:absolute;left:.85rem;pointer-events:none;opacity:.6}
 .hdr-search input{width:15rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
 .hdr-search input::placeholder{color:inherit;opacity:.55}
-.hdr-search input:focus{width:22rem;outline:2px solid var(--fg);outline-offset:1px}
+.hdr-search input:focus{width:22rem;outline:2px solid #969697;outline-offset:1px}
 .hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--fg);box-shadow:0 16px 40px rgba(0,0,0,.22);z-index:60;font-weight:400}
 .hdr-search.open .hdr-results{display:block}
 .hdr-results .results{max-height:min(60vh,30rem);margin:0}
@@ -204,10 +205,10 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-maps-btn .caret{flex:none;transition:transform .15s}
 .hdr-maps.open .caret{transform:rotate(180deg)}
 .hdr-maps-menu{display:none;position:absolute;top:calc(100% + 18px);left:-.75rem;min-width:18rem;padding:.5rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
-  background:linear-gradient(180deg,var(--hdr-sheen,rgba(255,255,255,.45)),rgba(255,255,255,0) 60%),color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
+  background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   border:1px solid var(--hdr-edge,rgba(255,255,255,.65));
-  box-shadow:0 16px 40px rgba(0,0,0,.2),inset 0 1px 0 var(--hdr-edge,rgba(255,255,255,.8))}
+  box-shadow:none}
 .hdr-maps.open .hdr-maps-menu{display:block}
 .hdr-maps-menu a{--bc:var(--hdr-accent,#0e0906);display:flex;align-items:center;gap:.75rem;padding:.7rem .85rem;border-radius:12px;color:inherit;text-decoration:none;font-size:.95rem}
 .hdr-maps-menu a::before{content:"";flex:none;width:.65rem;height:.65rem;border-radius:50%;background:var(--bc)}
@@ -310,3 +311,41 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .mgr-terrs{list-style:none;margin:.5rem 0 0;padding:0;font-size:.85rem;color:var(--muted)}
 .mgr-terrs li{display:flex;align-items:center;gap:.45rem;margin:.1rem 0}
 .mgr-terrs i{flex:none;width:.65rem;height:.65rem;border-radius:50%}
+
+/* ---- accessibility ---- */
+.pagehead-actions{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;max-width:20rem}
+.pagehead .a11y-note{margin:0;font-size:.75rem;line-height:1.4;text-align:right;color:var(--muted)}
+.pagehead .listlink{margin:.4rem 0 0}
+.pagehead .listlink a,.pagehead .a11y-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+@media (max-width:640px){.pagehead-actions{align-items:flex-start;max-width:none}.pagehead .a11y-note{text-align:left}}
+.dir-div{scroll-margin-top:110px}
+/* map: keyboard focus ring, selected-territory cue that isn't color (bolder, slightly larger letters + a check on the legend button) */
+.state[role=button]:focus{outline:none}
+.focus-ring{fill:none;stroke:var(--fg);stroke-width:4px;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 2px var(--bg))}
+.lbl.on{font-weight:900;font-size:calc(var(--lbl-size,13px) * 1.12)}
+.legend .lg-pill[aria-pressed=true]::before,.legend .lg-head[aria-pressed=true]::before{content:"\2713\00a0";font-weight:700}
+.legend .lg-head[aria-pressed=true]::before{margin-right:.15rem}
+/* larger touch targets on phones and tablets */
+@media (pointer:coarse){
+  .copy-btn,.res-go,.legend .lg-pill,.legend .lg-head,.btn,.hdr-menu,.panel .contact a{min-height:44px}
+  .panel .contact a,.nat-grid .contact a{display:inline-flex;align-items:center}
+  .copy-btn{padding:.5rem 1rem}
+  .dir-table .copy-ico{min-width:44px;min-height:44px;justify-content:center}
+  .res-go{display:inline-flex;align-items:center;padding:.5rem 1rem}
+}
+/* high-contrast / forced-colors mode: keep states separable and the selection visible */
+@media (forced-colors:active){
+  .state{stroke:CanvasText;stroke-width:1px}
+  .map.has-focus .state{opacity:1}
+  .state.on{stroke:Highlight;stroke-width:4px}
+  .focus-ring{stroke:Highlight}
+}
+/* respect "reduce motion" */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* hover / pin / search focus: the territories you are NOT looking at fade (above) and their abbreviations are muted */
+.lbl{transition:fill .15s,opacity .15s,font-size .15s}
+.map.has-focus .lbl[data-t]:not(.on){opacity:var(--lbl-dim,.5)}   /* muted abbreviations on the other states */
+.map.has-focus .leader[data-t]:not(.on){opacity:var(--lbl-dim,.5)}

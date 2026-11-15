@@ -21,24 +21,48 @@
   try { us = await d3.json(mapEl.dataset.src); }
   catch (e) { mapEl.textContent = 'Map data failed to load.'; return; }
 
-  const svg = d3.select(mapEl).append('svg').attr('viewBox', '0 0 975 610').attr('role', 'img');
+  const svg = d3.select(mapEl).append('svg').attr('viewBox', '0 0 975 610').attr('role', 'group')
+    .attr('aria-label', 'Map of US sales territories. Tab to the map, use the arrow keys to move between states, and Enter to keep a territory selected. The same information is in the list of territories and in the text list.');
+  const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const path = d3.geoPath();
   const features = topojson.feature(us, us.objects.states).features;
 
-  svg.append('g').selectAll('path').data(features).join('path')
+  const toggle = id => { if (!id) return; pinned = pinned === id ? null : id; hovered = id; render(); };
+  const statesSel = svg.append('g').selectAll('path').data(features).join('path')
     .attr('d', path)
     .attr('class', d => 'state' + (byAbbr[abbr(d)] ? '' : ' unassigned'))
     .attr('data-t', d => tid(d))
     .style('--c', d => (byAbbr[abbr(d)] || {}).color || null)
     .on('mouseenter', (e, d) => { hovered = tid(d); render(); })
     .on('mouseleave', () => { hovered = null; render(); })
-    .on('click', (e, d) => {
-      e.stopPropagation();
-      const id = tid(d); if (!id) return;
-      pinned = pinned === id ? null : id;
-      hovered = id; render();
-    })
-    .append('title').text(d => stateName(d));
+    .on('click', (e, d) => { e.stopPropagation(); toggle(tid(d)); });
+  statesSel.append('title').text(d => stateName(d));
+
+  // Keyboard: one tab stop for the map; arrow keys move between states (grouped by territory), Enter or Space pins.
+  const kb = statesSel.filter(d => !!tid(d)).nodes();
+  const tIdx = id => territories.findIndex(t => t.id === id);
+  const nameOf = el => stateName(d3.select(el).datum());
+  kb.sort((a, b) => tIdx(a.dataset.t) - tIdx(b.dataset.t) || nameOf(a).localeCompare(nameOf(b)));
+  const ring = svg.append('path').attr('class', 'focus-ring').attr('d', null);   // keyboard focus outline, drawn above neighbors
+  kb.forEach((el, i) => {
+    const d = d3.select(el).datum(), t = byId[tid(d)];
+    d3.select(el).attr('role', 'button').attr('tabindex', i === 0 ? 0 : -1).attr('aria-pressed', 'false')
+      .attr('aria-label', `${stateName(d)}, ${t.name}${t.group ? ' (' + t.group + ')' : ''}`);
+    el.addEventListener('focus', () => {
+      kb.forEach(k => k.setAttribute('tabindex', k === el ? '0' : '-1'));
+      ring.attr('d', el.matches(':focus-visible') ? path(d) : null);
+      hovered = tid(d); render();
+    });
+    el.addEventListener('blur', () => { ring.attr('d', null); hovered = null; render(); });
+    el.addEventListener('keydown', e => {
+      const move = n => { e.preventDefault(); const nx = kb[(i + n + kb.length) % kb.length]; nx.focus(); };
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(tid(d)); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') move(-1);
+      else if (e.key === 'Home') { e.preventDefault(); kb[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); kb[kb.length - 1].focus(); }
+    });
+  });
 
   svg.append('path').attr('class', 'borders')
     .attr('d', path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
@@ -99,7 +123,7 @@
     const [cx, cy] = lblPos[a];
     if (OUTSIDE.includes(a)) { outside.push({ a, cx, cy }); return; }
     const t = byAbbr[a];
-    const txt = labelG.append('text').attr('class', 'lbl' + (t ? '' : ' na')).attr('x', cx).attr('y', cy).attr('dy', '0.35em').text(a);
+    const txt = labelG.append('text').attr('class', 'lbl' + (t ? '' : ' na')).attr('data-t', t ? t.id : null).attr('x', cx).attr('y', cy).attr('dy', '0.35em').text(a);
     if (t) txt.style('fill', textFor(t.color));
     else if (FORCED !== 'auto') txt.style('fill', FORCED);
   });
@@ -107,8 +131,9 @@
   let lastY = 0;
   outside.forEach(o => {
     const y = Math.max(o.cy, lastY + 16); lastY = y;
-    labelG.append('line').attr('class', 'leader').attr('x1', o.cx).attr('y1', o.cy).attr('x2', 936).attr('y2', y);
-    labelG.append('text').attr('class', 'lbl out').attr('x', 942).attr('y', y).attr('dy', '0.35em').text(o.a);
+    const ot = (byAbbr[o.a] || {}).id || null;   // offshore labels (NJ, NH, MA, VT...) join the highlight/dim too
+    labelG.append('line').attr('class', 'leader').attr('data-t', ot).attr('x1', o.cx).attr('y1', o.cy).attr('x2', 936).attr('y2', y);
+    labelG.append('text').attr('class', 'lbl out').attr('data-t', ot).attr('x', 942).attr('y', y).attr('dy', '0.35em').text(o.a);
   });
 
   // Legend: regions (groups) with their territories beneath; a flat list when no groups are defined
@@ -174,6 +199,9 @@
     const set = g ? new Set(g.terrs.map(x => x.id)) : t ? new Set([id]) : searchSet;   // a region highlights all its territories
     mapEl.classList.toggle('has-focus', !!set);
     svg.selectAll('.state').classed('on', function () { return !!set && set.has(this.dataset.t); });
+    svg.selectAll('.lbl[data-t], .leader[data-t]').classed('on', function () { return !!set && set.has(this.dataset.t); });
+    const pset = pinned ? (gById[pinned] ? new Set(gById[pinned].terrs.map(x => x.id)) : byId[pinned] ? new Set([pinned]) : null) : null;
+    kb.forEach(el => el.setAttribute('aria-pressed', String(!!pset && pset.has(el.dataset.t))));
     legend.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === pinned)));
 
     if (!g && !t) {
@@ -204,7 +232,7 @@
 
   // Used by the menu search (search.js): pin a territory / region, or highlight a set of territories.
   window.TerritoryMap = {
-    pin(id) { if (byId[id] || gById[id]) { pinned = id; hovered = null; render(); mapEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } },
+    pin(id) { if (byId[id] || gById[id]) { pinned = id; hovered = null; render(); mapEl.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'nearest' }); } },
     highlight(ids) { searchSet = ids && ids.size ? ids : null; render(); }
   };
 

@@ -32,6 +32,8 @@
   const copyBtn = text => `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copy contact details">${ICON}<span class="cb-t">Copy</span></button>`;
   const links = p => `${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : ''}`;
 
+  const setOpen = v => { box.classList.toggle('open', v); input.setAttribute('aria-expanded', String(v)); };
+
   const entries = [], mgrIdx = {};
   (data.all || []).forEach(dv => {
     const push = (p, kind, t) => {
@@ -109,7 +111,7 @@
   const highlight = ids => { if (window.TerritoryMap) window.TerritoryMap.highlight(ids); };
   const run = () => {
     const raw = input.value.trim(), toks = raw.toLowerCase().split(/\s+/).filter(Boolean);
-    if (!toks.length) { results.innerHTML = ''; countEl.textContent = ''; box.classList.remove('open'); highlight(null); return; }
+    if (!toks.length) { results.innerHTML = ''; countEl.textContent = ''; setOpen(false); highlight(null); return; }
     const place = places ? resolvePlace(raw) : null;
     const usePlace = !!place && place.states.length > 0 && place.states.length <= 4;
     const textHits = place && place.kind === 'zip' ? [] : entries.filter(e => toks.every(tk => hit(e, tk)));
@@ -149,17 +151,28 @@
     if (mapHits.length && !usePlace) parts.push(`${mapHits.length} map${mapHits.length === 1 ? '' : 's'}`);
     if (hits.length) parts.push(`${hits.length} contact${hits.length === 1 ? '' : 's'}`);
     countEl.textContent = parts.length ? parts.join(' and ') + ' found' : 'No matches';
-    box.classList.add('open');
+    setOpen(true);
   };
   input.addEventListener('input', () => { if (!places) loadPlaces(); run(); });
-  input.addEventListener('focus', () => { loadPlaces(); if (input.value.trim()) box.classList.add('open'); });
+  input.addEventListener('focus', () => { loadPlaces(); if (input.value.trim()) setOpen(true); });
+  const focusables = () => [...results.querySelectorAll('a[href], button')];   // arrow keys move through the results
   input.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { if (input.value) { input.value = ''; run(); } else box.classList.remove('open'); e.stopPropagation(); }
+    if (e.key === 'ArrowDown' && box.classList.contains('open')) { const f = focusables(); if (f.length) { e.preventDefault(); f[0].focus(); } }
+    if (e.key === 'Escape') { if (input.value) { input.value = ''; run(); } else setOpen(false); e.stopPropagation(); }
   });
+  results.addEventListener('keydown', e => {
+    const f = focusables(), i = f.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); (f[i + 1] || f[0]).focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (i <= 0) input.focus(); else f[i - 1].focus(); }
+    else if (e.key === 'Home') { e.preventDefault(); if (f[0]) f[0].focus(); }
+    else if (e.key === 'End') { e.preventDefault(); if (f.length) f[f.length - 1].focus(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setOpen(false); input.focus(); }
+  });
+  box.addEventListener('focusout', e => { if (e.relatedTarget && !box.contains(e.relatedTarget)) setOpen(false); });   // Tab out of the list closes it
   results.addEventListener('click', e => {
     const b = e.target.closest('.res-go'); if (!b || b.tagName !== 'BUTTON') return;
     if (window.TerritoryMap) window.TerritoryMap.pin(b.dataset.id);
-    box.classList.remove('open');
+    setOpen(false);
   });
-  document.addEventListener('click', e => { if (!e.target.closest('.hdr-search')) box.classList.remove('open'); });   // click elsewhere closes the list (the text stays)
+  document.addEventListener('click', e => { if (!e.target.closest('.hdr-search')) setOpen(false); });   // click elsewhere closes the list (the text stays)
 })();

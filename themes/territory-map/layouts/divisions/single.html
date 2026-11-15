@@ -6,14 +6,17 @@
     <div>
       <h1>{{ .Title }}</h1>
       {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
+      <p class="listlink"><a href="{{ "directory/" | relURL }}#{{ .Params.territoryData }}">View this map as a text list</a></p>
     </div>
-    <button type="button" id="pdf-btn" class="btn" disabled>Download PDF</button>
+    <div class="pagehead-actions">
+      <button type="button" id="pdf-btn" class="btn" disabled>Download PDF</button>
+    </div>
   </header>
 
   <div class="layout">
     <div id="map" class="map" data-src="{{ $mapdata }}"
       data-outside="{{ with site.Params.mapLabels }}{{ with .outsideStates }}{{ delimit . "," }}{{ end }}{{ end }}"
-      aria-label="Map of US sales territories"></div>
+      ></div>
     <aside class="side">
       <ul id="legend" class="legend"></ul>
       <section id="panel" class="panel" aria-live="polite"></section>
