@@ -142,11 +142,11 @@ territories:
     states: [FL]
     contacts:
       - name: "Josh McGarry"
-        title: "Technical Specialist"
+        title: "Technical Specialist - Northern FL"
         phone: "813-545-3651"
         email: "joshm@sepro.com"
       - name: "Alicia Knecht-Dilling"
-        title: "Technical Specialist"
+        title: "Technical Specialist - Southern FL"
         phone: "317-601-5316"
         email: "alicia.knecht@sepro.com"
     managers:
