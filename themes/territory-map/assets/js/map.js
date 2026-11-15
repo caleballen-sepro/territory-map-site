@@ -257,11 +257,12 @@
   // Placement: the map is shrunk so there is room all around it. Cards go on the side (left, right, top, bottom) their region faces,
   // in the same order as their regions around the map, each as level with its region as possible, joined to it by a line.
   // Cards are swapped where two lines would cross, so no lines cross.
-  const DESK_M = 250;   // px of side margin each side (keep in sync with map.css)
+  const DESK_M = 280;   // px of side margin each side (keep in sync with map.css)
   let lblBase = null, normalW = 0, deskGeom = null;
   // The layout itself, in any units: W x H is the map, lblPx the size of the state abbreviations, cards need {id, ax, ay, w, h}.
   // Sets each card's side/position and its line (dot, end); returns the geometry helpers and how much room is needed above and below.
   function layoutDesk(W, H, k, cards, lblPx, M, GAP) {
+    cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; });
     // which side each card faces: by where its region lies relative to the map's centre (the rectangle's diagonals split the sides)
     cards.forEach(c => {
       const dx = (c.ax - W / 2) / W, dy = (c.ay - H / 2) / H;
@@ -389,13 +390,18 @@
       return v;
     };
     const route = c => {
-      const others = cards.filter(o => o !== c && o.dot);
-      let best = null, bv = Infinity;
-      c.cand.forEach(q => c.edges.forEach(e => {
-        const v = q.pre * 0.1 + lineCost(q, e, others) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
-        if (v < bv) { bv = v; best = [q, e]; }
-      }));
-      c.dot = best[0]; c.end = best[1];
+      const others = cards.filter(o => o !== c && o.lines).flatMap(o => o.lines);
+      const mine = [];
+      const pick = (cands) => {
+        let best = null, bv = Infinity;
+        cands.forEach(q => c.edges.forEach(e => {
+          const v = q.pre * 0.1 + lineCost(q, e, others.concat(mine)) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
+          if (v < bv) { bv = v; best = { dot: q, end: e }; }
+        }));
+        return best;
+      };
+      mine.push(pick(c.cand));
+      c.lines = mine; c.dot = mine[0].dot; c.end = mine[0].end;
     };
     cards.forEach(route);
     cards.forEach(route); cards.forEach(route);
@@ -419,7 +425,7 @@
     cards.forEach(c => {
       const g = geom(c);
       c.el.style.left = g.l + 'px'; c.el.style.top = g.t + 'px';
-      lines += `<line class="dl-h" x1="${c.dot[0]}" y1="${c.dot[1]}" x2="${c.end[0]}" y2="${c.end[1]}"/><line class="dl" x1="${c.dot[0]}" y1="${c.dot[1]}" x2="${c.end[0]}" y2="${c.end[1]}"/><circle class="dl-dot" cx="${c.dot[0]}" cy="${c.dot[1]}" r="4.5"/>`;
+      c.lines.forEach(l => { lines += `<line class="dl-h" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><line class="dl" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><circle class="dl-dot" cx="${l.dot[0]}" cy="${l.dot[1]}" r="4.5"/>`; });
     });
     const tot = bottomEnd - H > 0 ? bottomEnd - H : 0;
     svgl.style.top = (-VT) + 'px'; svgl.style.height = (H + VT + tot) + 'px';
@@ -430,7 +436,7 @@
         const g = geom(c), el = c.el, t = byId[c.id];
         const people = [...el.querySelectorAll('.contact')].map(ct => [...ct.querySelectorAll('strong, span, a')].filter(n => !n.closest('.copy-btn')).map(n => ({
           t: n.textContent.trim(), b: n.tagName === 'STRONG', url: n.tagName === 'A' ? n.getAttribute('href') : '' })).filter(l => l.t));
-        return { id: c.id, title: t.name, color: t.color, l: g.l, t: g.t, w: c.w, h: c.h, dot: c.dot, end: c.end, people };
+        return { id: c.id, title: t.name, color: t.color, l: g.l, t: g.t, w: c.w, h: c.h, lines: c.lines, people };
       })
     };
   }

@@ -177,12 +177,12 @@
       const ox = M + (availW - (chosen.x1 - chosen.x0)) / 2 - chosen.x0, oy = top0 + (availH - (chosen.y1 - chosen.y0)) / 2 - chosen.y0;
       drawMap(ox, oy, Wp / 975, LBL);
       doc.setLineCap && doc.setLineCap('round');
-      cs.forEach(q => {   // lines first, so cards sit on top
-        const a = [ox + q.dot[0], oy + q.dot[1]], b = [ox + q.end[0], oy + q.end[1]];
+      cs.forEach(q => q.lines.forEach(l => {   // lines first, so cards sit on top
+        const a = [ox + l.dot[0], oy + l.dot[1]], b = [ox + l.end[0], oy + l.end[1]];
         doc.setDrawColor('#ffffff').setLineWidth(3.5).line(a[0], a[1], b[0], b[1]);
         doc.setDrawColor(INK).setLineWidth(1.1).line(a[0], a[1], b[0], b[1]);
         doc.setFillColor(INK).setDrawColor('#ffffff').setLineWidth(1.4).circle(a[0], a[1], 3.4, 'FD');
-      });
+      }));
       cs.forEach((q, i) => {
         const g = R.geom(q), cx = ox + g.l, cy = oy + g.t, bx = boxes[i], k = bx.k;
         doc.setFillColor('#f1f1ef').setDrawColor('#c9ccc4').setLineWidth(0.6).roundedRect(cx, cy, q.w, q.h, 8, 8, 'FD');
