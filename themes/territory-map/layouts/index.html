@@ -1,0 +1,9 @@
+{{ define "main" }}
+<main class="wrap">
+  <header class="pagehead">
+    <h1>{{ site.Params.heading | default .Title }}</h1>
+    <p>{{ site.Params.intro }}</p>
+  </header>
+  {{ partial "cards.html" . }}
+</main>
+{{ end }}

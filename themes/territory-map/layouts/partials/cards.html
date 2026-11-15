@@ -1,0 +1,27 @@
+{{/* Landing page: one section per brand (logo, then its division cards). Each division sets brand: water | land. */}}
+{{ $divs := where site.RegularPages "Section" "divisions" }}
+{{ range slice "water" "land" }}
+  {{ $b := . }}
+  {{ $cfg := dict }}{{ with site.Params.landing }}{{ $cfg = (index . $b) | default dict }}{{ end }}
+  {{ $pages := (where $divs "Params.brand" $b).ByWeight }}
+  {{ if $pages }}
+  <section class="brand-section {{ $b }}">
+    <h2 class="brand-logo">
+      {{ with $cfg.logo }}
+        <img class="bl-light{{ if $cfg.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $cfg.label | default $b }}">
+        {{ with $cfg.logoDark }}<img class="bl-dark" src="{{ . | relURL }}" alt="" aria-hidden="true">{{ end }}
+      {{ else }}{{ $cfg.label | default $b }}{{ end }}
+    </h2>
+    <ul class="cards">
+    {{ range $pages }}
+      {{ $d := index site.Data.divisions .Params.territoryData }}
+      <li><a class="card {{ .Params.brand }}" href="{{ .RelPermalink }}">
+        <h3>{{ .Title }}</h3>
+        {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
+        <span class="chips" aria-hidden="true">{{ range $d.territories }}<i style="background:{{ .color }}"></i>{{ end }}</span>
+      </a></li>
+    {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+{{ end }}

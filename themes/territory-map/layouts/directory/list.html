@@ -1,0 +1,73 @@
+{{ define "main" }}
+{{ $divs := (where site.RegularPages "Section" "divisions").ByWeight }}
+<main class="wrap directory">
+  <header class="pagehead">
+    <h1>{{ .Title }}</h1>
+    <p>Every contact for every territory map, with the states they cover.</p>
+  </header>
+
+  <nav class="dir-jump" aria-label="Jump to a map">
+    {{ range $divs }}<a href="#{{ .Params.territoryData }}">{{ .Params.navTitle | default .Title }}</a>{{ end }}
+  </nav>
+
+  {{ range slice "water" "land" }}
+    {{ $b := . }}
+    {{ $cfg := dict }}{{ with site.Params.landing }}{{ $cfg = (index . $b) | default dict }}{{ end }}
+    {{ $pages := where $divs "Params.brand" $b }}
+    {{ if $pages }}
+    <section class="brand-section {{ $b }}">
+      <h2 class="brand-logo">
+        {{ with $cfg.logo }}
+          <img class="bl-light{{ if $cfg.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $cfg.label | default $b }}">
+          {{ with $cfg.logoDark }}<img class="bl-dark" src="{{ . | relURL }}" alt="" aria-hidden="true">{{ end }}
+        {{ else }}{{ $cfg.label | default $b }}{{ end }}
+      </h2>
+
+      {{ range $pages }}
+      {{ $d := index site.Data.divisions .Params.territoryData }}
+      <article class="dir-div {{ $b }}" id="{{ .Params.territoryData }}">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
+        <table class="dir-table">
+          <caption class="sr-only">{{ .Title }} contacts</caption>
+          <thead><tr><th class="c-name" scope="col">Name</th><th class="c-title" scope="col">Job title</th><th class="c-phone" scope="col">Phone</th><th class="c-email" scope="col">Email</th><th class="c-states" scope="col">States</th></tr></thead>
+
+          {{/* National team */}}
+          {{ with $d.national }}
+          <tbody>
+            <tr class="grp"><th colspan="5" scope="colgroup">{{ $d.nationalTitle | default "National Team" }}</th></tr>
+            {{ range . }}{{ partial "dirrow.html" (dict "p" . "states" (slice) "all" true) }}{{ end }}
+          </tbody>
+          {{ end }}
+
+          {{/* Regional managers: one row each, with all the states of the territories they oversee */}}
+          {{ $mnames := slice }}{{ $mlist := slice }}
+          {{ range $d.territories }}{{ range .managers }}{{ if not (in $mnames .name) }}{{ $mnames = $mnames | append .name }}{{ $mlist = $mlist | append . }}{{ end }}{{ end }}{{ end }}
+          {{ if $mlist }}
+          <tbody>
+            <tr class="grp"><th colspan="5" scope="colgroup">Regional managers</th></tr>
+            {{ range $mlist }}
+              {{ $m := . }}{{ $st := slice }}
+              {{ range $d.territories }}{{ $has := false }}{{ range .managers }}{{ if eq .name $m.name }}{{ $has = true }}{{ end }}{{ end }}{{ if $has }}{{ $st = $st | append .states }}{{ end }}{{ end }}
+              {{ partial "dirrow.html" (dict "p" $m "states" (sort ($st | uniq)) "all" false) }}
+            {{ end }}
+          </tbody>
+          {{ end }}
+
+          {{/* Territory contacts */}}
+          <tbody>
+            {{ if or $mlist $d.national }}<tr class="grp"><th colspan="5" scope="colgroup">Territory contacts</th></tr>{{ end }}
+            {{/* Open positions are skipped: a contact named "Open..." (or marked open: true) is hidden until a real person is entered */}}
+            {{ range $d.territories }}{{ $t := . }}{{ range .contacts }}
+              {{ if not (or .open (findRE "(?i)^\\s*open\\b" .name)) }}
+              {{ partial "dirrow.html" (dict "p" . "states" (sort $t.states) "all" false) }}
+              {{ end }}
+            {{ end }}{{ end }}
+          </tbody>
+        </table>
+      </article>
+      {{ end }}
+    </section>
+    {{ end }}
+  {{ end }}
+</main>
+{{ end }}

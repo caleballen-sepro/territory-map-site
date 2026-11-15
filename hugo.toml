@@ -1,0 +1,99 @@
+baseURL = "https://example.com/"
+locale = "en-us"
+title = "SEPRO Territory Maps"
+theme = "territory-map"
+
+[params]
+  heading = "Territory Maps"
+  intro = "Choose a division to find the contact for your area."
+  # Pre-projected US states TopoJSON. To self-host: save this file to static/us-states.json
+  # and change this to "/us-states.json"
+  mapDataURL = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"
+
+  # ---------- Landing page sections (one per brand: water, land) ----------
+  [params.landing.water]
+    label = "SEPRO Water"
+    logo = "logos/sepro-water.svg"
+    logoDark = "logos/sepro-water-dark.svg"   # shown in dark mode
+  [params.landing.land]
+    label = "SEPRO Land"
+    logo = "logos/sepro-land.svg"
+    logoDark = "logos/sepro-land-dark.svg"
+
+  # ---------- Brand colors (SEPRO Scientific style guide) ----------
+  [params.brand]
+    water = "#0076D5"        # Pantone 2174C: water divisions (menu, cards, PDF accent)
+    land = "#48A345"         # Pantone 7738C: land divisions
+    sunset = "#FE5B38"       # accent: Download PDF button (website only)
+
+  # ---------- Top menu bar ----------
+  [params.header]
+    # Floating glass pill: logo left, divisions right (like seproscientific.com). Light bar, so the color logo.
+    logo = "logos/sepro-scientific.svg"
+    logoDark = "logos/sepro-scientific-white.svg"   # shown in dark mode
+    logoAlt = "SEPRO Scientific"
+    logoLink = "/"            # where the logo goes ("/" = this site's home, or a full web address)
+    logoHeight = "40px"
+    pdfLogo = "logos/sepro-scientific.svg"   # color master logo in the PDF footer
+    background = "#ebebeb"    # pill color (light mode)
+    backgroundDark = "#1f1f1d" # pill color in dark mode
+    glass = "72%"             # how solid the pill is (lower = more see-through); the blur shows through
+    textColor = "#0e0906"
+    accentColor = "#0e0906"   # dot/underline for a division with no brand set
+
+    # White pill button at the far right of the menu
+    [params.header.cta]
+      label = "Request Change"
+      url = "https://form.asana.com/?k=DfF_ciyQctDcd1gDI5gTLA&d=11504317866398"
+
+  # ---------- Page text (style guide: Helvetica Neue + DM Mono) ----------
+  [params.typography]
+    fontURL = ""             # Helvetica Neue is a system font, nothing to load. Put a web-font URL here to use another font.
+    fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif'
+    monoURL = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&display=swap"
+    monoFamily = '"DM Mono", ui-monospace, Menlo, Consolas, monospace'   # captions and detail copy
+    baseSize = "16px"
+    lineHeight = "1.5"
+    bodyWeight = "400"       # Helvetica Neue Regular
+    h1Size = "2.25rem"
+    headingWeight = "300"    # Helvetica Neue Light, sentence case
+    introSize = "0.9rem"
+    legendSize = "0.9rem"
+    panelTitleSize = "1.4rem"
+    panelTextSize = "1rem"
+
+  # ---------- State abbreviations on the map ----------
+  # Sizes are in map units, so they scale with the map's width.
+  # Leave a value "" to use the theme default.
+  [params.mapLabels]
+    # Brand font, set explicitly so the labels always use it.
+    fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif'
+    size = "13px"            # map units: scales with the map's width
+    weight = "700"
+    letterSpacing = "0.02em"
+    transform = "none"       # "none", "uppercase", "lowercase"
+    # "auto" picks dark or light text for every state, whichever is easier to read on that
+    # state's color. Or force one color for all states, e.g. "#ffffff".
+    color = "auto"
+    darkColor = "#0e0906"    # used by "auto" on light territory colors
+    lightColor = "#ffffff"   # used by "auto" on dark territory colors
+    # No shadow or halo by default. Set a width above 0 (and a color) only if you want an outline.
+    outlineColor = ""
+    outlineWidth = "0"
+    outsideColor = ""        # text color for the offshore labels ("" = page text color)
+    leaderColor = ""         # line from an offshore label to its state
+    leaderWidth = "0.75"
+    # Small states labeled in the Atlantic with a leader line. Use [] to label everything inside.
+    outsideStates = ["VT", "NH", "MA", "RI", "CT", "NJ", "DE", "MD", "DC"]
+
+  # ---------- Map shapes ----------
+  [params.mapStyle]
+    borderWidth = "2"        # line between states
+    borderColor = ""         # "" = page background color
+    unassignedColor = ""     # states in no territory ("" = light gray)
+
+  # ---------- Downloadable PDF ----------
+  # US Letter, portrait (8.5 x 11 in), always one page. The map is the same size and place on every PDF.
+  [params.pdf]
+    mapWidth = 564     # pt. Map width on every PDF (564 = full width, max). Lower it (e.g. 520) to leave more room for contacts
+    maxFontSize = 12   # pt (12 is the most it will use). Text is as large as fits, up to this.

@@ -1,0 +1,59 @@
+# SEPRO Ornamental Team (revised 10/2026)
+# Edit people, colors and state lists here. States use 2-letter postal codes;
+# each state should appear in only one territory.
+revised: "11/2026"
+nationalTitle: "National Support Team"
+national:   # always visible under the map
+  - name: "Casey Zeller"
+    title: "Director, SEPRO Land"
+    phone: "317-417-6343"
+    email: "caseyz@sepro.com"
+  - name: "Brock Behme"
+    title: "Marketing Manager"
+    phone: "309-620-0230"
+    email: "brock.behme@sepro.com"
+  - name: "JC Chong, Ph.D."
+    title: "Technical Development Manager"
+    phone: "786-525-0717"
+    email: "jc.chong@sepro.com"
+  - name: "Dennis Bunkley"
+    title: "National Sales Manager"
+    phone: "407-504-9900"
+    email: "dennisb@sepro.com"
+territories:
+  - id: west
+    name: "West"
+    color: "#B9DB9F"
+    states: [WA, OR, ID, NV, CA, UT, AZ, AK, HI]
+    contacts:
+      - name: "Cameron Smith"
+        title: "Technical Specialist"
+        phone: "407-504-9900"
+        email: "cameron.smith@sepro.com"
+  - id: central
+    name: "Central"
+    color: "#7FA66A"
+    states: [MT, WY, ND, SD, NE, KS, CO, NM, OK, TX, MN, IA, MO, WI, IL, AR, LA, MS, TN, KY]
+    contacts:
+      - name: "Todd Stassel"
+        title: "Technical Specialist"
+        phone: "417-689-2547"
+        email: "todds@sepro.com"
+  - id: northeast
+    name: "Northeast"
+    color: "#CFE1C3"
+    states: [MI, IN, OH, PA, NY, VT, NH, MA, RI, CT, ME, NJ, DE, MD, DC, WV, VA]
+    contacts:
+      - name: "Billy Morrow"
+        title: "Technical Specialist"
+        phone: "317-617-3175"
+        email: "billy.morrow@sepro.com"
+  - id: southeast
+    name: "Southeast"
+    color: "#A5CF84"
+    states: [NC, SC, GA, AL, FL]
+    contacts:
+      - name: "Ben Keyes"
+        title: "Technical Specialist"
+        phone: "786-525-0717"
+        email: "ben.keyes@sepro.com"

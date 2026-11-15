@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Divisions on SEPRO Territory Maps</title>
+		<link>http://localhost:1313/divisions/</link>
+		<description>Recent content in Divisions on SEPRO Territory Maps</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<atom:link href="http://localhost:1313/divisions/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Water Team</title>
+				<link>http://localhost:1313/divisions/water/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/divisions/water/</guid>
+				<description>Regional managers and technical specialists for aquatic vegetation and water management.</description>
+			</item>
+			<item>
+				<title>Municipal &amp; Industrial Team</title>
+				<link>http://localhost:1313/divisions/municipal-industrial/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/divisions/municipal-industrial/</guid>
+				<description>Technical specialists for municipal and industrial water customers.</description>
+			</item>
+			<item>
+				<title>EutroPHIX</title>
+				<link>http://localhost:1313/divisions/eutrophix/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/divisions/eutrophix/</guid>
+				<description>A SEPRO scientific solution: water quality and limnology contacts.</description>
+			</item>
+			<item>
+				<title>Turf &amp; Landscape Team</title>
+				<link>http://localhost:1313/divisions/turf-landscape/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/divisions/turf-landscape/</guid>
+				<description>Technical specialists covering turf and landscape customers.</description>
+			</item>
+			<item>
+				<title>Ornamental Team</title>
+				<link>http://localhost:1313/divisions/ornamental/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/divisions/ornamental/</guid>
+				<description>Technical specialists covering ornamental customers.</description>
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,8 @@
+/* Your overrides. Loaded after the theme CSS, so anything here wins.
+   Typography basics live in hugo.toml under [params.typography].
+   Examples:
+
+   :root { --bg: #fff; --fg: #1a1a1a; }
+   .panel h2 { letter-spacing: -0.01em; }
+   .legend button { text-transform: uppercase; font-size: .75rem; }
+*/

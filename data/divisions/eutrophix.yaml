@@ -1,0 +1,54 @@
+# EutroPHIX (revised 07/2026)
+# Edit people, colors and state lists here. States use 2-letter postal codes;
+# each state should appear in only one territory.
+revised: "11/2026"
+nationalTitle: "National Team"
+national:   # always visible under the map
+  - name: "Mike Pearce"
+    title: "Business Director"
+    phone: "317-552-8272"
+    email: "mike.pearce@eutrophix.com"
+  - name: "Scott Shuler"
+    title: "Director of Technology & Operations"
+    phone: "317-703-9510"
+    email: "scotts@eutrophix.com"
+  - name: "Ryan Van Goethem"
+    title: "Limnologist & Operations Manager"
+    phone: "303-229-9622"
+    email: "ryanv@eutrophix.com"
+territories:
+  - id: west
+    name: "West"
+    color: "#C4C8CF"
+    states: [WA, OR, ID, MT, ND, SD, WY, NE, NV, UT, CO, KS, CA, AZ, NM, OK, TX, HI, AK]
+    contacts:
+      - name: "Alexis Fischer, Ph.D."
+        title: "Business Development Manager, West"
+        phone: "831-706-8523"
+        email: "alexis.fischer@eutrophix.com"
+  - id: east
+    name: "East"
+    color: "#A9D8F5"
+    states: [MN, IA, MO, AR, LA, MS, AL, GA, SC, NC, VA, WV, KY, TN, IN, OH, MI, IL, WI, PA, NY, NJ, DE, MD, DC, CT, RI, MA, VT, NH, ME]
+    contacts:
+      - name: "Shannon Junior"
+        title: "Water Quality Specialist"
+        phone: "540-830-6547"
+        email: "shannon.junior@eutrophix.com"
+      - name: "Rory Roten"
+        title: "Business Development Manager, East"
+        phone: "321-890-4367"
+        email: "roryr@sepro.com"
+  - id: florida
+    name: "Florida"
+    color: "#2C9ADB"
+    states: [FL]
+    contacts:
+      - name: "Pamela Dugan, Ph.D."
+        title: "Water Quality Specialist"
+        phone: "317-495-5657"
+        email: "pamelad@eutrophix.com"
+      - name: "Abbey Gering"
+        title: "Limnologist & Project Lead"
+        phone: "317-509-4745"
+        email: "abbey.gering@eutrophix.com"

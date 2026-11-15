@@ -1,0 +1,88 @@
+# SEPRO Turf & Landscape Team (revised 10/2026)
+# Edit people, colors and state lists here. States use 2-letter postal codes;
+# each state should appear in only one territory.
+revised: "11/2026"
+nationalTitle: "National Support Team"
+national:   # always visible under the map
+  - name: "Casey Zeller"
+    title: "Director, SEPRO Land"
+    phone: "317-417-6343"
+    email: "caseyz@sepro.com"
+  - name: "Brock Behme"
+    title: "Marketing Manager"
+    phone: "309-620-0230"
+    email: "brock.behme@sepro.com"
+  - name: "Kyle Briscoe, Ph.D."
+    title: "Senior Research Manager \u2013 Portfolio Dev."
+    phone: "252-947-5790"
+    email: "kyleb@sepro.com"
+  - name: "Erick Begitschke, Ph.D."
+    title: "Technical Development Manager"
+    phone: "252-904-7759"
+    email: "erick.begitschke@sepro.com"
+  - name: "Joe Lynch"
+    title: "National Sales Manager"
+    phone: "973-567-1170"
+    email: "josephl@sepro.com"
+territories:
+  - id: west
+    name: "West"
+    color: "#B9DB9F"
+    states: [WA, OR, ID, NV, CA, UT, AZ, AK, HI]
+    contacts:
+      - name: "Marc Snyder"
+        title: "Technical Specialist"
+        phone: "480-915-7940"
+        email: "marc.snyder@sepro.com"
+  - id: north-central
+    name: "North Central"
+    color: "#7FA66A"
+    states: [MT, ND, SD, NE, MN, WI, IA, IL]
+    contacts:
+      - name: "Nick Bannach"
+        title: "Technical Specialist"
+        phone: "331-231-0124"
+        email: "nick.bannach@sepro.com"
+  - id: midwest
+    name: "Midwest"
+    color: "#CFE1C3"
+    states: [MI, IN, OH, KY, WV]
+    contacts:
+      - name: "Troy Coker"
+        title: "Technical Specialist"
+        phone: "317-495-8861"
+        email: "troyc@sepro.com"
+  - id: northeast
+    name: "Northeast"
+    color: "#5E9C83"
+    states: [PA, NY, NJ, DE, MD, DC, CT, RI, MA, VT, NH, ME]
+    contacts:
+      - name: "Joe Lynch"
+        title: "National Sales Manager"
+        phone: "973-567-1170"
+        email: "josephl@sepro.com"
+  - id: south-central
+    name: "South Central"
+    color: "#6DB86A"
+    states: [WY, CO, NM, KS, OK, TX, MO, AR, LA]
+    contacts:
+      - name: "Clint Formby"
+        title: "Technical Specialist"
+        phone: "512-417-5662"
+        email: "clintf@sepro.com"
+  - id: southeast
+    name: "Southeast (Open)"
+    color: "#A5CF84"
+    states: [VA, NC, SC, GA, AL, MS, TN]
+    contacts:
+      - name: "Open position"
+        title: "Please contact Joe Lynch"
+  - id: florida
+    name: "Florida"
+    color: "#4F9E78"
+    states: [FL]
+    contacts:
+      - name: "Mark Prospect"
+        title: "Technical Specialist"
+        phone: "317-601-2559"
+        email: "mark.prospect@sepro.com"

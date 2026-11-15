@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+  {{ with site.Params.typography }}{{ if or .fontURL .monoURL }}<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>{{ end }}
+  {{ with .fontURL }}<link rel="stylesheet" href="{{ . }}">{{ end }}
+  {{ with .monoURL }}<link rel="stylesheet" href="{{ . }}">{{ end }}{{ end }}
+  {{ $css := resources.Get "css/map.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{/* Settings from hugo.toml become CSS variables (after map.css so they win) */}}
+  <style>:root{
+  {{ with site.Params.typography }}
+    {{ with .fontFamily }}--font:{{ . | safeCSS }};{{ end }}
+    {{ with .monoFamily }}--mono:{{ . | safeCSS }};{{ end }}
+    {{ with .baseSize }}--fs-base:{{ . | safeCSS }};{{ end }}
+    {{ with .lineHeight }}--lh:{{ . | safeCSS }};{{ end }}
+    {{ with .bodyWeight }}--fw-body:{{ . | safeCSS }};{{ end }}
+    {{ with .h1Size }}--fs-h1:{{ . | safeCSS }};{{ end }}
+    {{ with .headingWeight }}--fw-head:{{ . | safeCSS }};{{ end }}
+    {{ with .introSize }}--fs-intro:{{ . | safeCSS }};{{ end }}
+    {{ with .legendSize }}--fs-legend:{{ . | safeCSS }};{{ end }}
+    {{ with .panelTitleSize }}--fs-panel-title:{{ . | safeCSS }};{{ end }}
+    {{ with .panelTextSize }}--fs-panel:{{ . | safeCSS }};{{ end }}
+  {{ end }}
+  {{ with site.Params.mapLabels }}
+    {{ with .fontFamily }}--lbl-font:{{ . | safeCSS }};{{ end }}
+    {{ with .size }}--lbl-size:{{ . | safeCSS }};{{ end }}
+    {{ with .weight }}--lbl-weight:{{ . | safeCSS }};{{ end }}
+    {{ with .color }}--lbl-color:{{ . | safeCSS }};{{ end }}
+    {{ with .darkColor }}--lbl-dark:{{ . | safeCSS }};{{ end }}
+    {{ with .lightColor }}--lbl-light:{{ . | safeCSS }};{{ end }}
+    {{ with .outlineColor }}--lbl-outline:{{ . | safeCSS }};{{ end }}
+    {{ with .outlineWidth }}--lbl-outline-w:{{ . | safeCSS }};{{ end }}
+    {{ with .letterSpacing }}--lbl-spacing:{{ . | safeCSS }};{{ end }}
+    {{ with .transform }}--lbl-transform:{{ . | safeCSS }};{{ end }}
+    {{ with .outsideColor }}--lbl-out-color:{{ . | safeCSS }};{{ end }}
+    {{ with .leaderColor }}--leader-color:{{ . | safeCSS }};{{ end }}
+    {{ with .leaderWidth }}--leader-w:{{ . | safeCSS }};{{ end }}
+  {{ end }}
+  {{ with site.Params.brand }}
+    {{ with .water }}--water:{{ . | safeCSS }};{{ end }}
+    {{ with .land }}--land:{{ . | safeCSS }};{{ end }}
+    {{ with .sunset }}--sunset:{{ . | safeCSS }};{{ end }}
+  {{ end }}
+  {{ with site.Params.header }}
+    {{ with .background }}--hdr-bg:{{ . | safeCSS }};{{ end }}
+    {{ with .textColor }}--hdr-fg:{{ . | safeCSS }};{{ end }}
+    {{ with .accentColor }}--hdr-accent:{{ . | safeCSS }};{{ end }}
+    {{ with .backgroundDark }}--hdr-bg-dark:{{ . | safeCSS }};{{ end }}
+    {{ with .glass }}--hdr-glass:{{ . | safeCSS }};{{ end }}
+    {{ with .logoHeight }}--hdr-logo-h:{{ . | safeCSS }};{{ end }}
+  {{ end }}
+  {{ with site.Params.mapStyle }}
+    {{ with .borderWidth }}--border-w:{{ . | safeCSS }};{{ end }}
+    {{ with .borderColor }}--border-color:{{ . | safeCSS }};{{ end }}
+    {{ with .unassignedColor }}--none:{{ . | safeCSS }};{{ end }}
+  {{ end }}
+  }</style>
+  {{ with resources.Get "css/custom.css" }}{{ $c := . | minify | fingerprint }}<link rel="stylesheet" href="{{ $c.RelPermalink }}" integrity="{{ $c.Data.Integrity }}">{{ end }}
+</head>
+<body{{ with .Params.territoryData }} data-division="{{ . }}"{{ end }}>
+  <header class="site-header">
+    <div class="hdr-inner">
+      {{ with site.Params.header }}
+      <a class="hdr-logo" href="{{ .logoLink | default "/" | relURL }}">
+        {{ with .logo }}<img class="hdr-logo-light{{ if $.Site.Params.header.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $.Site.Params.header.logoAlt | default site.Title }}">{{ else }}<span>{{ site.Title }}</span>{{ end }}{{ with .logoDark }}<img class="hdr-logo-dark" src="{{ . | relURL }}" alt="" aria-hidden="true">{{ end }}
+      </a>
+      {{ else }}<a class="hdr-logo" href="{{ "/" | relURL }}"><span>{{ site.Title }}</span></a>{{ end }}
+      <button type="button" class="hdr-menu" id="hdr-menu" aria-expanded="false" aria-controls="hdr-nav">Menu</button>
+      <div id="hdr-nav" class="hdr-collapse">
+        <div class="hdr-links">
+        <div class="hdr-maps">
+          <button type="button" class="hdr-maps-btn" id="hdr-maps-btn" aria-expanded="false" aria-haspopup="true" aria-controls="hdr-maps-menu">Maps
+            <svg class="caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="hdr-maps-menu" id="hdr-maps-menu">
+            {{ $here := . }}
+            {{ range (where site.RegularPages "Section" "divisions").ByWeight }}
+            <a href="{{ .RelPermalink }}" class="{{ .Params.brand }}{{ if eq .Permalink $here.Permalink }} current{{ end }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ .Title }}</a>
+            {{ end }}
+          </div>
+        </div>
+          {{ with site.GetPage "/directory" }}<a class="hdr-link{{ if eq .Permalink $here.Permalink }} current{{ end }}" href="{{ .RelPermalink }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>Directory</a>{{ end }}
+        </div>
+        <form class="hdr-search" role="search" onsubmit="return false">
+          <label class="sr-only" for="search">Search all contacts</label>
+          <svg class="ico-search" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="search" type="search" placeholder="Search maps, states and more" autocomplete="off" spellcheck="false">
+          <div class="hdr-results">
+            <p id="search-count" class="search-count" aria-live="polite"></p>
+            <ul id="results" class="results"></ul>
+          </div>
+        </form>
+        {{ with site.Params.header }}{{ with .cta }}{{ if .url }}<a class="hdr-cta" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .label | default "Request Change" }}</a>{{ end }}{{ end }}{{ end }}
+      </div>
+    </div>
+  </header>
+  {{ block "main" . }}{{ end }}
+  {{/* Every division's contacts, for the menu search (works on every page) */}}
+  {{ $all := slice }}
+  {{ range (where site.RegularPages "Section" "divisions").ByWeight }}{{ $dd := index site.Data.divisions .Params.territoryData }}{{ $all = $all | append (dict "id" .Params.territoryData "title" .Title "nav" (.Params.navTitle | default .Title) "url" .RelPermalink "brand" .Params.brand "territories" $dd.territories "national" $dd.national) }}{{ end }}
+  <script id="search-data" type="application/json">{{ dict "all" $all "states" site.Data.states | jsonify | safeJS }}</script>
+  {{ $srch := resources.Get "js/search.js" | minify | fingerprint }}
+  <script src="{{ $srch.RelPermalink }}" integrity="{{ $srch.Data.Integrity }}"></script>
+  <button type="button" id="theme-toggle" class="theme-fab" role="switch" aria-checked="false" aria-label="Dark mode">
+    <svg class="ico-moon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="ico-sun" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+  <script>
+  (function(){
+    var m=document.getElementById('hdr-menu'),h=document.querySelector('.site-header');
+    if(m)m.addEventListener('click',function(){var o=h.classList.toggle('open');m.setAttribute('aria-expanded',String(o))});
+    var mb=document.getElementById('hdr-maps-btn'),mw=document.querySelector('.hdr-maps');
+    if(mb){
+      var closeMaps=function(){mw.classList.remove('open');mb.setAttribute('aria-expanded','false')};
+      mb.addEventListener('click',function(){var o=mw.classList.toggle('open');mb.setAttribute('aria-expanded',String(o))});
+      document.addEventListener('click',function(e){if(!e.target.closest('.hdr-maps'))closeMaps()});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMaps()});
+    }
+    var b=document.getElementById('theme-toggle'),r=document.documentElement,mq=matchMedia('(prefers-color-scheme: dark)');
+    var isDark=function(){return r.dataset.theme?r.dataset.theme==='dark':mq.matches};
+    var sync=function(){var d=isDark();b.setAttribute('aria-checked',String(d));b.title=d?'Switch to light mode':'Switch to dark mode'};
+    b.addEventListener('click',function(){
+      var n=isDark()?'light':'dark';r.dataset.theme=n;
+      try{localStorage.setItem('theme',n)}catch(e){}
+      sync();
+    });
+    mq.addEventListener&&mq.addEventListener('change',sync);
+    sync();
+  })();
+  </script>
+</body>
+</html>

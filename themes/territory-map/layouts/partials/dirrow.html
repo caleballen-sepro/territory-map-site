@@ -1,0 +1,8 @@
+{{/* One directory row. Usage: partial "dirrow.html" (dict "p" $person "states" $statesSlice "all" false) */}}
+<tr>
+  <td class="c-name" data-label="Name"><strong>{{ .p.name }}</strong></td>
+  <td class="c-title" data-label="Job title"><span class="clamp" title="{{ .p.title }}">{{ .p.title }}</span></td>
+  <td class="c-phone" data-label="Phone">{{ with .p.phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a>{{ end }}</td>
+  <td class="c-email" data-label="Email">{{ with .p.email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}</td>
+  <td class="c-states" data-label="States">{{ if .all }}All states{{ else }}{{ $u := slice }}{{ range .states }}{{ $u = $u | append (upper .) }}{{ end }}{{ delimit (sort ($u | uniq)) " " }}{{ end }}</td>
+</tr>

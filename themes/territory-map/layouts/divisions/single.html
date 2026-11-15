@@ -1,0 +1,58 @@
+{{ define "main" }}
+{{ $d := index site.Data.divisions .Params.territoryData }}
+{{ $mapdata := site.Params.mapDataURL }}{{ if fileExists "static/vendor/us-states.json" }}{{ $mapdata = "vendor/us-states.json" | relURL }}{{ end }}
+<main class="wrap {{ .Params.brand }}">
+  <header class="pagehead pagehead-row">
+    <div>
+      <h1>{{ .Title }}</h1>
+      {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
+    </div>
+    <button type="button" id="pdf-btn" class="btn" disabled>Download PDF</button>
+  </header>
+
+  <div class="layout">
+    <div id="map" class="map" data-src="{{ $mapdata }}"
+      data-outside="{{ with site.Params.mapLabels }}{{ with .outsideStates }}{{ delimit . "," }}{{ end }}{{ end }}"
+      aria-label="Map of US sales territories"></div>
+    <aside class="side">
+      <ul id="legend" class="legend"></ul>
+      <section id="panel" class="panel" aria-live="polite"></section>
+    </aside>
+  </div>
+
+  {{ with $d.national }}
+  <section class="national">
+    <h2>{{ $d.nationalTitle | default "National Team" }}</h2>
+    <div class="nat-grid">
+      {{ range . }}
+      <div class="contact">
+        <strong>{{ .name }}</strong>
+        {{ with .title }}<span>{{ . }}</span>{{ end }}
+        {{ with .phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a><br>{{ end }}
+        {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ with $d.revised }}<p class="rev">Revised {{ . }}</p>{{ end }}
+</main>
+
+{{ $logo := "" }}{{ with .Params.logo }}{{ $logo = . | relURL }}{{ end }}
+{{ $water := "#0076D5" }}{{ $land := "#48A345" }}{{ with site.Params.brand }}{{ with .water }}{{ $water = . }}{{ end }}{{ with .land }}{{ $land = . }}{{ end }}{{ end }}
+{{ $bcolor := cond (eq .Params.brand "land") $land (cond (eq .Params.brand "water") $water "") }}
+{{ $mlogo := "" }}{{ with site.Params.header }}{{ with .pdfLogo }}{{ $mlogo = . | relURL }}{{ end }}{{ end }}
+{{/* Local copies in static/vendor/ (run scripts/fetch-vendor.sh) are used when present; otherwise public CDNs */}}
+{{ $d3 := "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" }}{{ if fileExists "static/vendor/d3.min.js" }}{{ $d3 = "vendor/d3.min.js" | relURL }}{{ end }}
+{{ $topo := "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" }}{{ if fileExists "static/vendor/topojson-client.min.js" }}{{ $topo = "vendor/topojson-client.min.js" | relURL }}{{ end }}
+{{ $pdfjs := "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" }}{{ if fileExists "static/vendor/jspdf.umd.min.js" }}{{ $pdfjs = "vendor/jspdf.umd.min.js" | relURL }}{{ end }}
+{{ $pmax := 12 }}{{ $pmapw := 0 }}{{ with site.Params.pdf }}{{ with .mapWidth }}{{ $pmapw = . }}{{ end }}{{ with .maxFontSize }}{{ $pmax = . }}{{ end }}{{ end }}
+<script id="map-data" type="application/json">{{ dict "territories" $d.territories "states" site.Data.states "title" .Title "revised" ($d.revised | default "") "national" $d.national "nationalTitle" ($d.nationalTitle | default "National Team") "logo" $logo "brandColor" $bcolor "masterLogo" $mlogo "jspdfURL" $pdfjs "pdfMax" $pmax "pdfMapW" $pmapw | jsonify | safeJS }}</script>
+<script src="{{ $d3 }}"></script>
+<script src="{{ $topo }}"></script>
+{{ $js := resources.Get "js/map.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ $pdf := resources.Get "js/pdf.js" | minify | fingerprint }}
+<script src="{{ $pdf.RelPermalink }}" integrity="{{ $pdf.Data.Integrity }}"></script>
+{{ end }}

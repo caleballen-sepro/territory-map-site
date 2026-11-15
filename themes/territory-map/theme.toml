@@ -1,0 +1,3 @@
+name = "Territory Map"
+description = "Interactive US state map with colored sales territories, hover and click-to-pin contact info."
+min_version = "0.120.0"

@@ -1,0 +1,158 @@
+# SEPRO Water Team (revised 09/2026)
+# Regions (group:) share a color family: West = purples, North = greys, South = blues,
+# and each territory is a shade of its region. Edit people, colors and state lists here. States use 2-letter postal codes;
+# each state should appear in only one territory.
+revised: "11/2026"
+territories:
+  - id: northwest
+    name: "Northwest"
+    group: "West Region"
+    color: "#D5C9E3"
+    states: [WA, OR, ID, MT, AK]
+    contacts:
+      - name: "Travis Fuller"
+        title: "Technical Specialist"
+        phone: "509-385-3549"
+        email: "travisf@sepro.com"
+    managers:
+      - name: "Andrea Sealock"
+        title: "Regional Manager - West"
+        phone: "925-536-6692"
+        email: "andreas@sepro.com"
+  - id: southwest
+    name: "Southwest"
+    group: "West Region"
+    color: "#B7A5D1"
+    states: [CA, NV, AZ, HI]
+    contacts:
+      - name: "Jeremey Varley"
+        title: "Technical Specialist"
+        phone: "317-741-6927"
+        email: "jeremey.varley@sepro.com"
+    managers:
+      - name: "Andrea Sealock"
+        title: "Regional Manager - West"
+        phone: "925-536-6692"
+        email: "andreas@sepro.com"
+  - id: mountain-plains
+    name: "Mountain & Plains"
+    group: "West Region"
+    color: "#9B84BC"
+    states: [UT, CO, NM, WY, ND, SD, NE, KS]
+    contacts:
+      - name: "Kyra Florea"
+        title: "Technical Specialist"
+        phone: "720-582-9145"
+        email: "kyra.florea@sepro.com"
+    managers:
+      - name: "Andrea Sealock"
+        title: "Regional Manager - West"
+        phone: "925-536-6692"
+        email: "andreas@sepro.com"
+  - id: upper-midwest
+    name: "Upper Midwest"
+    group: "North Region"
+    color: "#D9DCE1"
+    states: [MN, WI, IA, MO, IL]
+    contacts:
+      - name: "Bill Ratajczyk"
+        title: "Technical Specialist"
+        phone: "651-303-1198"
+        email: "williamr@sepro.com"
+    managers:
+      - name: "John Goidosik"
+        title: "Regional Manager - North"
+        phone: "810-618-5414"
+        email: "jgoidosik@sepro.com"
+  - id: great-lakes
+    name: "Great Lakes"
+    group: "North Region"
+    color: "#A0A6B0"
+    states: [MI, IN, OH, KY]
+    contacts:
+      - name: "McKenna Hinz"
+        title: "Technical Specialist"
+        phone: "317-407-8106"
+        email: "mckenna.cimperman@sepro.com"
+    managers:
+      - name: "John Goidosik"
+        title: "Regional Manager - North"
+        phone: "810-618-5414"
+        email: "jgoidosik@sepro.com"
+  - id: northeast
+    name: "Northeast"
+    group: "North Region"
+    color: "#C4C8CF"
+    states: [PA, NY, VT, NH, MA, RI, CT, ME, NJ]
+    contacts:
+      - name: "Josh Burnside"
+        title: "Technical Specialist"
+        phone: "267-605-2381"
+        email: "josh.burnside@sepro.com"
+    managers:
+      - name: "John Goidosik"
+        title: "Regional Manager - North"
+        phone: "810-618-5414"
+        email: "jgoidosik@sepro.com"
+  - id: mid-atlantic
+    name: "Mid-Atlantic"
+    group: "South Region"
+    color: "#A9D8F5"
+    states: [WV, VA, NC, MD, DE, DC]
+    contacts:
+      - name: "Rory Roten"
+        title: "Technical Specialist"
+        phone: "321-890-4367"
+        email: "roryr@sepro.com"
+    managers:
+      - name: "Todd Horton"
+        title: "Regional Manager - South"
+        phone: "864-561-3640"
+        email: "toddh@sepro.com"
+  - id: southeast-open
+    name: "Southeast (Open)"
+    group: "South Region"
+    color: "#84C8F0"
+    states: [TN, AL, GA, SC]
+    contacts:
+      - name: "Open position"
+        title: "Please contact the Regional Manager - South"
+    managers:
+      - name: "Todd Horton"
+        title: "Regional Manager - South"
+        phone: "864-561-3640"
+        email: "toddh@sepro.com"
+  - id: south-central
+    name: "South Central"
+    group: "South Region"
+    color: "#2C9ADB"
+    states: [TX, OK, AR, LA, MS]
+    contacts:
+      - name: "Joey Kauppi"
+        title: "Technical Specialist"
+        phone: "682-220-5513"
+        email: "joey.kauppi@sepro.com"
+    managers:
+      - name: "Todd Horton"
+        title: "Regional Manager - South"
+        phone: "864-561-3640"
+        email: "toddh@sepro.com"
+  - id: florida
+    name: "Florida"
+    group: "South Region"
+    color: "#4AAAE4"
+    states: [FL]
+    contacts:
+      - name: "Josh McGarry"
+        title: "Technical Specialist"
+        phone: "813-545-3651"
+        email: "joshm@sepro.com"
+      - name: "Alicia Knecht-Dilling"
+        title: "Technical Specialist"
+        phone: "317-601-5316"
+        email: "alicia.knecht@sepro.com"
+    managers:
+      - name: "Todd Horton"
+        title: "Regional Manager - South"
+        phone: "864-561-3640"
+        email: "toddh@sepro.com"

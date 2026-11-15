@@ -1,0 +1,37 @@
+# Municipal & Industrial Team (revised 09/2026)
+# Edit people, colors and state lists here. States use 2-letter postal codes;
+# each state should appear in only one territory.
+revised: "11/2026"
+nationalTitle: "Support Team"
+national:   # always visible under the map
+  - name: "Jeremy Slade"
+    title: "Market Development Manager"
+    phone: "386-628-8500"
+    email: "jeremy.slade@sepro.com"
+  - name: "Dr. David Hammond"
+    title: "Senior Scientist"
+    phone: "510-289-3310"
+    email: "david.hammond@sepro.com"
+  - name: "Amber Talley-Benight"
+    title: "Director of Portfolio Integration"
+    phone: "479-264-7926"
+    email: "amber.talley@sepro.com"
+territories:
+  - id: west
+    name: "West"
+    color: "#C4C8CF"
+    states: [WA, OR, ID, MT, ND, SD, WY, NE, NV, UT, CO, KS, CA, AZ, NM, OK, TX, HI, AK]
+    contacts:
+      - name: "Robert Noble"
+        title: "Technical Specialist"
+        phone: "916-952-9814"
+        email: "robert.noble@sepro.com"
+  - id: east
+    name: "East"
+    color: "#A9D8F5"
+    states: [MN, IA, MO, AR, LA, MS, AL, GA, SC, NC, VA, WV, KY, TN, IN, OH, MI, IL, WI, PA, NY, NJ, DE, MD, DC, CT, RI, MA, VT, NH, ME, FL]
+    contacts:
+      - name: "Doug Barnett"
+        title: "Technical Specialist"
+        phone: "317-719-8222"
+        email: "doug.barnett@sepro.com"
