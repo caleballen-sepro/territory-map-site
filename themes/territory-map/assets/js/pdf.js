@@ -39,12 +39,13 @@
   });
 
   window.TerritoryPDF = async function (c) {
-    await load(c.data.jspdfURL);
+    if (!c.doc) await load(c.data.jspdfURL);   // a caller that supplies its own document (the Directory's "all" PDFs) has the library already
     const mark = c.data.logo ? await loadLogo(c.data.logo, LOGO_MARK).catch(() => null) : null;
     const word = c.data.logo ? await loadLogo(c.data.logo, logoWord(c.data.logo)).catch(() => null) : null;
-    const { jsPDF } = window.jspdf;
     const desk = c.desk;   // Desktop Mode: the PDF is a landscape page of the map with its contact cards around it
-    const doc = new jsPDF({ orientation: desk ? 'landscape' : 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
+    let doc = c.doc;   // 612 x 792 pt = 8.5 x 11 in
+    if (!doc) doc = new window.jspdf.jsPDF({ orientation: desk ? 'landscape' : 'portrait', unit: 'pt', format: 'letter' });
+    else if (!c.first) doc.addPage('letter', desk ? 'landscape' : 'portrait');   // a further page in a shared document
     const PW = desk ? 792 : 612, PH = desk ? 612 : 792, M = 24;
     const FMAX = Math.min(12, Number(c.data.pdfMax) || 12);
     const INK = '#0e0906', SUB = '#51544a', MUTED = '#51544a', LIGHT = '#dcdfd7';   // brand: black, dark grey, light grey
@@ -195,8 +196,9 @@
           else doc.text(o.t, x, y, o.dot ? { charSpace: o.size * 0.06 } : undefined);
         });
       });
+      if (c.doc) return doc;
       doc.save(clean(c.data.title).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-Territory-Map-Landscape.pdf');
-      return;
+      return doc;
     }
 
     // National team (no color bullet)
@@ -305,6 +307,8 @@
       });
     }
 
+    if (c.doc) return doc;
     doc.save(clean(c.data.title).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-Territory-Map.pdf');
+    return doc;
   };
 })();

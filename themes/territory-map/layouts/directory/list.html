@@ -1,9 +1,16 @@
 {{ define "main" }}
 {{ $divs := (where site.RegularPages "Section" "divisions").ByWeight }}
-<main class="wrap directory">
-  <header class="pagehead">
-    <h1>{{ .Title }}</h1>
-    <p>Every contact for every territory map, with the states they cover.</p>
+{{ $pdfjs := "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" }}{{ if fileExists "static/vendor/jspdf.umd.min.js" }}{{ $pdfjs = "vendor/jspdf.umd.min.js" | relURL }}{{ end }}
+<main class="wrap directory" data-jspdf="{{ $pdfjs }}">
+  <header class="pagehead pagehead-row">
+    <div>
+      <h1>{{ .Title }}</h1>
+      <p>Every contact for every territory map, with the states they cover.</p>
+    </div>
+    <div class="dir-actions">
+      <button type="button" class="btn dir-pdf" data-scope="all" data-mode="portrait">Download All PDFs</button>
+      <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="all" data-mode="landscape">Download All Landscape PDFs</button>
+    </div>
   </header>
 
   <nav class="dir-jump" aria-label="Jump to a map">
@@ -26,7 +33,13 @@
       {{ range $pages }}
       {{ $d := index site.Data.divisions .Params.territoryData }}
       <article class="dir-div {{ .Params.brand }}" id="{{ .Params.territoryData }}">
-        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
+        <div class="dir-head">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
+          <div class="dir-btns">
+            <button type="button" class="btn dir-pdf" data-scope="one" data-mode="portrait" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Download {{ .Title }} PDF">Download PDF</button>
+            <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="one" data-mode="landscape" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Download {{ .Title }} landscape PDF">Download Landscape PDF</button>
+          </div>
+        </div>
         <table class="dir-table">
           <caption class="sr-only">{{ .Title }} contacts</caption>
           <thead><tr><th class="c-name" scope="col">Name</th><th class="c-title" scope="col">Job title</th><th class="c-phone" scope="col">Phone</th><th class="c-email" scope="col">Email</th><th class="c-states" scope="col">States</th></tr></thead>
@@ -70,4 +83,6 @@
     {{ end }}
   {{ end }}
 </main>
+{{ $dp := resources.Get "js/dirpdf.js" | minify | fingerprint }}
+<script src="{{ $dp.RelPermalink }}" integrity="{{ $dp.Data.Integrity }}"></script>
 {{ end }}

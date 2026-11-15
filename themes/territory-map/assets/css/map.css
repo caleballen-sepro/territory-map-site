@@ -393,3 +393,15 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 .pagehead-actions .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .pagehead-actions .btn-white{border-color:var(--line)}
 .pagehead-actions .btn-white[aria-pressed=true]{border-color:#969697}
+
+/* Directory: PDF buttons (same colours as the map pages: orange for portrait, citrus for landscape) */
+.btn-citrus{background:var(--citrus,#d7e62d);color:#0e0906}
+.btn-citrus:hover:not(:disabled){filter:brightness(.95)}
+.dir-actions,.dir-btns{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.6rem}
+.dir-actions .btn,.dir-btns .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+.dir-btns .btn{padding:.65rem 1.1rem}
+.dir-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem 1rem;margin:0 0 .75rem}
+.dir-head h3{margin:0;flex:1 1 auto}
+.dir-pdf{transition:background-color .2s ease}
+@media (max-width:899px),(hover:none) and (pointer:coarse){.dir-landscape{display:none}}   /* landscape needs the wide Desktop Mode layout */
+@media print{.dir-actions,.dir-btns{display:none!important}}

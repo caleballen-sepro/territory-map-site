@@ -563,15 +563,29 @@
   }
 
   // Download PDF (see pdf.js)
+  const pdfCtx = () => ({ data, features, path, abbr, byAbbr, OUTSIDE, lblPos, layoutDesk: (W, H, cards, lblPx, M) => { const k = W / SVGW; cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; }); return layoutDesk(W, H, k, cards, lblPx, M, 10); } });
   const btn = document.getElementById('pdf-btn');
   if (btn) {
     btn.disabled = false;
     btn.addEventListener('click', async () => {
       const label = btn.textContent;
       btn.disabled = true; btn.textContent = 'Preparing PDF…';
-      try { await window.TerritoryPDF({ data, features, path, abbr, byAbbr, OUTSIDE, lblPos, desk: deskOn ? deskGeom : null, layoutDesk: (W, H, cards, lblPx, M) => { const k = W / SVGW; cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; }); return layoutDesk(W, H, k, cards, lblPx, M, 10); } }); }
+      try { await window.TerritoryPDF({ ...pdfCtx(), desk: deskOn ? deskGeom : null }); }
       catch (err) { alert('Could not create the PDF: ' + err.message); }
       btn.textContent = label; btn.disabled = false;
     });
   }
+  // Used by the Directory page (dirpdf.js, which loads this page in a hidden frame): draws this map onto a page of a shared PDF.
+  window.TerritoryMap.exportPdf = async ({ mode, doc, first }) => {
+    const landscape = mode === 'landscape';
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    let desk = null;
+    if (landscape) {
+      applyDesk(true);
+      await new Promise(r => setTimeout(r, 150));   // a timer, not requestAnimationFrame: browsers never run animation frames in a hidden frame
+      placeDesk(); desk = deskGeom;
+    }
+    try { return await window.TerritoryPDF({ ...pdfCtx(), desk, doc, first }); }
+    finally { if (landscape) applyDesk(false); }
+  };
 })();
