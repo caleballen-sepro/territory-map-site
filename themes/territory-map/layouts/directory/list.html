@@ -10,12 +10,12 @@
     {{ range $divs }}<a href="#{{ .Params.territoryData }}">{{ .Params.navTitle | default .Title }}</a>{{ end }}
   </nav>
 
-  {{ range slice "water" "land" }}
+  {{ range slice "water" "eutrophix" "land" }}
     {{ $b := . }}
     {{ $cfg := dict }}{{ with site.Params.landing }}{{ $cfg = (index . $b) | default dict }}{{ end }}
-    {{ $pages := where $divs "Params.brand" $b }}
+    {{ $pages := slice }}{{ range $divs }}{{ if eq (.Params.group | default .Params.brand) $b }}{{ $pages = $pages | append . }}{{ end }}{{ end }}
     {{ if $pages }}
-    <section class="brand-section {{ $b }}">
+    <section class="brand-section {{ (index $pages 0).Params.brand }}">
       <h2 class="brand-logo">
         {{ with $cfg.logo }}
           <img class="bl-light{{ if $cfg.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $cfg.label | default $b }}">
@@ -25,7 +25,7 @@
 
       {{ range $pages }}
       {{ $d := index site.Data.divisions .Params.territoryData }}
-      <article class="dir-div {{ $b }}" id="{{ .Params.territoryData }}">
+      <article class="dir-div {{ .Params.brand }}" id="{{ .Params.territoryData }}">
         <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
         <table class="dir-table">
           <caption class="sr-only">{{ .Title }} contacts</caption>

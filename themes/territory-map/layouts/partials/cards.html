@@ -1,11 +1,11 @@
-{{/* Landing page: one section per brand (logo, then its division cards). Each division sets brand: water | land. */}}
+{{/* Landing page: one section per group (logo, then its division cards). A division joins the group named by `group:` (default: its `brand:` water | land). */}}
 {{ $divs := where site.RegularPages "Section" "divisions" }}
-{{ range slice "water" "land" }}
+{{ range slice "water" "eutrophix" "land" }}
   {{ $b := . }}
   {{ $cfg := dict }}{{ with site.Params.landing }}{{ $cfg = (index . $b) | default dict }}{{ end }}
-  {{ $pages := (where $divs "Params.brand" $b).ByWeight }}
+  {{ $pages := slice }}{{ range $divs.ByWeight }}{{ if eq (.Params.group | default .Params.brand) $b }}{{ $pages = $pages | append . }}{{ end }}{{ end }}
   {{ if $pages }}
-  <section class="brand-section {{ $b }}">
+  <section class="brand-section {{ (index $pages 0).Params.brand }}">
     <h2 class="brand-logo">
       {{ with $cfg.logo }}
         <img class="bl-light{{ if $cfg.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $cfg.label | default $b }}">

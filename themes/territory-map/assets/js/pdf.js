@@ -15,19 +15,22 @@
     .replace(/[\u201C\u201D]/g, '"').replace(/[^\x20-\x7E\u00A0-\u00FF]/g, '');
   const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
 
-  // Every division logo is the same 1400 x 419 drawing: the round mark on the left, the SEPRO + division wordmark on the right.
+  // Each division logo is one drawing: the round mark on the left, the SEPRO + division wordmark on the right.
   // The PDF header splits them (mark left, title in between, wordmark right), so each piece is cropped out of the one file.
-  const LOGO_MARK = { x: 53, y: 42, w: 320, h: 320 }, LOGO_WORD = { x: 445, y: 87, w: 927, h: 290 };
+  // Crops are in the logo file's own units (its viewBox). The Water and Land logos share a layout; EutroPHIX has its own
+  // (its wordmark includes the "A SEPRO Scientific Solution" line, so the crop is taller).
+  const LOGO_MARK = { x: 53, y: 42, w: 320, h: 320 };
+  const logoWord = url => (/eutrophix/i.test(url || '') ? { x: 462, y: 52, w: 1050, h: 270 } : { x: 445, y: 87, w: 927, h: 290 });
   const loadLogo = (url, crop) => new Promise((res, rej) => {
     const im = new Image();
     im.onload = () => {
       try {
-        const nw = im.naturalWidth || 1400, nh = im.naturalHeight || 419, f = nw / 1400;   // f: file pixels per logo unit
-        const cr = crop || { x: 0, y: 0, w: 1400, h: 419 };
+        const nw = im.naturalWidth || 1400, nh = im.naturalHeight || 419;   // the logo files are sized to their viewBox
+        const cr = crop || { x: 0, y: 0, w: nw, h: nh };
         const sc = crop ? 1.5 : Math.min(4, Math.max(1, 1000 / nw));
         const cv = document.createElement('canvas');
         cv.width = Math.round(cr.w * sc); cv.height = Math.round(cr.h * sc);
-        cv.getContext('2d').drawImage(im, -cr.x * sc, -cr.y * sc, nw / f * sc, nh / f * sc);
+        cv.getContext('2d').drawImage(im, -cr.x * sc, -cr.y * sc, nw * sc, nh * sc);
         res({ data: cv.toDataURL('image/png'), w: cr.w, h: cr.h });
       } catch (e) { rej(e); }
     };
@@ -38,7 +41,7 @@
   window.TerritoryPDF = async function (c) {
     await load(c.data.jspdfURL);
     const mark = c.data.logo ? await loadLogo(c.data.logo, LOGO_MARK).catch(() => null) : null;
-    const word = c.data.logo ? await loadLogo(c.data.logo, LOGO_WORD).catch(() => null) : null;
+    const word = c.data.logo ? await loadLogo(c.data.logo, logoWord(c.data.logo)).catch(() => null) : null;
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
     const PW = 612, PH = 792, M = 24;

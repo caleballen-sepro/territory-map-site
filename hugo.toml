@@ -14,11 +14,15 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
   # and change this to "/us-states.json"
   mapDataURL = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"
 
-  # ---------- Landing page sections (one per brand: water, land) ----------
+  # ---------- Landing page and Directory sections (order: water, eutrophix, land). A division joins the section named by its `group:` (default: its `brand:`) ----------
   [params.landing.water]
     label = "SEPRO Water"
     logo = "logos/sepro-water.svg"
     logoDark = "logos/sepro-water-dark.svg"   # shown in dark mode
+  [params.landing.eutrophix]
+    label = "SEPRO EutroPHIX"
+    logo = "logos/sepro-eutrophix.svg"
+    logoDark = "logos/sepro-eutrophix-dark.svg"
   [params.landing.land]
     label = "SEPRO Land"
     logo = "logos/sepro-land.svg"
