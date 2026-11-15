@@ -1,6 +1,6 @@
 {{/* One directory row. Usage: partial "dirrow.html" (dict "p" $person "states" $statesSlice "all" false) */}}
 <tr>
-  <td class="c-name" data-label="Name"><strong>{{ .p.name }}</strong></td>
+  <td class="c-name" data-label="Name"><strong>{{ .p.name }}</strong>{{ partial "copybtn.html" (dict "p" .p "icon" true) }}</td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="{{ .p.title }}">{{ .p.title }}</span></td>
   <td class="c-phone" data-label="Phone">{{ with .p.phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a>{{ end }}</td>
   <td class="c-email" data-label="Email">{{ with .p.email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}</td>

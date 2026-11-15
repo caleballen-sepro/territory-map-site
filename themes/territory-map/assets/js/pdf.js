@@ -34,7 +34,6 @@
   window.TerritoryPDF = async function (c) {
     await load(c.data.jspdfURL);
     const logo = c.data.logo ? await loadLogo(c.data.logo).catch(() => null) : null;
-    const mlogo = c.data.masterLogo ? await loadLogo(c.data.masterLogo).catch(() => null) : null;
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });   // 612 x 792 pt = 8.5 x 11 in
     const PW = 612, PH = 792, M = 24;
@@ -54,7 +53,8 @@
       const r = Math.min(170 / logo.w, 38 / logo.h), dw = logo.w * r, dh = logo.h * r;
       doc.addImage(logo.data, 'PNG', PW - M - dw, 28, dw, dh);
     }
-    if (mlogo) { const r = 16 / mlogo.h; doc.addImage(mlogo.data, 'PNG', M, PH - 32, mlogo.w * r, 16); }   // master brand logo
+    const made = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });   // the day the PDF was created
+    doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Generated ' + made, M, PH - 18);
     if (c.data.revised) doc.setFont('courier', 'normal').setFontSize(7.5).setTextColor(MUTED).text('Revised ' + clean(c.data.revised), PW - M, PH - 18, { align: 'right' });   // mono, like the site's detail copy
 
     // ---- Map (vector) ----

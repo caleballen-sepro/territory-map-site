@@ -284,3 +284,29 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
   .dir-table .c-states{width:7.5rem}
   .dir-table .c-name,.dir-table .c-phone,.dir-table .c-email{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+
+/* copy buttons, search place banner, open-position cards */
+.copy-btn{display:inline-flex;align-items:center;gap:.35rem;margin-top:.5rem;padding:.2rem .65rem;border:1px solid var(--line);border-radius:999px;background:none;color:var(--muted);font:inherit;font-size:.78rem;line-height:1.3;cursor:pointer}
+.copy-btn:hover,.copy-btn:focus-visible{color:var(--fg);border-color:var(--fg)}
+.copy-btn.done{color:var(--fg);border-color:var(--fg)}
+.copy-btn.fail{color:var(--sunset,#fe5b38);border-color:var(--sunset,#fe5b38)}
+.copy-btn svg{flex:none}
+.contact .copy-btn{display:flex;width:max-content}
+.contact .copy-btn .cb-t,.res .copy-btn .cb-t,.copy-btn .cb-t{display:inline;margin:0;color:inherit;font-size:inherit}
+.res-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
+.res-actions .res-go,.res-actions .copy-btn{margin-top:0}
+.contact.open strong{color:var(--muted);font-weight:500}
+.res-place{padding:.6rem .75rem;border-bottom:2px solid var(--line);background:var(--card);font-size:.9rem}
+.res-place small{display:block;margin-top:.15rem;color:var(--muted);font-size:.75rem}
+/* directory: icon-only copy button in the name cell, shown on row hover (always on touch screens) */
+.dir-table .c-name{position:relative}
+.dir-table .copy-ico{position:absolute;top:50%;right:.35rem;transform:translateY(-50%);margin:0;padding:.3rem;border-color:transparent;background:var(--bg);opacity:0;transition:opacity .12s}
+.dir-table tr:hover .copy-ico,.dir-table .copy-ico:focus-visible,.dir-table .copy-ico.done,.dir-table .copy-ico.fail{opacity:1}
+@media (hover:none){.dir-table .copy-ico{opacity:1}}
+@media (max-width:760px){.dir-table .copy-ico{top:.35rem;right:.5rem;transform:none;opacity:1}}
+@media print{.copy-btn{display:none!important}}
+
+/* regional managers block: the territories each one manages */
+.mgr-terrs{list-style:none;margin:.5rem 0 0;padding:0;font-size:.85rem;color:var(--muted)}
+.mgr-terrs li{display:flex;align-items:center;gap:.45rem;margin:.1rem 0}
+.mgr-terrs i{flex:none;width:.65rem;height:.65rem;border-radius:50%}

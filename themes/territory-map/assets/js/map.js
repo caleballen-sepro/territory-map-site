@@ -137,13 +137,35 @@
   document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header')) { pinned = null; render(); } });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; render(); } });
 
-  const person = c => `
+  // Open positions show who to contact instead: the territory's regional manager, or a name found in the open position's title.
+  const isOpen = p => !!p.open || /^\s*open\b/i.test(p.name || '');
+  const coverFor = (p, t) => {
+    if (!isOpen(p)) return [];
+    if (t && (t.managers || []).length) return t.managers;
+    const pool = [].concat(data.national || [], ...territories.map(x => x.managers || []));
+    const txt = String(p.title || '').toLowerCase();
+    return pool.filter((x, i, a) => x.name && txt.includes(String(x.name).toLowerCase()) && a.findIndex(y => y.name === x.name) === i);
+  };
+  const vcard = p => [p.name, p.title, p.phone, p.email].filter(Boolean).join('\n');
+  const COPY = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const copyBtn = text => `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copy contact details">${COPY}<span class="cb-t">Copy</span></button>`;
+  const links = c => `${c.phone ? `<a href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${esc(c.phone)}</a><br>` : ''}${c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ''}`;
+  const person = (c, t) => {
+    const cover = coverFor(c, t);
+    if (cover.length) return `
+    <div class="contact open">
+      <strong>${esc(c.name)}</strong>
+      ${cover.map(m => `<span>Contact ${esc(m.name)}${m.title ? ', ' + esc(m.title) : ''}</span>${links(m)}`).join('<br>')}
+      ${copyBtn(cover.map(vcard).join('\n\n'))}
+    </div>`;
+    return `
     <div class="contact">
       <strong>${esc(c.name)}</strong>
       ${c.title ? `<span>${esc(c.title)}</span>` : ''}
-      ${c.phone ? `<a href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${esc(c.phone)}</a><br>` : ''}
-      ${c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ''}
+      ${links(c)}
+      ${c.phone || c.email ? copyBtn(vcard(c)) : ''}
     </div>`;
+  };
   const pinLine = () => `<p class="pin">${pinned ? '📌 Pinned. Click again or press Esc to release.' : 'Click to pin'}</p>`;
 
   function render() {
@@ -161,16 +183,13 @@
         : '<p class="hint">Hover over a region to see who covers it. Click a region to keep its details on screen.</p>';
       return;
     }
-    if (g) {   // region card: its manager(s), then every territory in it with its specialists
-      const seen = new Set(), mgrs = [];
-      g.terrs.forEach(x => (x.managers || []).forEach(m => { if (!seen.has(m.name)) { seen.add(m.name); mgrs.push(m); } }));
+    if (g) {   // region card: every territory in it with its specialists (managers are listed at the bottom of the page)
       panel.style.setProperty('--c', g.terrs[0].color);
       panel.innerHTML = `
         <p class="eyebrow">Region</p>
         <h2>${esc(g.name)}</h2>
         ${pinLine()}
-        ${mgrs.map(person).join('')}
-        ${g.terrs.map(x => `<p class="terr"><i style="background:${esc(x.color)}"></i>${esc(x.name)}</p>${(x.contacts || []).map(person).join('')}`).join('')}`;
+        ${g.terrs.map(x => `<p class="terr"><i style="background:${esc(x.color)}"></i>${esc(x.name)}</p>${(x.contacts || []).map(c => person(c, x)).join('')}`).join('')}`;
       return;
     }
     panel.style.setProperty('--c', t.color);
@@ -178,8 +197,7 @@
       ${t.group ? `<p class="eyebrow">${esc(t.group)}</p>` : ''}
       <h2>${esc(t.name)}</h2>
       ${pinLine()}
-      ${(t.contacts || []).map(person).join('')}
-      ${(t.managers || []).map(person).join('')}
+      ${(t.contacts || []).map(c => person(c, t)).join('')}
       <p class="states">${esc([...new Set((t.states || []).map(a => String(a).toUpperCase()))].sort().join(', '))}</p>`;
   }
   render();

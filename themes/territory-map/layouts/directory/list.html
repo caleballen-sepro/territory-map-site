@@ -34,7 +34,7 @@
           {{/* National team */}}
           {{ with $d.national }}
           <tbody>
-            <tr class="grp"><th colspan="5" scope="colgroup">{{ $d.nationalTitle | default "National Team" }}</th></tr>
+            <tr class="grp"><th colspan="5" scope="colgroup">{{ $d.nationalTitle | default "National Team" | title }}</th></tr>
             {{ range . }}{{ partial "dirrow.html" (dict "p" . "states" (slice) "all" true) }}{{ end }}
           </tbody>
           {{ end }}

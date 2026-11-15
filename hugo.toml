@@ -38,7 +38,6 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
     logoAlt = "SEPRO Scientific"
     logoLink = "/"            # where the logo goes ("/" = this site's home, or a full web address)
     logoHeight = "40px"
-    pdfLogo = "logos/sepro-scientific.svg"   # color master logo in the PDF footer
     background = "#ebebeb"    # pill color (light mode)
     backgroundDark = "#1f1f1d" # pill color in dark mode
     glass = "72%"             # how solid the pill is (lower = more see-through); the blur shows through

@@ -1,0 +1,16 @@
+# Extra places for the menu search (ZIP code and city lookup). Optional: add anything the built-in list misses.
+#
+# cities: a city name -> its state. Use a list if the name exists in more than one state.
+#   Spelling and punctuation don't matter ("St. Louis" = "saint louis").
+# zips: an exact 5-digit ZIP -> state. Use this for border ZIPs where the first 3 digits point at the wrong state.
+#   Put the ZIP in quotes so a leading zero is kept.
+#
+# Example (delete the leading # to use):
+#   cities:
+#     "Fort Campbell": KY
+#     "Springfield Gardens": NY
+#   zips:
+#     "42223": KY
+
+cities: {}
+zips: {}

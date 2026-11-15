@@ -30,6 +30,30 @@
         {{ with .title }}<span>{{ . }}</span>{{ end }}
         {{ with .phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a><br>{{ end }}
         {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+        {{ partial "copybtn.html" (dict "p" .) }}
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{/* Regional managers: listed once here, each with the territories they manage (not repeated on every contact card) */}}
+  {{ $mnames := slice }}{{ $mlist := slice }}
+  {{ range $d.territories }}{{ range .managers }}{{ if not (in $mnames .name) }}{{ $mnames = $mnames | append .name }}{{ $mlist = $mlist | append . }}{{ end }}{{ end }}{{ end }}
+  {{ if $mlist }}
+  <section class="national managers">
+    <h2>Regional Managers</h2>
+    <div class="nat-grid">
+      {{ range $mlist }}{{ $m := . }}
+      <div class="contact">
+        <strong>{{ .name }}</strong>
+        {{ with .title }}<span>{{ . }}</span>{{ end }}
+        {{ with .phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a><br>{{ end }}
+        {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+        <ul class="mgr-terrs">
+          {{ range $d.territories }}{{ $t := . }}{{ $has := false }}{{ range .managers }}{{ if eq .name $m.name }}{{ $has = true }}{{ end }}{{ end }}{{ if $has }}<li><i style="background:{{ $t.color }}"></i>{{ $t.name }}</li>{{ end }}{{ end }}
+        </ul>
+        {{ partial "copybtn.html" (dict "p" $m) }}
       </div>
       {{ end }}
     </div>
@@ -42,13 +66,12 @@
 {{ $logo := "" }}{{ with .Params.logo }}{{ $logo = . | relURL }}{{ end }}
 {{ $water := "#0076D5" }}{{ $land := "#48A345" }}{{ with site.Params.brand }}{{ with .water }}{{ $water = . }}{{ end }}{{ with .land }}{{ $land = . }}{{ end }}{{ end }}
 {{ $bcolor := cond (eq .Params.brand "land") $land (cond (eq .Params.brand "water") $water "") }}
-{{ $mlogo := "" }}{{ with site.Params.header }}{{ with .pdfLogo }}{{ $mlogo = . | relURL }}{{ end }}{{ end }}
 {{/* Local copies in static/vendor/ (run scripts/fetch-vendor.sh) are used when present; otherwise public CDNs */}}
 {{ $d3 := "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" }}{{ if fileExists "static/vendor/d3.min.js" }}{{ $d3 = "vendor/d3.min.js" | relURL }}{{ end }}
 {{ $topo := "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" }}{{ if fileExists "static/vendor/topojson-client.min.js" }}{{ $topo = "vendor/topojson-client.min.js" | relURL }}{{ end }}
 {{ $pdfjs := "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" }}{{ if fileExists "static/vendor/jspdf.umd.min.js" }}{{ $pdfjs = "vendor/jspdf.umd.min.js" | relURL }}{{ end }}
 {{ $pmax := 12 }}{{ $pmapw := 0 }}{{ with site.Params.pdf }}{{ with .mapWidth }}{{ $pmapw = . }}{{ end }}{{ with .maxFontSize }}{{ $pmax = . }}{{ end }}{{ end }}
-<script id="map-data" type="application/json">{{ dict "territories" $d.territories "states" site.Data.states "title" .Title "revised" ($d.revised | default "") "national" $d.national "nationalTitle" ($d.nationalTitle | default "National Team") "logo" $logo "brandColor" $bcolor "masterLogo" $mlogo "jspdfURL" $pdfjs "pdfMax" $pmax "pdfMapW" $pmapw | jsonify | safeJS }}</script>
+<script id="map-data" type="application/json">{{ dict "territories" $d.territories "states" site.Data.states "title" .Title "revised" ($d.revised | default "") "national" $d.national "nationalTitle" ($d.nationalTitle | default "National Team") "logo" $logo "brandColor" $bcolor "jspdfURL" $pdfjs "pdfMax" $pmax "pdfMapW" $pmapw | jsonify | safeJS }}</script>
 <script src="{{ $d3 }}"></script>
 <script src="{{ $topo }}"></script>
 {{ $js := resources.Get "js/map.js" | minify | fingerprint }}
