@@ -128,7 +128,6 @@
     };
     const drawStack = (st, x, y) => st.ops.forEach(o => { setF(o.size, o.b); doc.setTextColor(o.c).text(o.t, x, y + o.y + o.size * 0.9); });
     const anchorX = t => { const ps = (t.states || []).map(a => c.lblPos && c.lblPos[a]).filter(Boolean); return ps.length ? ps.reduce((a, p) => a + p[0], 0) / ps.length : 0; };
-    const sum = (arr, g) => arr.reduce((t, b) => t + b.h, 0) + Math.max(0, arr.length - 1) * g;
 
 
     if (desk) {

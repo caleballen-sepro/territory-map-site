@@ -9,7 +9,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 /* top navigation */
 
 .pagehead h1{margin:0 0 .25rem;font-size:var(--fs-h1,2rem);font-weight:var(--fw-head,300);line-height:1.2}
-.pagehead p{margin:0 0 1.5rem;font-size:var(--fs-intro,1rem);color:var(--muted)}
+.pagehead p{margin:0;font-size:var(--fs-intro,1rem);color:var(--muted)}
 
 /* home cards */
 .cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
@@ -25,7 +25,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 
 /* map */
 .map svg{width:100%;height:auto;display:block}
-.state{fill:var(--c,var(--none));stroke:none;cursor:pointer;transition:opacity .15s,filter .15s}
+.state{fill:var(--c,var(--none));stroke:none;cursor:pointer;transition:opacity .15s,filter .15s,fill .55s ease}
 .borders{fill:none;stroke:var(--border-color,var(--bg));stroke-width:var(--border-w,2);pointer-events:none;stroke-linejoin:round;stroke-linecap:round}
 .map.has-focus .state{opacity:.55}
 .map.has-focus .state.on{opacity:1;filter:brightness(1.08)}
@@ -33,7 +33,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 
 /* state abbreviations: edit in hugo.toml [params.mapLabels] or override .lbl in custom.css */
 .labels{pointer-events:none}
-.lbl{font-family:var(--lbl-font,inherit);font-size:var(--lbl-size,13px);font-weight:var(--lbl-weight,700);letter-spacing:var(--lbl-spacing,0);text-transform:var(--lbl-transform,none);text-anchor:middle;fill:var(--lbl-na);stroke:var(--lbl-outline,none);stroke-width:var(--lbl-outline-w,0);paint-order:stroke;stroke-linejoin:round;text-rendering:geometricPrecision}
+.lbl{font-family:var(--lbl-font,inherit);font-size:var(--lbl-size,13px);font-weight:var(--lbl-weight,700);letter-spacing:var(--lbl-spacing,0);text-transform:var(--lbl-transform,none);text-anchor:middle;fill:var(--lbl-na);stroke:var(--lbl-outline,none);stroke-width:var(--lbl-outline-w,0);paint-order:stroke;stroke-linejoin:round;text-rendering:geometricPrecision;transition:fill .15s,opacity .15s,font-size .15s}
 .lbl.out{text-anchor:start;fill:var(--lbl-out-color,var(--fg));stroke:none}
 .leader{stroke:var(--leader-color,var(--muted));stroke-width:var(--leader-w,.75)}
 
@@ -103,11 +103,10 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .wrap.water{--bc:var(--water)}
 .wrap.land{--bc:var(--land)}
 .pagehead{padding-bottom:1rem;margin-bottom:1.5rem;border-bottom:3px solid var(--bc,var(--line))}
-.pagehead p{margin-bottom:0}
+.pagehead-row{border-bottom:0;padding-bottom:0}
 .card.water{border-top:4px solid var(--water)}
 .card.land{border-top:4px solid var(--land)}
 .panel h2,.card h3,.national h2,.pagehead h1{font-weight:var(--fw-head,300)}
-.btn{font-weight:500}
 
 /* ---- DM Mono for captions and detail copy (style guide: used sparingly) ---- */
 .pagehead p,.card p,.panel .hint,.panel .pin,.panel .states,.rev{font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.8rem;letter-spacing:0}
@@ -136,9 +135,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .panel .terr i{flex:none;width:.8rem;height:.8rem;border-radius:50%}
 
 /* legend pills: filled with the territory color, no stroke unless selected */
-.legend .lg-pill{background:var(--c);color:var(--tc,#fff);border:2px solid transparent;box-shadow:none;padding:.3rem .8rem}
+.legend .lg-pill{background:var(--c);color:var(--tc,#fff);border:2px solid transparent;box-shadow:none;padding:.35rem 1.1rem;gap:.4rem}
 .legend .lg-pill:hover{filter:brightness(1.07)}
-.legend .lg-head{background:none;border:2px solid transparent;padding:.1rem .4rem .1rem .1rem;margin-left:-.1rem}
+.legend .lg-head{background:none;border:2px solid transparent;padding:.3rem .8rem .3rem .55rem;margin-left:0;gap:.55rem}
 .legend .lg-head[aria-pressed=true]{border-color:var(--fg);box-shadow:none}
 .legend .lg-head:hover{background:var(--line)}
 
@@ -246,7 +245,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .dir-jump{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 2rem}
 .dir-jump a{padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;color:inherit;text-decoration:none;font-size:.85rem}
 .dir-jump a:hover{background:var(--line)}
-.dir-div{--bc:var(--line);margin:0 0 2.5rem;scroll-margin-top:96px}
+.dir-div{--bc:var(--line);margin:0 0 2.5rem;scroll-margin-top:110px}
 .dir-div.water{--bc:var(--water)}
 .dir-div.land{--bc:var(--land)}
 .dir-div h3{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1rem;margin:0 0 .75rem;padding-left:.75rem;border-left:4px solid var(--bc);font-size:1.3rem;font-weight:var(--fw-head,300)}
@@ -319,10 +318,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 
 /* ---- accessibility ---- */
 .pagehead-actions{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.6rem}
-.pagehead .a11y-note{margin:0;font-size:.75rem;line-height:1.4;text-align:right;color:var(--muted)}
 .pagehead .listlink{margin:.4rem 0 0}
-.pagehead .listlink a,.pagehead .a11y-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.dir-div{scroll-margin-top:110px}
+.pagehead .listlink a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 /* map: keyboard focus ring, selected-territory cue that isn't color (bolder, slightly larger letters + a check on the legend button) */
 .state[role=button]:focus{outline:none}
 .focus-ring{fill:none;stroke:var(--fg);stroke-width:4px;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 2px var(--bg))}
@@ -348,16 +345,13 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 }
 
 /* hover / pin / search focus: the territories you are NOT looking at fade (above) and their abbreviations are muted */
-.lbl{transition:fill .15s,opacity .15s,font-size .15s}
 .map.lbl-still .lbl{transition:fill .15s,opacity .15s}
 .map.has-focus .lbl[data-t]:not(.on){opacity:var(--lbl-dim,.5)}   /* muted abbreviations on the other states */
 .map.has-focus .leader[data-t]:not(.on){opacity:var(--lbl-dim,.5)}
 
 /* pinned territory: the pill just gets the outline (the card shows the pin) */
-.legend .lg-pill{padding:.35rem 1.1rem;gap:.4rem}
 .legend .lg-pill[aria-pressed=true]{border-color:var(--fg);box-shadow:none}
 /* region header buttons: more room around the dots and name, especially when outlined */
-.legend .lg-head{padding:.3rem .8rem .3rem .55rem;margin-left:0;gap:.55rem}
 
 /* ---- Desktop Mode: bigger map, every contact in a glass card over its region ---- */
 .btn-white{background:#fff;color:#0e0906;border:1px solid var(--line)}
@@ -396,7 +390,6 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 @media print{.desk-cards{display:none!important}}
 
 /* map page header: no coloured rule under the title (it can't glide cleanly in Desktop Mode); buttons match the menu items */
-.pagehead-row{border-bottom:0;padding-bottom:0}
 .pagehead-actions .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .pagehead-actions .btn-white{border-color:var(--line)}
 .pagehead-actions .btn-white[aria-pressed=true]{border-color:var(--citrus,#d7e62d)}
@@ -447,7 +440,6 @@ body.desk-arriving:not(.desk-toggle) .pagehead>div:first-child,body.desk-arrivin
 body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bottom .6s cubic-bezier(.4,0,.2,1)}
 
 /* ---- Desktop: pressing Maps drops one glass pill per map in under the menu, spread across the full width; they stay until Maps is pressed again ---- */
-.hdr-drawer,.maps-bar,.hdr-tray{display:none!important}   /* (earlier versions of this menu; hidden if an old copy is ever served) */
 .maps-row{display:none}
 @media (min-width:901px){
   .hdr-maps-menu,.hdr-maps.open .hdr-maps-menu{display:none}
@@ -477,7 +469,6 @@ body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bot
 body.desk .lbl,body.desk .lbl.on,body.desk .lbl.out.on{font-size:var(--lbl-size,13px)!important;font-weight:var(--lbl-weight,700)!important;letter-spacing:var(--lbl-spacing,0)!important;transition:fill .15s,opacity .15s!important}
 
 /* Normal view: switching maps in place (map stays up, colors and text fade) */
-.state{transition:opacity .15s,filter .15s,fill .55s ease}
 body.nm-leaving .state{fill:var(--none)}
 body.nm-leaving .labels,body.nm-leaving .side,body.nm-leaving .pagehead>div:first-child,body.nm-leaving .national,body.nm-leaving .rev{opacity:0;transition:opacity .3s ease}
 body.nm-blank .state{fill:var(--none);transition:none}
@@ -490,3 +481,26 @@ body.nm-arriving #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-b
 
 /* Keep the page from shifting sideways when a scroll bar appears or disappears (Safari with always-visible scroll bars, Windows, etc.): the scroll bar's space is always reserved */
 html{overflow-y:scroll;scrollbar-gutter:stable}
+
+/* Directory: filter box (dirsearch.js) */
+.dir-search{position:relative;display:flex;align-items:center;max-width:36rem;margin:0 0 .5rem}
+.dir-search .ico-search{position:absolute;left:1rem;pointer-events:none;opacity:.6}
+.dir-search input{flex:1;box-sizing:border-box;height:calc(1.7rem + .8125rem + 2px);padding:0 4.75rem 0 2.6rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:inherit;font-family:inherit;font-size:.9rem}
+.dir-search input::placeholder{color:inherit;opacity:.55}
+.dir-search input:focus{outline:2px solid var(--citrus,#d7e62d);outline-offset:-1px;border-color:transparent}
+.dir-search input::-webkit-search-cancel-button{display:none}
+.dir-clear{position:absolute;right:.45rem;padding:.3rem .8rem;border:0;border-radius:999px;background:var(--line);color:inherit;font:inherit;font-size:.75rem;cursor:pointer}
+.dir-clear:hover{filter:brightness(.95)}
+.dir-status{min-height:1.4em;margin:0 0 1.25rem;font-size:.85rem;color:var(--muted)}
+.dir-jump{margin-bottom:1rem}
+.dir-jump a{transition:opacity .25s}
+.dir-jump a.dim{opacity:.35}
+.dir-jump a.active{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.dir-jump a{cursor:pointer}
+/* a search is on: every Generate button steps aside; a map is chosen: only the "all maps" ones do (their space stays so nothing jumps) */
+.dir-actions,.dir-btns{transition:opacity .25s ease,visibility 0s}
+.dir-q .dir-actions,.dir-q .dir-btns,.dir-sel .dir-actions{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s .25s}
+.dir-table [hidden],.dir-div[hidden],.brand-section[hidden]{display:none!important}   /* (the phone layout sets display on rows) */
+body.dir-page .hdr-results{display:none!important}   /* the page list is the result here */
+@media (prefers-reduced-motion:reduce){.dir-actions,.dir-btns,.dir-jump a{transition:none!important}}
+@media print{.dir-search,.dir-status{display:none}}

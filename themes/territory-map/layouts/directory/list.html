@@ -14,8 +14,17 @@
   </header>
 
   <nav class="dir-jump" aria-label="Jump to a map">
-    {{ range $divs }}<a href="#{{ .Params.territoryData }}">{{ .Params.navTitle | default .Title }}</a>{{ end }}
+    {{ range $divs }}<a href="#{{ .Params.territoryData }}" data-div="{{ .Params.territoryData }}">{{ .Params.navTitle | default .Title }}</a>{{ end }}
   </nav>
+
+  {{/* Filters the lists below as you type (dirsearch.js); the menu search box drives the same filter on this page */}}
+  <div class="dir-search" role="search" hidden>
+    <label class="sr-only" for="dir-q">Filter the directory by name, state, ZIP code or city</label>
+    <svg class="ico-search" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="dir-q" type="search" placeholder="Filter by name, state, ZIP code or city" autocomplete="off" spellcheck="false">
+    <button type="button" class="dir-clear" hidden>Clear</button>
+  </div>
+  <p id="dir-status" class="dir-status" role="status" aria-live="polite"></p>
 
   {{ range slice "water" "eutrophix" "land" }}
     {{ $b := . }}
@@ -31,7 +40,7 @@
       </h2>
 
       {{ range $pages }}
-      {{ $d := index site.Data.divisions .Params.territoryData }}
+      {{ $div := . }}{{ $d := index site.Data.divisions .Params.territoryData }}
       <article class="dir-div {{ .Params.brand }}" id="{{ .Params.territoryData }}">
         <div class="dir-head">
           <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
@@ -48,7 +57,7 @@
           {{ with $d.national }}
           <tbody>
             <tr class="grp"><th colspan="5" scope="colgroup">{{ $d.nationalTitle | default "National Team" | title }}</th></tr>
-            {{ range . }}{{ partial "dirrow.html" (dict "p" . "states" (slice) "all" true) }}{{ end }}
+            {{ range . }}{{ partial "dirrow.html" (dict "p" . "states" (slice) "all" true "key" (printf "%s|n|%s" $div.Params.territoryData .name)) }}{{ end }}
           </tbody>
           {{ end }}
 
@@ -61,7 +70,7 @@
             {{ range $mlist }}
               {{ $m := . }}{{ $st := slice }}
               {{ range $d.territories }}{{ $has := false }}{{ range .managers }}{{ if eq .name $m.name }}{{ $has = true }}{{ end }}{{ end }}{{ if $has }}{{ $st = $st | append .states }}{{ end }}{{ end }}
-              {{ partial "dirrow.html" (dict "p" $m "states" (sort ($st | uniq)) "all" false) }}
+              {{ partial "dirrow.html" (dict "p" $m "states" (sort ($st | uniq)) "all" false "key" (printf "%s|m|%s" $div.Params.territoryData $m.name)) }}
             {{ end }}
           </tbody>
           {{ end }}
@@ -72,7 +81,7 @@
             {{/* Open positions are skipped: a contact named "Open..." (or marked open: true) is hidden until a real person is entered */}}
             {{ range $d.territories }}{{ $t := . }}{{ range .contacts }}
               {{ if not (or .open (findRE "(?i)^\\s*open\\b" .name)) }}
-              {{ partial "dirrow.html" (dict "p" . "states" (sort $t.states) "all" false) }}
+              {{ partial "dirrow.html" (dict "p" . "states" (sort $t.states) "all" false "key" (printf "%s|s|%s|%s" $div.Params.territoryData $t.id .name)) }}
               {{ end }}
             {{ end }}{{ end }}
           </tbody>
@@ -85,4 +94,6 @@
 </main>
 {{ $dp := resources.Get "js/dirpdf.js" | minify | fingerprint }}
 <script src="{{ $dp.RelPermalink }}" integrity="{{ $dp.Data.Integrity }}"></script>
+{{ $ds := resources.Get "js/dirsearch.js" | minify | fingerprint }}
+<script src="{{ $ds.RelPermalink }}" integrity="{{ $ds.Data.Integrity }}"></script>
 {{ end }}

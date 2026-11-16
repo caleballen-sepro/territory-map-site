@@ -37,8 +37,9 @@
   const entries = [], mgrIdx = {};
   (data.all || []).forEach(dv => {
     const push = (p, kind, t) => {
-      if (kind === 'manager') { const k = dv.id + '|' + p.name; if (mgrIdx[k]) { mgrIdx[k].terrs.push(t); return; } mgrIdx[k] = { dv, p, kind, terrs: [t] }; entries.push(mgrIdx[k]); return; }
-      entries.push({ dv, p, kind, terrs: t ? [t] : [] });
+      // key: how a Directory row finds its entry (see dirrow.html)
+      if (kind === 'manager') { const k = dv.id + '|' + p.name; if (mgrIdx[k]) { mgrIdx[k].terrs.push(t); return; } mgrIdx[k] = { dv, p, kind, terrs: [t], key: dv.id + '|m|' + p.name }; entries.push(mgrIdx[k]); return; }
+      entries.push({ dv, p, kind, terrs: t ? [t] : [], key: dv.id + '|' + (t ? 's|' + t.id : 'n') + '|' + p.name });
     };
     (dv.territories || []).forEach(t => {
       (t.contacts || []).forEach(p => push(p, 'specialist', t));
@@ -108,18 +109,32 @@
       `<div class="res-links">${links(p)}</div><div class="res-actions">${go}${p.phone || p.email ? copyBtn(vcard(p)) : ''}</div></li>`;
   };
 
-  const highlight = ids => { if (window.TerritoryMap) window.TerritoryMap.highlight(ids); };
-  const run = () => {
-    const raw = input.value.trim(), toks = raw.toLowerCase().split(/\s+/).filter(Boolean);
-    if (!toks.length) { results.innerHTML = ''; countEl.textContent = ''; setOpen(false); highlight(null); return; }
-    const place = places ? resolvePlace(raw) : null;
+  // Who matches a search (shared by the menu list and the Directory filter): a ZIP or city means everyone covering that state, anything else is a text match.
+  const compute = raw => {
+    const toks = raw.toLowerCase().split(/\s+/).filter(Boolean);
+    const place = places && toks.length ? resolvePlace(raw) : null;
     const usePlace = !!place && place.states.length > 0 && place.states.length <= 4;
-    const textHits = place && place.kind === 'zip' ? [] : entries.filter(e => toks.every(tk => hit(e, tk)));
-    let hits = textHits, banner = '';
+    const textHits = !toks.length ? [] : place && place.kind === 'zip' ? [] : entries.filter(e => toks.every(tk => hit(e, tk)));
     const set = new Set(usePlace ? place.states : []);
+    let hits = textHits;
     if (usePlace) {
       const pHits = entries.filter(e => e.kind !== 'national' && [...e.abbrs].some(a => set.has(a)));
       hits = [...pHits, ...textHits.filter(e => !pHits.includes(e))];
+    }
+    return { toks, place, usePlace, set, hits };
+  };
+  window.TerritorySearch = {   // used by the Directory page's own search box (dirsearch.js)
+    ready: () => places ? Promise.resolve() : loadPlaces(),
+    filter: raw => { const q = compute(String(raw).trim()); return { keys: new Set(q.hits.map(e => e.key)), count: q.hits.length, place: q.usePlace ? { label: q.place.label, states: q.place.states.map(a => stName[a] || a) } : null }; }
+  };
+
+  const highlight = ids => { if (window.TerritoryMap) window.TerritoryMap.highlight(ids); };
+  const run = () => {
+    const raw = input.value.trim();
+    if (!raw) { results.innerHTML = ''; countEl.textContent = ''; setOpen(false); highlight(null); return; }
+    const { toks, place, usePlace, set, hits } = compute(raw);
+    let banner = '';
+    if (usePlace) {
       const where = place.states.map(a => stName[a] || a).join(', ');
       banner = `<li class="res-place"><strong>${esc(place.label)}</strong> → ${esc(where)}` +
         (place.kind === 'zip' ? '<small>Matched on the first 3 digits of the ZIP.</small>' : place.states.length > 1 ? '<small>More than one state has a city with this name. Add a state to narrow it.</small>' : '') + '</li>';
