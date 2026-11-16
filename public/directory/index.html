@@ -25,13 +25,13 @@
 <meta name="twitter:image" content="http://localhost:1313/og-image.png">
 
   <title>Directory · SEPRO Territory Maps</title>
-  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}try{if(sessionStorage.getItem('mapsTray')==='1')document.documentElement.classList.add('maps-open')}catch(e){}</script>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}try{if(sessionStorage.getItem('mapsTray')==='1')document.documentElement.classList.add('maps-open')}catch(e){}try{var d=+sessionStorage.getItem('territoryDirEnter');if(d){sessionStorage.removeItem('territoryDirEnter');if(Date.now()-d<6000)document.documentElement.classList.add('dir-enter')}}catch(e){}try{var n=+sessionStorage.getItem('territoryMapEnter');if(n){sessionStorage.removeItem('territoryMapEnter');if(Date.now()-n<6000)document.documentElement.classList.add('map-enter')}}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM&#43;Mono:wght@400&amp;display=swap">
   
-  <link rel="stylesheet" href="/css/map.min.7e1f78d8f86a7e722c849b0f2f6be6cfd0b9151fde953f34595bff75c5503efb.css" integrity="sha256-fh942PhqfnIshJsPL2vmz9C5FR/elT80WVv/dcVQPvs=">
+  <link rel="stylesheet" href="/css/map.min.2ebd27261ce83f596dcb8812bcd2a61f34c2a0ff5b3c703e2dc17fccb585238d.css" integrity="sha256-Lr0nJhzoP1lty4gSvNKmHzTCoP9bPHA&#43;LcF/zLWFI40=">
   
   <style>:root{
   
@@ -153,13 +153,14 @@
   </nav>
 
   
-  <div class="dir-search" role="search" hidden>
+  <div class="dir-search" role="search">
     <label class="sr-only" for="dir-q">Filter the directory by name, state, ZIP code or city</label>
     <svg class="ico-search" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="dir-q" type="search" placeholder="Filter by name, state, ZIP code or city" autocomplete="off" spellcheck="false">
     <button type="button" class="dir-clear" hidden>Clear</button>
   </div>
   <p id="dir-status" class="dir-status" role="status" aria-live="polite"></p>
+  <noscript><style>.dir-search{display:none}</style></noscript>   
 
   
     
@@ -205,10 +206,10 @@
   <td class="c-name" data-label="Name"><strong>Andrea Sealock</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Andrea Sealock
+<button type="button" class="copy-btn" data-copy="Andrea Sealock
 Regional Manager - West
 925-536-6692
-andreas@sepro.com" aria-label="Copy Andrea Sealock's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+andreas@sepro.com" aria-label="Copy Andrea Sealock's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Regional Manager - West">Regional Manager - West</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:9255366692">925-536-6692</a></td>
@@ -224,10 +225,10 @@ andreas@sepro.com" aria-label="Copy Andrea Sealock's contact details"><svg viewB
   <td class="c-name" data-label="Name"><strong>John Goidosik</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="John Goidosik
+<button type="button" class="copy-btn" data-copy="John Goidosik
 Regional Manager - North
 810-618-5414
-jgoidosik@sepro.com" aria-label="Copy John Goidosik's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+jgoidosik@sepro.com" aria-label="Copy John Goidosik's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Regional Manager - North">Regional Manager - North</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:8106185414">810-618-5414</a></td>
@@ -243,10 +244,10 @@ jgoidosik@sepro.com" aria-label="Copy John Goidosik's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Todd Horton</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Todd Horton
+<button type="button" class="copy-btn" data-copy="Todd Horton
 Regional Manager - South
 864-561-3640
-toddh@sepro.com" aria-label="Copy Todd Horton's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+toddh@sepro.com" aria-label="Copy Todd Horton's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Regional Manager - South">Regional Manager - South</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:8645613640">864-561-3640</a></td>
@@ -269,10 +270,10 @@ toddh@sepro.com" aria-label="Copy Todd Horton's contact details"><svg viewBox="0
   <td class="c-name" data-label="Name"><strong>Travis Fuller</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Travis Fuller
+<button type="button" class="copy-btn" data-copy="Travis Fuller
 Technical Specialist
 509-385-3549
-travisf@sepro.com" aria-label="Copy Travis Fuller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+travisf@sepro.com" aria-label="Copy Travis Fuller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:5093853549">509-385-3549</a></td>
@@ -288,10 +289,10 @@ travisf@sepro.com" aria-label="Copy Travis Fuller's contact details"><svg viewBo
   <td class="c-name" data-label="Name"><strong>Jeremey Varley</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Jeremey Varley
+<button type="button" class="copy-btn" data-copy="Jeremey Varley
 Technical Specialist
 317-741-6927
-jeremey.varley@sepro.com" aria-label="Copy Jeremey Varley's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+jeremey.varley@sepro.com" aria-label="Copy Jeremey Varley's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3177416927">317-741-6927</a></td>
@@ -307,10 +308,10 @@ jeremey.varley@sepro.com" aria-label="Copy Jeremey Varley's contact details"><sv
   <td class="c-name" data-label="Name"><strong>Kyra Florea</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Kyra Florea
+<button type="button" class="copy-btn" data-copy="Kyra Florea
 Technical Specialist
 720-582-9145
-kyra.florea@sepro.com" aria-label="Copy Kyra Florea's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+kyra.florea@sepro.com" aria-label="Copy Kyra Florea's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:7205829145">720-582-9145</a></td>
@@ -326,10 +327,10 @@ kyra.florea@sepro.com" aria-label="Copy Kyra Florea's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Bill Ratajczyk</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Bill Ratajczyk
+<button type="button" class="copy-btn" data-copy="Bill Ratajczyk
 Technical Specialist
 651-303-1198
-williamr@sepro.com" aria-label="Copy Bill Ratajczyk's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+williamr@sepro.com" aria-label="Copy Bill Ratajczyk's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:6513031198">651-303-1198</a></td>
@@ -345,10 +346,10 @@ williamr@sepro.com" aria-label="Copy Bill Ratajczyk's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>McKenna Hinz</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="McKenna Hinz
+<button type="button" class="copy-btn" data-copy="McKenna Hinz
 Technical Specialist
 317-407-8106
-mckenna.hinz@sepro.com" aria-label="Copy McKenna Hinz's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+mckenna.hinz@sepro.com" aria-label="Copy McKenna Hinz's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3174078106">317-407-8106</a></td>
@@ -364,10 +365,10 @@ mckenna.hinz@sepro.com" aria-label="Copy McKenna Hinz's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Josh Burnside</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Josh Burnside
+<button type="button" class="copy-btn" data-copy="Josh Burnside
 Technical Specialist
 267-605-2381
-josh.burnside@sepro.com" aria-label="Copy Josh Burnside's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+josh.burnside@sepro.com" aria-label="Copy Josh Burnside's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:2676052381">267-605-2381</a></td>
@@ -387,10 +388,10 @@ josh.burnside@sepro.com" aria-label="Copy Josh Burnside's contact details"><svg 
   <td class="c-name" data-label="Name"><strong>Joey Kauppi</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Joey Kauppi
+<button type="button" class="copy-btn" data-copy="Joey Kauppi
 Technical Specialist
 682-220-5513
-joey.kauppi@sepro.com" aria-label="Copy Joey Kauppi's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+joey.kauppi@sepro.com" aria-label="Copy Joey Kauppi's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:6822205513">682-220-5513</a></td>
@@ -406,10 +407,10 @@ joey.kauppi@sepro.com" aria-label="Copy Joey Kauppi's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Josh McGarry</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Josh McGarry
+<button type="button" class="copy-btn" data-copy="Josh McGarry
 Technical Specialist
 813-545-3651
-joshm@sepro.com" aria-label="Copy Josh McGarry's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+joshm@sepro.com" aria-label="Copy Josh McGarry's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:8135453651">813-545-3651</a></td>
@@ -425,10 +426,10 @@ joshm@sepro.com" aria-label="Copy Josh McGarry's contact details"><svg viewBox="
   <td class="c-name" data-label="Name"><strong>Alicia Knecht-Dilling</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Alicia Knecht-Dilling
+<button type="button" class="copy-btn" data-copy="Alicia Knecht-Dilling
 Technical Specialist
 317-601-5316
-alicia.knecht@sepro.com" aria-label="Copy Alicia Knecht-Dilling's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+alicia.knecht@sepro.com" aria-label="Copy Alicia Knecht-Dilling's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3176015316">317-601-5316</a></td>
@@ -464,10 +465,10 @@ alicia.knecht@sepro.com" aria-label="Copy Alicia Knecht-Dilling's contact detail
   <td class="c-name" data-label="Name"><strong>Jeremy Slade</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Jeremy Slade
+<button type="button" class="copy-btn" data-copy="Jeremy Slade
 Market Development Manager
 386-628-8500
-jeremy.slade@sepro.com" aria-label="Copy Jeremy Slade's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+jeremy.slade@sepro.com" aria-label="Copy Jeremy Slade's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Market Development Manager">Market Development Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3866288500">386-628-8500</a></td>
@@ -479,10 +480,10 @@ jeremy.slade@sepro.com" aria-label="Copy Jeremy Slade's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Dr. David Hammond</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Dr. David Hammond
+<button type="button" class="copy-btn" data-copy="Dr. David Hammond
 Senior Scientist
 510-289-3310
-david.hammond@sepro.com" aria-label="Copy Dr. David Hammond's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+david.hammond@sepro.com" aria-label="Copy Dr. David Hammond's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Senior Scientist">Senior Scientist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:5102893310">510-289-3310</a></td>
@@ -494,10 +495,10 @@ david.hammond@sepro.com" aria-label="Copy Dr. David Hammond's contact details"><
   <td class="c-name" data-label="Name"><strong>Amber Talley-Benight</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Amber Talley-Benight
+<button type="button" class="copy-btn" data-copy="Amber Talley-Benight
 Director of Portfolio Integration
 479-264-7926
-amber.talley@sepro.com" aria-label="Copy Amber Talley-Benight's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+amber.talley@sepro.com" aria-label="Copy Amber Talley-Benight's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Director of Portfolio Integration">Director of Portfolio Integration</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:4792647926">479-264-7926</a></td>
@@ -524,10 +525,10 @@ amber.talley@sepro.com" aria-label="Copy Amber Talley-Benight's contact details"
   <td class="c-name" data-label="Name"><strong>Robert Noble</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Robert Noble
+<button type="button" class="copy-btn" data-copy="Robert Noble
 Technical Specialist
 916-952-9814
-robert.noble@sepro.com" aria-label="Copy Robert Noble's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+robert.noble@sepro.com" aria-label="Copy Robert Noble's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:9169529814">916-952-9814</a></td>
@@ -543,10 +544,10 @@ robert.noble@sepro.com" aria-label="Copy Robert Noble's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Doug Barnett</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Doug Barnett
+<button type="button" class="copy-btn" data-copy="Doug Barnett
 Technical Specialist
 317-719-8222
-doug.barnett@sepro.com" aria-label="Copy Doug Barnett's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+doug.barnett@sepro.com" aria-label="Copy Doug Barnett's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3177198222">317-719-8222</a></td>
@@ -598,10 +599,10 @@ doug.barnett@sepro.com" aria-label="Copy Doug Barnett's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Mike Pearce</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Mike Pearce
+<button type="button" class="copy-btn" data-copy="Mike Pearce
 Business Director
 317-552-8272
-mike.pearce@eutrophix.com" aria-label="Copy Mike Pearce's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+mike.pearce@eutrophix.com" aria-label="Copy Mike Pearce's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Business Director">Business Director</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3175528272">317-552-8272</a></td>
@@ -613,10 +614,10 @@ mike.pearce@eutrophix.com" aria-label="Copy Mike Pearce's contact details"><svg 
   <td class="c-name" data-label="Name"><strong>Scott Shuler</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Scott Shuler
+<button type="button" class="copy-btn" data-copy="Scott Shuler
 Director of Technology &amp; Operations
 317-703-9510
-scotts@eutrophix.com" aria-label="Copy Scott Shuler's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+scotts@eutrophix.com" aria-label="Copy Scott Shuler's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Director of Technology &amp; Operations">Director of Technology &amp; Operations</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3177039510">317-703-9510</a></td>
@@ -628,10 +629,10 @@ scotts@eutrophix.com" aria-label="Copy Scott Shuler's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Ryan Van Goethem</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Ryan Van Goethem
+<button type="button" class="copy-btn" data-copy="Ryan Van Goethem
 Limnologist &amp; Operations Manager
 303-229-9622
-ryanv@eutrophix.com" aria-label="Copy Ryan Van Goethem's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+ryanv@eutrophix.com" aria-label="Copy Ryan Van Goethem's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Limnologist &amp; Operations Manager">Limnologist &amp; Operations Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3032299622">303-229-9622</a></td>
@@ -658,10 +659,10 @@ ryanv@eutrophix.com" aria-label="Copy Ryan Van Goethem's contact details"><svg v
   <td class="c-name" data-label="Name"><strong>Alexis Fischer, Ph.D.</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Alexis Fischer, Ph.D.
+<button type="button" class="copy-btn" data-copy="Alexis Fischer, Ph.D.
 Business Development Manager, West
 831-706-8523
-alexis.fischer@eutrophix.com" aria-label="Copy Alexis Fischer, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+alexis.fischer@eutrophix.com" aria-label="Copy Alexis Fischer, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Business Development Manager, West">Business Development Manager, West</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:8317068523">831-706-8523</a></td>
@@ -677,10 +678,10 @@ alexis.fischer@eutrophix.com" aria-label="Copy Alexis Fischer, Ph.D.'s contact d
   <td class="c-name" data-label="Name"><strong>Shannon Junior</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Shannon Junior
+<button type="button" class="copy-btn" data-copy="Shannon Junior
 Water Quality Specialist
 540-830-6547
-shannon.junior@eutrophix.com" aria-label="Copy Shannon Junior's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+shannon.junior@eutrophix.com" aria-label="Copy Shannon Junior's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Water Quality Specialist">Water Quality Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:5408306547">540-830-6547</a></td>
@@ -696,14 +697,14 @@ shannon.junior@eutrophix.com" aria-label="Copy Shannon Junior's contact details"
   <td class="c-name" data-label="Name"><strong>Rory Roten</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Rory Roten
+<button type="button" class="copy-btn" data-copy="Rory Roten
 Business Development Manager, East
 321-890-4367
-roryr@sepro.com" aria-label="Copy Rory Roten's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+roryr@eutrophix.com" aria-label="Copy Rory Roten's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Business Development Manager, East">Business Development Manager, East</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3218904367">321-890-4367</a></td>
-  <td class="c-email" data-label="Email"><a href="mailto:roryr@sepro.com">roryr@sepro.com</a></td>
+  <td class="c-email" data-label="Email"><a href="mailto:roryr@eutrophix.com">roryr@eutrophix.com</a></td>
   <td class="c-states" data-label="States">AL AR CT DC DE GA IA IL IN KY LA MA MD ME MI MN MO MS NC NH NJ NY OH PA RI SC TN VA VT WI WV</td>
 </tr>
 
@@ -715,10 +716,10 @@ roryr@sepro.com" aria-label="Copy Rory Roten's contact details"><svg viewBox="0 
   <td class="c-name" data-label="Name"><strong>Pamela Dugan, Ph.D.</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Pamela Dugan, Ph.D.
+<button type="button" class="copy-btn" data-copy="Pamela Dugan, Ph.D.
 Water Quality Specialist
 317-495-5657
-pamelad@eutrophix.com" aria-label="Copy Pamela Dugan, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+pamelad@eutrophix.com" aria-label="Copy Pamela Dugan, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Water Quality Specialist">Water Quality Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3174955657">317-495-5657</a></td>
@@ -734,10 +735,10 @@ pamelad@eutrophix.com" aria-label="Copy Pamela Dugan, Ph.D.'s contact details"><
   <td class="c-name" data-label="Name"><strong>Abbey Gering</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Abbey Gering
+<button type="button" class="copy-btn" data-copy="Abbey Gering
 Limnologist &amp; Project Lead
 317-509-4745
-abbey.gering@eutrophix.com" aria-label="Copy Abbey Gering's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+abbey.gering@eutrophix.com" aria-label="Copy Abbey Gering's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Limnologist &amp; Project Lead">Limnologist &amp; Project Lead</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3175094745">317-509-4745</a></td>
@@ -789,10 +790,10 @@ abbey.gering@eutrophix.com" aria-label="Copy Abbey Gering's contact details"><sv
   <td class="c-name" data-label="Name"><strong>Casey Zeller</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Casey Zeller
+<button type="button" class="copy-btn" data-copy="Casey Zeller
 Director, SEPRO Land
 317-417-6343
-caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Director, SEPRO Land">Director, SEPRO Land</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3174176343">317-417-6343</a></td>
@@ -804,10 +805,10 @@ caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox=
   <td class="c-name" data-label="Name"><strong>Brock Behme</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Brock Behme
+<button type="button" class="copy-btn" data-copy="Brock Behme
 Marketing Manager
 309-620-0230
-brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Marketing Manager">Marketing Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3096200230">309-620-0230</a></td>
@@ -819,10 +820,10 @@ brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Kyle Briscoe, Ph.D.</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Kyle Briscoe, Ph.D.
+<button type="button" class="copy-btn" data-copy="Kyle Briscoe, Ph.D.
 Senior Research Manager – Portfolio Dev.
 252-947-5790
-kyleb@sepro.com" aria-label="Copy Kyle Briscoe, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+kyleb@sepro.com" aria-label="Copy Kyle Briscoe, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Senior Research Manager – Portfolio Dev.">Senior Research Manager – Portfolio Dev.</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:2529475790">252-947-5790</a></td>
@@ -834,10 +835,10 @@ kyleb@sepro.com" aria-label="Copy Kyle Briscoe, Ph.D.'s contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Erick Begitschke, Ph.D.</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Erick Begitschke, Ph.D.
+<button type="button" class="copy-btn" data-copy="Erick Begitschke, Ph.D.
 Technical Development Manager
 252-904-7759
-erick.begitschke@sepro.com" aria-label="Copy Erick Begitschke, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+erick.begitschke@sepro.com" aria-label="Copy Erick Begitschke, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Development Manager">Technical Development Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:2529047759">252-904-7759</a></td>
@@ -849,10 +850,10 @@ erick.begitschke@sepro.com" aria-label="Copy Erick Begitschke, Ph.D.'s contact d
   <td class="c-name" data-label="Name"><strong>Joe Lynch</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Joe Lynch
+<button type="button" class="copy-btn" data-copy="Joe Lynch
 National Sales Manager
 973-567-1170
-josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="National Sales Manager">National Sales Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:9735671170">973-567-1170</a></td>
@@ -879,10 +880,10 @@ josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0
   <td class="c-name" data-label="Name"><strong>Marc Snyder</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Marc Snyder
+<button type="button" class="copy-btn" data-copy="Marc Snyder
 Technical Specialist
 480-915-7940
-marc.snyder@sepro.com" aria-label="Copy Marc Snyder's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+marc.snyder@sepro.com" aria-label="Copy Marc Snyder's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:4809157940">480-915-7940</a></td>
@@ -898,10 +899,10 @@ marc.snyder@sepro.com" aria-label="Copy Marc Snyder's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>Nick Bannach</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Nick Bannach
+<button type="button" class="copy-btn" data-copy="Nick Bannach
 Technical Specialist
 331-231-0124
-nick.bannach@sepro.com" aria-label="Copy Nick Bannach's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+nick.bannach@sepro.com" aria-label="Copy Nick Bannach's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3312310124">331-231-0124</a></td>
@@ -917,10 +918,10 @@ nick.bannach@sepro.com" aria-label="Copy Nick Bannach's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Troy Coker</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Troy Coker
+<button type="button" class="copy-btn" data-copy="Troy Coker
 Technical Specialist
 317-495-8861
-troyc@sepro.com" aria-label="Copy Troy Coker's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+troyc@sepro.com" aria-label="Copy Troy Coker's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3174958861">317-495-8861</a></td>
@@ -936,10 +937,10 @@ troyc@sepro.com" aria-label="Copy Troy Coker's contact details"><svg viewBox="0 
   <td class="c-name" data-label="Name"><strong>Joe Lynch</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Joe Lynch
+<button type="button" class="copy-btn" data-copy="Joe Lynch
 National Sales Manager
 973-567-1170
-josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="National Sales Manager">National Sales Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:9735671170">973-567-1170</a></td>
@@ -955,10 +956,10 @@ josephl@sepro.com" aria-label="Copy Joe Lynch's contact details"><svg viewBox="0
   <td class="c-name" data-label="Name"><strong>Clint Formby</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Clint Formby
+<button type="button" class="copy-btn" data-copy="Clint Formby
 Technical Specialist
 512-417-5662
-clintf@sepro.com" aria-label="Copy Clint Formby's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+clintf@sepro.com" aria-label="Copy Clint Formby's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:5124175662">512-417-5662</a></td>
@@ -976,10 +977,10 @@ clintf@sepro.com" aria-label="Copy Clint Formby's contact details"><svg viewBox=
   <td class="c-name" data-label="Name"><strong>Mark Prospect</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Mark Prospect
+<button type="button" class="copy-btn" data-copy="Mark Prospect
 Technical Specialist
 317-601-2559
-mark.prospect@sepro.com" aria-label="Copy Mark Prospect's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+mark.prospect@sepro.com" aria-label="Copy Mark Prospect's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3176012559">317-601-2559</a></td>
@@ -1015,10 +1016,10 @@ mark.prospect@sepro.com" aria-label="Copy Mark Prospect's contact details"><svg 
   <td class="c-name" data-label="Name"><strong>Casey Zeller</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Casey Zeller
+<button type="button" class="copy-btn" data-copy="Casey Zeller
 Director, SEPRO Land
 317-417-6343
-caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Director, SEPRO Land">Director, SEPRO Land</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3174176343">317-417-6343</a></td>
@@ -1030,10 +1031,10 @@ caseyz@sepro.com" aria-label="Copy Casey Zeller's contact details"><svg viewBox=
   <td class="c-name" data-label="Name"><strong>Brock Behme</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Brock Behme
+<button type="button" class="copy-btn" data-copy="Brock Behme
 Marketing Manager
 309-620-0230
-brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Marketing Manager">Marketing Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3096200230">309-620-0230</a></td>
@@ -1045,10 +1046,10 @@ brock.behme@sepro.com" aria-label="Copy Brock Behme's contact details"><svg view
   <td class="c-name" data-label="Name"><strong>JC Chong, Ph.D.</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="JC Chong, Ph.D.
+<button type="button" class="copy-btn" data-copy="JC Chong, Ph.D.
 Technical Development Manager
 786-525-0717
-jc.chong@sepro.com" aria-label="Copy JC Chong, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+jc.chong@sepro.com" aria-label="Copy JC Chong, Ph.D.'s contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Development Manager">Technical Development Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:7865250717">786-525-0717</a></td>
@@ -1060,10 +1061,10 @@ jc.chong@sepro.com" aria-label="Copy JC Chong, Ph.D.'s contact details"><svg vie
   <td class="c-name" data-label="Name"><strong>Dennis Bunkley</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Dennis Bunkley
+<button type="button" class="copy-btn" data-copy="Dennis Bunkley
 National Sales Manager
 407-504-9900
-dennisb@sepro.com" aria-label="Copy Dennis Bunkley's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+dennisb@sepro.com" aria-label="Copy Dennis Bunkley's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="National Sales Manager">National Sales Manager</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:4075049900">407-504-9900</a></td>
@@ -1090,10 +1091,10 @@ dennisb@sepro.com" aria-label="Copy Dennis Bunkley's contact details"><svg viewB
   <td class="c-name" data-label="Name"><strong>Cameron Smith</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Cameron Smith
+<button type="button" class="copy-btn" data-copy="Cameron Smith
 Technical Specialist
 407-504-9900
-cameron.smith@sepro.com" aria-label="Copy Cameron Smith's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+cameron.smith@sepro.com" aria-label="Copy Cameron Smith's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:4075049900">407-504-9900</a></td>
@@ -1109,10 +1110,10 @@ cameron.smith@sepro.com" aria-label="Copy Cameron Smith's contact details"><svg 
   <td class="c-name" data-label="Name"><strong>Todd Stassel</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Todd Stassel
+<button type="button" class="copy-btn" data-copy="Todd Stassel
 Technical Specialist
 417-689-2547
-todds@sepro.com" aria-label="Copy Todd Stassel's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+todds@sepro.com" aria-label="Copy Todd Stassel's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:4176892547">417-689-2547</a></td>
@@ -1128,10 +1129,10 @@ todds@sepro.com" aria-label="Copy Todd Stassel's contact details"><svg viewBox="
   <td class="c-name" data-label="Name"><strong>Billy Morrow</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Billy Morrow
+<button type="button" class="copy-btn" data-copy="Billy Morrow
 Technical Specialist
 317-617-3175
-billy.morrow@sepro.com" aria-label="Copy Billy Morrow's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+billy.morrow@sepro.com" aria-label="Copy Billy Morrow's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:3176173175">317-617-3175</a></td>
@@ -1147,10 +1148,10 @@ billy.morrow@sepro.com" aria-label="Copy Billy Morrow's contact details"><svg vi
   <td class="c-name" data-label="Name"><strong>Ben Keyes</strong>
 
 
-<button type="button" class="copy-btn copy-ico" data-copy="Ben Keyes
+<button type="button" class="copy-btn" data-copy="Ben Keyes
 Technical Specialist
 786-525-0717
-ben.keyes@sepro.com" aria-label="Copy Ben Keyes's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+ben.keyes@sepro.com" aria-label="Copy Ben Keyes's contact details"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="cb-t">Copy</span></button>
 </td>
   <td class="c-title" data-label="Job title"><span class="clamp" title="Technical Specialist">Technical Specialist</span></td>
   <td class="c-phone" data-label="Phone"><a href="tel:7865250717">786-525-0717</a></td>
@@ -1171,12 +1172,12 @@ ben.keyes@sepro.com" aria-label="Copy Ben Keyes's contact details"><svg viewBox=
 
 <script src="/js/dirpdf.min.5b35ff33e227077997067b86272533be99fc69ee53ef0ea7e701c8d094dbde9e.js" integrity="sha256-WzX/M&#43;InB3mXBnuGJyUzvpn8ae5T7w6n5wHI0JTb3p4="></script>
 
-<script src="/js/dirsearch.min.d126bb03928bcbbea5d7ee0073c3a639cf8d5677cecbcdb5fd1ad419db667e79.js" integrity="sha256-0Sa7A5KLy76l1&#43;4Ac8OmOc&#43;NVnfOy821/RrUGdtmfnk="></script>
+<script src="/js/dirsearch.min.4059d349fffbfffaacce09f3c6368b64621b4842325980d304e5028c1252371e.js" integrity="sha256-QFnTSf/7//qszgnzxjaLZGIbSEIyWYDTBOUCjBJSNx4="></script>
 
   
   
   
-  <script id="search-data" type="application/json">{"all":[{"brand":"water","id":"water","national":null,"nav":"Water","territories":[{"color":"#77aadd","contacts":[{"email":"travisf@sepro.com","name":"Travis Fuller","phone":"509-385-3549","title":"Technical Specialist"}],"group":"West Region","id":"northwest","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Northwest","states":["WA","OR","ID","MT","AK"]},{"color":"#ee8866","contacts":[{"email":"jeremey.varley@sepro.com","name":"Jeremey Varley","phone":"317-741-6927","title":"Technical Specialist"}],"group":"West Region","id":"southwest","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Southwest","states":["CA","NV","AZ","HI"]},{"color":"#44bb99","contacts":[{"email":"kyra.florea@sepro.com","name":"Kyra Florea","phone":"720-582-9145","title":"Technical Specialist"}],"group":"West Region","id":"mountain-plains","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Mountain \u0026 Plains","states":["UT","CO","NM","WY","ND","SD","NE","KS"]},{"color":"#eeee88","contacts":[{"email":"williamr@sepro.com","name":"Bill Ratajczyk","phone":"651-303-1198","title":"Technical Specialist"}],"group":"North Region","id":"upper-midwest","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Upper Midwest","states":["MN","WI","IA","MO","IL"]},{"color":"#ffaabb","contacts":[{"email":"mckenna.hinz@sepro.com","name":"McKenna Hinz","phone":"317-407-8106","title":"Technical Specialist"}],"group":"North Region","id":"great-lakes","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Great Lakes","states":["MI","IN","OH","KY"]},{"color":"#bbcc33","contacts":[{"email":"josh.burnside@sepro.com","name":"Josh Burnside","phone":"267-605-2381","title":"Technical Specialist"}],"group":"North Region","id":"northeast","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Northeast","states":["PA","NY","VT","NH","MA","RI","CT","ME","NJ"]},{"color":"#ab97c0","contacts":[{"name":"Open position","title":"Please contact Todd Horton"}],"group":"South Region","id":"mid-atlantic","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Mid-Atlantic (Open)","states":["WV","VA","NC","MD","DE","DC"]},{"color":"#6b9b6a","contacts":[{"name":"Open position","title":"Please contact Todd Horton"}],"group":"South Region","id":"southeast-open","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Southeast (Open)","states":["TN","AL","GA","SC"]},{"color":"#A9D8F5","contacts":[{"email":"joey.kauppi@sepro.com","name":"Joey Kauppi","phone":"682-220-5513","title":"Technical Specialist"}],"group":"South Region","id":"south-central","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"South Central","states":["TX","OK","AR","LA","MS"]},{"color":"#C4C8CF","contacts":[{"email":"joshm@sepro.com","name":"Josh McGarry","phone":"813-545-3651","title":"Technical Specialist"},{"email":"alicia.knecht@sepro.com","name":"Alicia Knecht-Dilling","phone":"317-601-5316","title":"Technical Specialist"}],"group":"South Region","id":"florida","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Florida","states":["FL"]}],"title":"Water Team","url":"/divisions/water/"},{"brand":"water","id":"municipal-industrial","national":[{"email":"jeremy.slade@sepro.com","name":"Jeremy Slade","phone":"386-628-8500","title":"Market Development Manager"},{"email":"david.hammond@sepro.com","name":"Dr. David Hammond","phone":"510-289-3310","title":"Senior Scientist"},{"email":"amber.talley@sepro.com","name":"Amber Talley-Benight","phone":"479-264-7926","title":"Director of Portfolio Integration"}],"nav":"Municipal \u0026 Industrial","territories":[{"color":"#C4C8CF","contacts":[{"email":"robert.noble@sepro.com","name":"Robert Noble","phone":"916-952-9814","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","MT","ND","SD","WY","NE","NV","UT","CO","KS","CA","AZ","NM","OK","TX","HI","AK"]},{"color":"#A9D8F5","contacts":[{"email":"doug.barnett@sepro.com","name":"Doug Barnett","phone":"317-719-8222","title":"Technical Specialist"}],"id":"east","name":"East","states":["MN","IA","MO","AR","LA","MS","AL","GA","SC","NC","VA","WV","KY","TN","IN","OH","MI","IL","WI","PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME","FL"]}],"title":"Municipal \u0026 Industrial Team","url":"/divisions/municipal-industrial/"},{"brand":"water","id":"eutrophix","national":[{"email":"mike.pearce@eutrophix.com","name":"Mike Pearce","phone":"317-552-8272","title":"Business Director"},{"email":"scotts@eutrophix.com","name":"Scott Shuler","phone":"317-703-9510","title":"Director of Technology \u0026 Operations"},{"email":"ryanv@eutrophix.com","name":"Ryan Van Goethem","phone":"303-229-9622","title":"Limnologist \u0026 Operations Manager"}],"nav":"EutroPHIX","territories":[{"color":"#C4C8CF","contacts":[{"email":"alexis.fischer@eutrophix.com","name":"Alexis Fischer, Ph.D.","phone":"831-706-8523","title":"Business Development Manager, West"}],"id":"west","name":"West","states":["WA","OR","ID","MT","ND","SD","WY","NE","NV","UT","CO","KS","CA","AZ","NM","OK","TX","HI","AK"]},{"color":"#A9D8F5","contacts":[{"email":"shannon.junior@eutrophix.com","name":"Shannon Junior","phone":"540-830-6547","title":"Water Quality Specialist"},{"email":"roryr@sepro.com","name":"Rory Roten","phone":"321-890-4367","title":"Business Development Manager, East"}],"id":"east","name":"East","states":["MN","IA","MO","AR","LA","MS","AL","GA","SC","NC","VA","WV","KY","TN","IN","OH","MI","IL","WI","PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME"]},{"color":"#2C9ADB","contacts":[{"email":"pamelad@eutrophix.com","name":"Pamela Dugan, Ph.D.","phone":"317-495-5657","title":"Water Quality Specialist"},{"email":"abbey.gering@eutrophix.com","name":"Abbey Gering","phone":"317-509-4745","title":"Limnologist \u0026 Project Lead"}],"id":"florida","name":"Florida","states":["FL"]}],"title":"EutroPHIX","url":"/divisions/eutrophix/"},{"brand":"land","id":"turf-landscape","national":[{"email":"caseyz@sepro.com","name":"Casey Zeller","phone":"317-417-6343","title":"Director, SEPRO Land"},{"email":"brock.behme@sepro.com","name":"Brock Behme","phone":"309-620-0230","title":"Marketing Manager"},{"email":"kyleb@sepro.com","name":"Kyle Briscoe, Ph.D.","phone":"252-947-5790","title":"Senior Research Manager – Portfolio Dev."},{"email":"erick.begitschke@sepro.com","name":"Erick Begitschke, Ph.D.","phone":"252-904-7759","title":"Technical Development Manager"},{"email":"josephl@sepro.com","name":"Joe Lynch","phone":"973-567-1170","title":"National Sales Manager"}],"nav":"Turf \u0026 Landscape","territories":[{"color":"#EE8866","contacts":[{"email":"marc.snyder@sepro.com","name":"Marc Snyder","phone":"480-915-7940","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","NV","CA","UT","AZ","AK","HI"]},{"color":"#44BB99","contacts":[{"email":"nick.bannach@sepro.com","name":"Nick Bannach","phone":"331-231-0124","title":"Technical Specialist"}],"id":"north-central","name":"North Central","states":["MT","ND","SD","NE","MN","WI","IA","IL"]},{"color":"#eeee88","contacts":[{"email":"troyc@sepro.com","name":"Troy Coker","phone":"317-495-8861","title":"Technical Specialist"}],"id":"midwest","name":"Midwest","states":["MI","IN","OH","KY","WV"]},{"color":"#ffaabb","contacts":[{"email":"josephl@sepro.com","name":"Joe Lynch","phone":"973-567-1170","title":"National Sales Manager"}],"id":"northeast","name":"Northeast","states":["PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME"]},{"color":"#bbcc33","contacts":[{"email":"clintf@sepro.com","name":"Clint Formby","phone":"512-417-5662","title":"Technical Specialist"}],"id":"south-central","name":"South Central","states":["WY","CO","NM","KS","OK","TX","MO","AR","LA"]},{"color":"#ab97c0","contacts":[{"name":"Open position","title":"Please contact Joe Lynch"}],"id":"southeast","name":"Southeast (Open)","states":["VA","NC","SC","GA","AL","MS","TN"]},{"color":"#6b9b6a","contacts":[{"email":"mark.prospect@sepro.com","name":"Mark Prospect","phone":"317-601-2559","title":"Technical Specialist"}],"id":"florida","name":"Florida","states":["FL"]}],"title":"Turf \u0026 Landscape Team","url":"/divisions/turf-landscape/"},{"brand":"land","id":"ornamental","national":[{"email":"caseyz@sepro.com","name":"Casey Zeller","phone":"317-417-6343","title":"Director, SEPRO Land"},{"email":"brock.behme@sepro.com","name":"Brock Behme","phone":"309-620-0230","title":"Marketing Manager"},{"email":"jc.chong@sepro.com","name":"JC Chong, Ph.D.","phone":"786-525-0717","title":"Technical Development Manager"},{"email":"dennisb@sepro.com","name":"Dennis Bunkley","phone":"407-504-9900","title":"National Sales Manager"}],"nav":"Ornamental","territories":[{"color":"#44bb99","contacts":[{"email":"cameron.smith@sepro.com","name":"Cameron Smith","phone":"407-504-9900","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","NV","CA","UT","AZ","AK","HI"]},{"color":"#ab97c0","contacts":[{"email":"todds@sepro.com","name":"Todd Stassel","phone":"417-689-2547","title":"Technical Specialist"}],"id":"central","name":"Central","states":["MT","WY","ND","SD","NE","KS","CO","NM","OK","TX","MN","IA","MO","WI","IL","AR","LA","MS","TN","KY"]},{"color":"#ee8866","contacts":[{"email":"billy.morrow@sepro.com","name":"Billy Morrow","phone":"317-617-3175","title":"Technical Specialist"}],"id":"northeast","name":"Northeast","states":["MI","IN","OH","PA","NY","VT","NH","MA","RI","CT","ME","NJ","DE","MD","DC","WV","VA"]},{"color":"#6b9b6a","contacts":[{"email":"ben.keyes@sepro.com","name":"Ben Keyes","phone":"786-525-0717","title":"Technical Specialist"}],"id":"southeast","name":"Southeast","states":["NC","SC","GA","AL","FL"]}],"title":"Ornamental Team","url":"/divisions/ornamental/"}],"states":{"01":{"abbr":"AL","name":"Alabama"},"02":{"abbr":"AK","name":"Alaska"},"04":{"abbr":"AZ","name":"Arizona"},"05":{"abbr":"AR","name":"Arkansas"},"06":{"abbr":"CA","name":"California"},"08":{"abbr":"CO","name":"Colorado"},"09":{"abbr":"CT","name":"Connecticut"},"10":{"abbr":"DE","name":"Delaware"},"11":{"abbr":"DC","name":"District of Columbia"},"12":{"abbr":"FL","name":"Florida"},"13":{"abbr":"GA","name":"Georgia"},"15":{"abbr":"HI","name":"Hawaii"},"16":{"abbr":"ID","name":"Idaho"},"17":{"abbr":"IL","name":"Illinois"},"18":{"abbr":"IN","name":"Indiana"},"19":{"abbr":"IA","name":"Iowa"},"20":{"abbr":"KS","name":"Kansas"},"21":{"abbr":"KY","name":"Kentucky"},"22":{"abbr":"LA","name":"Louisiana"},"23":{"abbr":"ME","name":"Maine"},"24":{"abbr":"MD","name":"Maryland"},"25":{"abbr":"MA","name":"Massachusetts"},"26":{"abbr":"MI","name":"Michigan"},"27":{"abbr":"MN","name":"Minnesota"},"28":{"abbr":"MS","name":"Mississippi"},"29":{"abbr":"MO","name":"Missouri"},"30":{"abbr":"MT","name":"Montana"},"31":{"abbr":"NE","name":"Nebraska"},"32":{"abbr":"NV","name":"Nevada"},"33":{"abbr":"NH","name":"New Hampshire"},"34":{"abbr":"NJ","name":"New Jersey"},"35":{"abbr":"NM","name":"New Mexico"},"36":{"abbr":"NY","name":"New York"},"37":{"abbr":"NC","name":"North Carolina"},"38":{"abbr":"ND","name":"North Dakota"},"39":{"abbr":"OH","name":"Ohio"},"40":{"abbr":"OK","name":"Oklahoma"},"41":{"abbr":"OR","name":"Oregon"},"42":{"abbr":"PA","name":"Pennsylvania"},"44":{"abbr":"RI","name":"Rhode Island"},"45":{"abbr":"SC","name":"South Carolina"},"46":{"abbr":"SD","name":"South Dakota"},"47":{"abbr":"TN","name":"Tennessee"},"48":{"abbr":"TX","name":"Texas"},"49":{"abbr":"UT","name":"Utah"},"50":{"abbr":"VT","name":"Vermont"},"51":{"abbr":"VA","name":"Virginia"},"53":{"abbr":"WA","name":"Washington"},"54":{"abbr":"WV","name":"West Virginia"},"55":{"abbr":"WI","name":"Wisconsin"},"56":{"abbr":"WY","name":"Wyoming"}}}</script>
+  <script id="search-data" type="application/json">{"all":[{"brand":"water","id":"water","national":null,"nav":"Water","territories":[{"color":"#77aadd","contacts":[{"email":"travisf@sepro.com","name":"Travis Fuller","phone":"509-385-3549","title":"Technical Specialist"}],"group":"West Region","id":"northwest","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Northwest","states":["WA","OR","ID","MT","AK"]},{"color":"#ee8866","contacts":[{"email":"jeremey.varley@sepro.com","name":"Jeremey Varley","phone":"317-741-6927","title":"Technical Specialist"}],"group":"West Region","id":"southwest","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Southwest","states":["CA","NV","AZ","HI"]},{"color":"#44bb99","contacts":[{"email":"kyra.florea@sepro.com","name":"Kyra Florea","phone":"720-582-9145","title":"Technical Specialist"}],"group":"West Region","id":"mountain-plains","managers":[{"email":"andreas@sepro.com","name":"Andrea Sealock","phone":"925-536-6692","title":"Regional Manager - West"}],"name":"Mountain \u0026 Plains","states":["UT","CO","NM","WY","ND","SD","NE","KS"]},{"color":"#eeee88","contacts":[{"email":"williamr@sepro.com","name":"Bill Ratajczyk","phone":"651-303-1198","title":"Technical Specialist"}],"group":"North Region","id":"upper-midwest","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Upper Midwest","states":["MN","WI","IA","MO","IL"]},{"color":"#ffaabb","contacts":[{"email":"mckenna.hinz@sepro.com","name":"McKenna Hinz","phone":"317-407-8106","title":"Technical Specialist"}],"group":"North Region","id":"great-lakes","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Great Lakes","states":["MI","IN","OH","KY"]},{"color":"#bbcc33","contacts":[{"email":"josh.burnside@sepro.com","name":"Josh Burnside","phone":"267-605-2381","title":"Technical Specialist"}],"group":"North Region","id":"northeast","managers":[{"email":"jgoidosik@sepro.com","name":"John Goidosik","phone":"810-618-5414","title":"Regional Manager - North"}],"name":"Northeast","states":["PA","NY","VT","NH","MA","RI","CT","ME","NJ"]},{"color":"#ab97c0","contacts":[{"name":"Open position","title":"Please contact Todd Horton"}],"group":"South Region","id":"mid-atlantic","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Mid-Atlantic (Open)","states":["WV","VA","NC","MD","DE","DC"]},{"color":"#6b9b6a","contacts":[{"name":"Open position","title":"Please contact Todd Horton"}],"group":"South Region","id":"southeast-open","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Southeast (Open)","states":["TN","AL","GA","SC"]},{"color":"#A9D8F5","contacts":[{"email":"joey.kauppi@sepro.com","name":"Joey Kauppi","phone":"682-220-5513","title":"Technical Specialist"}],"group":"South Region","id":"south-central","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"South Central","states":["TX","OK","AR","LA","MS"]},{"color":"#C4C8CF","contacts":[{"email":"joshm@sepro.com","name":"Josh McGarry","phone":"813-545-3651","title":"Technical Specialist"},{"email":"alicia.knecht@sepro.com","name":"Alicia Knecht-Dilling","phone":"317-601-5316","title":"Technical Specialist"}],"group":"South Region","id":"florida","managers":[{"email":"toddh@sepro.com","name":"Todd Horton","phone":"864-561-3640","title":"Regional Manager - South"}],"name":"Florida","states":["FL"]}],"title":"Water Team","url":"/divisions/water/"},{"brand":"water","id":"municipal-industrial","national":[{"email":"jeremy.slade@sepro.com","name":"Jeremy Slade","phone":"386-628-8500","title":"Market Development Manager"},{"email":"david.hammond@sepro.com","name":"Dr. David Hammond","phone":"510-289-3310","title":"Senior Scientist"},{"email":"amber.talley@sepro.com","name":"Amber Talley-Benight","phone":"479-264-7926","title":"Director of Portfolio Integration"}],"nav":"Municipal \u0026 Industrial","territories":[{"color":"#C4C8CF","contacts":[{"email":"robert.noble@sepro.com","name":"Robert Noble","phone":"916-952-9814","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","MT","ND","SD","WY","NE","NV","UT","CO","KS","CA","AZ","NM","OK","TX","HI","AK"]},{"color":"#A9D8F5","contacts":[{"email":"doug.barnett@sepro.com","name":"Doug Barnett","phone":"317-719-8222","title":"Technical Specialist"}],"id":"east","name":"East","states":["MN","IA","MO","AR","LA","MS","AL","GA","SC","NC","VA","WV","KY","TN","IN","OH","MI","IL","WI","PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME","FL"]}],"title":"Municipal \u0026 Industrial Team","url":"/divisions/municipal-industrial/"},{"brand":"water","id":"eutrophix","national":[{"email":"mike.pearce@eutrophix.com","name":"Mike Pearce","phone":"317-552-8272","title":"Business Director"},{"email":"scotts@eutrophix.com","name":"Scott Shuler","phone":"317-703-9510","title":"Director of Technology \u0026 Operations"},{"email":"ryanv@eutrophix.com","name":"Ryan Van Goethem","phone":"303-229-9622","title":"Limnologist \u0026 Operations Manager"}],"nav":"EutroPHIX","territories":[{"color":"#C4C8CF","contacts":[{"email":"alexis.fischer@eutrophix.com","name":"Alexis Fischer, Ph.D.","phone":"831-706-8523","title":"Business Development Manager, West"}],"id":"west","name":"West","states":["WA","OR","ID","MT","ND","SD","WY","NE","NV","UT","CO","KS","CA","AZ","NM","OK","TX","HI","AK"]},{"color":"#A9D8F5","contacts":[{"email":"shannon.junior@eutrophix.com","name":"Shannon Junior","phone":"540-830-6547","title":"Water Quality Specialist"},{"email":"roryr@eutrophix.com","name":"Rory Roten","phone":"321-890-4367","title":"Business Development Manager, East"}],"id":"east","name":"East","states":["MN","IA","MO","AR","LA","MS","AL","GA","SC","NC","VA","WV","KY","TN","IN","OH","MI","IL","WI","PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME"]},{"color":"#2C9ADB","contacts":[{"email":"pamelad@eutrophix.com","name":"Pamela Dugan, Ph.D.","phone":"317-495-5657","title":"Water Quality Specialist"},{"email":"abbey.gering@eutrophix.com","name":"Abbey Gering","phone":"317-509-4745","title":"Limnologist \u0026 Project Lead"}],"id":"florida","name":"Florida","states":["FL"]}],"title":"EutroPHIX","url":"/divisions/eutrophix/"},{"brand":"land","id":"turf-landscape","national":[{"email":"caseyz@sepro.com","name":"Casey Zeller","phone":"317-417-6343","title":"Director, SEPRO Land"},{"email":"brock.behme@sepro.com","name":"Brock Behme","phone":"309-620-0230","title":"Marketing Manager"},{"email":"kyleb@sepro.com","name":"Kyle Briscoe, Ph.D.","phone":"252-947-5790","title":"Senior Research Manager – Portfolio Dev."},{"email":"erick.begitschke@sepro.com","name":"Erick Begitschke, Ph.D.","phone":"252-904-7759","title":"Technical Development Manager"},{"email":"josephl@sepro.com","name":"Joe Lynch","phone":"973-567-1170","title":"National Sales Manager"}],"nav":"Turf \u0026 Landscape","territories":[{"color":"#EE8866","contacts":[{"email":"marc.snyder@sepro.com","name":"Marc Snyder","phone":"480-915-7940","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","NV","CA","UT","AZ","AK","HI"]},{"color":"#44BB99","contacts":[{"email":"nick.bannach@sepro.com","name":"Nick Bannach","phone":"331-231-0124","title":"Technical Specialist"}],"id":"north-central","name":"North Central","states":["MT","ND","SD","NE","MN","WI","IA","IL"]},{"color":"#eeee88","contacts":[{"email":"troyc@sepro.com","name":"Troy Coker","phone":"317-495-8861","title":"Technical Specialist"}],"id":"midwest","name":"Midwest","states":["MI","IN","OH","KY","WV"]},{"color":"#ffaabb","contacts":[{"email":"josephl@sepro.com","name":"Joe Lynch","phone":"973-567-1170","title":"National Sales Manager"}],"id":"northeast","name":"Northeast","states":["PA","NY","NJ","DE","MD","DC","CT","RI","MA","VT","NH","ME"]},{"color":"#bbcc33","contacts":[{"email":"clintf@sepro.com","name":"Clint Formby","phone":"512-417-5662","title":"Technical Specialist"}],"id":"south-central","name":"South Central","states":["WY","CO","NM","KS","OK","TX","MO","AR","LA"]},{"color":"#ab97c0","contacts":[{"name":"Open position","title":"Please contact Joe Lynch"}],"id":"southeast","name":"Southeast (Open)","states":["VA","NC","SC","GA","AL","MS","TN"]},{"color":"#6b9b6a","contacts":[{"email":"mark.prospect@sepro.com","name":"Mark Prospect","phone":"317-601-2559","title":"Technical Specialist"}],"id":"florida","name":"Florida","states":["FL"]}],"title":"Turf \u0026 Landscape Team","url":"/divisions/turf-landscape/"},{"brand":"land","id":"ornamental","national":[{"email":"caseyz@sepro.com","name":"Casey Zeller","phone":"317-417-6343","title":"Director, SEPRO Land"},{"email":"brock.behme@sepro.com","name":"Brock Behme","phone":"309-620-0230","title":"Marketing Manager"},{"email":"jc.chong@sepro.com","name":"JC Chong, Ph.D.","phone":"786-525-0717","title":"Technical Development Manager"},{"email":"dennisb@sepro.com","name":"Dennis Bunkley","phone":"407-504-9900","title":"National Sales Manager"}],"nav":"Ornamental","territories":[{"color":"#44bb99","contacts":[{"email":"cameron.smith@sepro.com","name":"Cameron Smith","phone":"407-504-9900","title":"Technical Specialist"}],"id":"west","name":"West","states":["WA","OR","ID","NV","CA","UT","AZ","AK","HI"]},{"color":"#ab97c0","contacts":[{"email":"todds@sepro.com","name":"Todd Stassel","phone":"417-689-2547","title":"Technical Specialist"}],"id":"central","name":"Central","states":["MT","WY","ND","SD","NE","KS","CO","NM","OK","TX","MN","IA","MO","WI","IL","AR","LA","MS","TN","KY"]},{"color":"#ee8866","contacts":[{"email":"billy.morrow@sepro.com","name":"Billy Morrow","phone":"317-617-3175","title":"Technical Specialist"}],"id":"northeast","name":"Northeast","states":["MI","IN","OH","PA","NY","VT","NH","MA","RI","CT","ME","NJ","DE","MD","DC","WV","VA"]},{"color":"#6b9b6a","contacts":[{"email":"ben.keyes@sepro.com","name":"Ben Keyes","phone":"786-525-0717","title":"Technical Specialist"}],"id":"southeast","name":"Southeast","states":["NC","SC","GA","AL","FL"]}],"title":"Ornamental Team","url":"/divisions/ornamental/"}],"states":{"01":{"abbr":"AL","name":"Alabama"},"02":{"abbr":"AK","name":"Alaska"},"04":{"abbr":"AZ","name":"Arizona"},"05":{"abbr":"AR","name":"Arkansas"},"06":{"abbr":"CA","name":"California"},"08":{"abbr":"CO","name":"Colorado"},"09":{"abbr":"CT","name":"Connecticut"},"10":{"abbr":"DE","name":"Delaware"},"11":{"abbr":"DC","name":"District of Columbia"},"12":{"abbr":"FL","name":"Florida"},"13":{"abbr":"GA","name":"Georgia"},"15":{"abbr":"HI","name":"Hawaii"},"16":{"abbr":"ID","name":"Idaho"},"17":{"abbr":"IL","name":"Illinois"},"18":{"abbr":"IN","name":"Indiana"},"19":{"abbr":"IA","name":"Iowa"},"20":{"abbr":"KS","name":"Kansas"},"21":{"abbr":"KY","name":"Kentucky"},"22":{"abbr":"LA","name":"Louisiana"},"23":{"abbr":"ME","name":"Maine"},"24":{"abbr":"MD","name":"Maryland"},"25":{"abbr":"MA","name":"Massachusetts"},"26":{"abbr":"MI","name":"Michigan"},"27":{"abbr":"MN","name":"Minnesota"},"28":{"abbr":"MS","name":"Mississippi"},"29":{"abbr":"MO","name":"Missouri"},"30":{"abbr":"MT","name":"Montana"},"31":{"abbr":"NE","name":"Nebraska"},"32":{"abbr":"NV","name":"Nevada"},"33":{"abbr":"NH","name":"New Hampshire"},"34":{"abbr":"NJ","name":"New Jersey"},"35":{"abbr":"NM","name":"New Mexico"},"36":{"abbr":"NY","name":"New York"},"37":{"abbr":"NC","name":"North Carolina"},"38":{"abbr":"ND","name":"North Dakota"},"39":{"abbr":"OH","name":"Ohio"},"40":{"abbr":"OK","name":"Oklahoma"},"41":{"abbr":"OR","name":"Oregon"},"42":{"abbr":"PA","name":"Pennsylvania"},"44":{"abbr":"RI","name":"Rhode Island"},"45":{"abbr":"SC","name":"South Carolina"},"46":{"abbr":"SD","name":"South Dakota"},"47":{"abbr":"TN","name":"Tennessee"},"48":{"abbr":"TX","name":"Texas"},"49":{"abbr":"UT","name":"Utah"},"50":{"abbr":"VT","name":"Vermont"},"51":{"abbr":"VA","name":"Virginia"},"53":{"abbr":"WA","name":"Washington"},"54":{"abbr":"WV","name":"West Virginia"},"55":{"abbr":"WI","name":"Wisconsin"},"56":{"abbr":"WY","name":"Wyoming"}}}</script>
   
   <script src="/js/search.min.c35400646555c4b560d533104742654ebacb3bcfb62b2a34acbcdbfbe0e34bec.js" integrity="sha256-w1QAZGVVxLVg1TMQR0JlTrrLO8&#43;2Kyo0rLzb&#43;&#43;DjS&#43;w="></script>
   
