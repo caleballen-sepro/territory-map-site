@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{ partial "head-meta.html" . }}
   <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
-  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}try{if(sessionStorage.getItem('mapsTray')==='1')document.documentElement.classList.add('maps-open')}catch(e){}</script>
   {{ with site.Params.typography }}{{ if or .fontURL .monoURL }}<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>{{ end }}
   {{ with .fontURL }}<link rel="stylesheet" href="{{ . }}">{{ end }}
@@ -100,6 +100,11 @@
         </form>
         {{ with site.Params.header }}{{ with .cta }}{{ if .url }}<a class="hdr-cta" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .label | default "Request Change" }}</a>{{ end }}{{ end }}{{ end }}
       </div>
+      <nav class="hdr-drawer" id="hdr-drawer" aria-label="Territory maps">
+        <div class="hdr-drawer-in">
+          {{ range (where site.RegularPages "Section" "divisions").ByWeight }}<a href="{{ .RelPermalink }}" class="{{ .Params.brand }}{{ if eq .Permalink $here.Permalink }} current{{ end }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ .Title }}</a>{{ end }}
+        </div>
+      </nav>
     </div>
   </header>
   {{ block "main" . }}{{ end }}
@@ -122,7 +127,12 @@
     var mb=document.getElementById('hdr-maps-btn'),mw=document.querySelector('.hdr-maps');
     if(mb){
       var closeMaps=function(){mw.classList.remove('open');mb.setAttribute('aria-expanded','false')};
-      mb.addEventListener('click',function(){var o=mw.classList.toggle('open');mb.setAttribute('aria-expanded',String(o))});
+      var wide=matchMedia('(min-width:901px)'),root=document.documentElement;
+      var syncTray=function(){if(wide.matches)mb.setAttribute('aria-expanded',String(root.classList.contains('maps-open')))};
+      syncTray();wide.addEventListener&&wide.addEventListener('change',function(){mw.classList.remove('open');mb.setAttribute('aria-expanded','false');syncTray()});
+      mb.addEventListener('click',function(){
+        if(wide.matches){var t=root.classList.toggle('maps-open');mb.setAttribute('aria-expanded',String(t));try{t?sessionStorage.setItem('mapsTray','1'):sessionStorage.removeItem('mapsTray')}catch(e){}return}   // desktop: a second pill drops in under the menu and stays open
+        var o=mw.classList.toggle('open');mb.setAttribute('aria-expanded',String(o))});
       document.addEventListener('click',function(e){if(!e.target.closest('.hdr-maps'))closeMaps()});
       document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMaps()});
     }

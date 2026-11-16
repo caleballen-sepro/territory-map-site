@@ -162,8 +162,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .res-more{padding:.6rem .75rem;font-size:.8rem;color:var(--muted)}
 
 /* ---- Request Change: white pill ---- */
-.hdr-cta{display:inline-flex;align-items:center;align-self:center;padding:.8rem 1.6rem;border-radius:999px;background:#fff;color:#000;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;font-size:.8125rem;font-weight:500;line-height:1;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.14);transition:box-shadow .15s,transform .15s}
-.hdr-cta:hover{box-shadow:0 3px 10px rgba(0,0,0,.22);transform:translateY(-1px)}
+.hdr-cta{display:inline-flex;align-items:center;align-self:center;padding:.85rem 1.4rem;border:1px solid var(--line);border-radius:999px;background:#fff;color:#0e0906;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;font-size:.8125rem;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;transition:background-color .2s ease}   /* the same white button as Desktop Mode */
+.hdr-cta:hover{background:#f1f1ef}
+.hdr-cta:focus-visible{outline:2px solid var(--citrus,#d7e62d);outline-offset:2px}
 @media (max-width:900px){.hdr-cta{align-self:flex-start;margin:.25rem 0 .4rem .75rem}}
 
 /* ---- menu search ---- */
@@ -171,11 +172,16 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-search .ico-search{position:absolute;left:.85rem;pointer-events:none;opacity:.6}
 .hdr-search input{width:15rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
 .hdr-search input::placeholder{color:inherit;opacity:.55}
-.hdr-search input:focus{width:22rem;outline:2px solid #969697;outline-offset:1px}
-.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--fg);box-shadow:0 16px 40px rgba(0,0,0,.22);z-index:60;font-weight:400}
+.hdr-search input:focus{width:22rem;outline:2px solid var(--citrus,#d7e62d);outline-offset:-1px;border-color:transparent}   /* one citrus line: the outline replaces the border */
+.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
+  background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--hdr-edge,rgba(255,255,255,.65));
+  box-shadow:none}   /* same flat glass as the menu and the Maps dropdown */
 .hdr-search.open .hdr-results{display:block}
 .hdr-results .results{max-height:min(60vh,30rem);margin:0}
-.hdr-results .res-div{background:var(--card)}
+.hdr-results .res-div{position:static;background:transparent}   /* headings scroll with the list (sticky ones overlapped the glass) */
+.hdr-results .res,.hdr-results .res-place{background:transparent}
 .hdr-results .search-count{margin-top:0}
 @media (max-width:900px){
   .hdr-search input,.hdr-search input:focus{width:100%}
@@ -358,7 +364,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 #pdf-btn{transition:background-color .4s ease,color .4s ease}
 body.desk #pdf-btn{background:var(--citrus,#d7e62d);color:#0e0906}
 body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
-.btn-white[aria-pressed=true]{border-color:#969697;box-shadow:inset 0 0 0 1px #969697}
+.btn-white[aria-pressed=true]{border-color:var(--citrus,#d7e62d);box-shadow:inset 0 0 0 1px var(--citrus,#d7e62d)}
 .map{position:relative}
 .desk-cards{display:none}
 @media (max-width:899px),(hover:none) and (pointer:coarse){#desk-btn{display:none}}   /* no Desktop Mode on phones and tablets */
@@ -392,7 +398,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 .pagehead-row{border-bottom:0;padding-bottom:0}
 .pagehead-actions .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .pagehead-actions .btn-white{border-color:var(--line)}
-.pagehead-actions .btn-white[aria-pressed=true]{border-color:#969697}
+.pagehead-actions .btn-white[aria-pressed=true]{border-color:var(--citrus,#d7e62d)}
 
 /* Directory: PDF buttons (same colours as the map pages: orange for portrait, citrus for landscape) */
 .btn-citrus{background:var(--citrus,#d7e62d);color:#0e0906}
@@ -405,3 +411,59 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 .dir-pdf{transition:background-color .2s ease}
 @media (max-width:899px),(hover:none) and (pointer:coarse){.dir-landscape{display:none}}   /* landscape needs the wide Desktop Mode layout */
 @media print{.dir-actions,.dir-btns{display:none!important}}
+
+/* Dark mode: the white buttons (Request Change, Desktop Mode) behave like the territory pills on the Directory:
+   clear with a thin line and the theme's text colour, filling with the line colour on hover. */
+:root{--pill-bg:#fff;--pill-fg:#0e0906;--pill-hover:#f1f1ef}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--pill-bg:transparent;--pill-fg:var(--fg);--pill-hover:var(--line)}}
+:root[data-theme=dark]{--pill-bg:transparent;--pill-fg:var(--fg);--pill-hover:var(--line)}
+.btn-white,.hdr-cta{background:var(--pill-bg);color:var(--pill-fg)}
+.btn-white:hover:not(:disabled),.hdr-cta:hover{background:var(--pill-hover)}
+.hdr-cta{border-color:var(--hdr-line,var(--line))}   /* the header's own line colour, so the outline stays visible on the dark glass */
+
+/* Desktop Mode: switching maps */
+body.desk .state{transition:opacity .15s,filter .15s,fill .6s ease}
+.desk-card{--fx:0;--fy:0}
+.desk-card[data-side=L]{--fx:-70px}.desk-card[data-side=R]{--fx:70px}.desk-card[data-side=T]{--fy:-60px}.desk-card[data-side=B]{--fy:60px}
+body.desk-leaving .desk-card{transform:translate(var(--fx),var(--fy));opacity:0;transition:transform .45s cubic-bezier(.5,0,.8,.4) calc(var(--i)*25ms),opacity .35s ease calc(var(--i)*25ms)}
+body.desk-leaving .desk-lines{opacity:0;transition:opacity .25s}
+body.desk-leaving .state{fill:var(--none);transition:fill .45s ease}
+body.desk-leaving .labels{opacity:.0;transition:opacity .3s}
+body.desk-blank .state{fill:var(--none);transition:none}
+@keyframes dcIn{from{transform:translate(var(--fx),var(--fy));opacity:0}to{transform:none;opacity:1}}
+@keyframes dlDraw{from{stroke-dashoffset:-1;opacity:1}to{stroke-dashoffset:0;opacity:1}}
+@keyframes dlPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes dlFade{from{opacity:0}to{opacity:1}}
+body.desk-arriving .desk-card{animation:dcIn .6s cubic-bezier(.2,.7,.2,1) calc(var(--i)*45ms) both}
+body.desk-arriving .desk-lines .dl,body.desk-arriving .desk-lines .dl-h{stroke-dasharray:1 1;animation:dlDraw .5s ease .75s both}
+body.desk-arriving .desk-lines .dl-dot{transform-box:fill-box;transform-origin:center;animation:dlPop .3s ease 1.2s both}
+body.desk-arriving .labels{animation:dlFade .5s ease 1.3s both}
+@media (prefers-reduced-motion:reduce){body.desk-leaving .desk-card,body.desk-arriving .desk-card,body.desk-arriving .desk-lines *{animation:none;transition:none}}
+body.desk-leaving .pagehead>div:first-child,body.desk-leaving .national,body.desk-leaving .rev{opacity:0;transition:opacity .35s ease}
+body.desk-arriving .pagehead>div:first-child,body.desk-arriving .national,body.desk-arriving .rev{animation:dlFade .6s ease .25s both}
+body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bottom .6s cubic-bezier(.4,0,.2,1)}
+
+/* ---- Desktop: pressing Maps grows the menu pill downward and lists every map across its full width; it stays open until Maps is pressed again ---- */
+.maps-bar,.hdr-tray{display:none!important}
+.hdr-drawer{display:none}
+@media (min-width:901px){
+  .hdr-maps-menu,.hdr-maps.open .hdr-maps-menu{display:none}
+  html.maps-open .hdr-maps-btn{background:var(--hdr-hover)}
+  html.maps-open .hdr-maps-btn .caret{transform:rotate(180deg)}
+  .hdr-inner{flex-wrap:wrap;row-gap:0;align-content:flex-start;border-radius:34px}   /* 34px = half the closed height, so the corners look the same closed and open and the edges simply grow with the pill */
+  .hdr-inner>.hdr-logo{min-height:calc(68px - .8rem)}
+  .hdr-drawer{--drawer-h:3.6rem;display:block;flex:0 0 calc(100% + 2.25rem);margin:0 -.75rem 0 -1.5rem;height:0;overflow:hidden;visibility:hidden;transition:height .45s cubic-bezier(.4,0,.2,1),visibility 0s .45s}
+  html.maps-open .hdr-drawer{height:var(--drawer-h);visibility:visible;transition-delay:0s}
+  .hdr-drawer-in{box-sizing:border-box;height:var(--drawer-h);display:flex;align-items:center;padding:0 1rem .5rem}
+  .hdr-drawer a{--bc:var(--hdr-accent,#0e0906);flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.85rem .5rem;border-radius:999px;color:inherit;text-decoration:none;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1;white-space:nowrap;opacity:0;transition:background .18s,opacity .2s}
+  html.maps-open .hdr-drawer a{opacity:1;transition:background .18s,opacity .3s ease .2s}
+  .hdr-drawer a::before{content:"";flex:none;width:.65rem;height:.65rem;border-radius:50%;background:var(--bc)}
+  .hdr-drawer a.water{--bc:var(--water)}
+  .hdr-drawer a.land{--bc:var(--land)}
+  .hdr-drawer a:hover,.hdr-drawer a.current{background:var(--hdr-hover)}
+  .hdr-drawer a:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
+}
+@media (prefers-reduced-motion:reduce){.hdr-drawer,.hdr-drawer a{transition:none}}
+
+/* the search field is exactly as tall as the Request Change button */
+@media (min-width:901px){.hdr-search input{box-sizing:border-box;height:calc(1.7rem + .8125rem + 2px);padding-top:0;padding-bottom:0}}

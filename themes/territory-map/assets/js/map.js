@@ -1,4 +1,6 @@
-(async function () {
+window.__tmBoot = async function (soft) {
+  if (window.__tmAC) window.__tmAC.abort();   // a soft page change re-runs this: drop the previous run's listeners
+  const AC = new AbortController(); window.__tmAC = AC; const sig = { signal: AC.signal };
   const data = JSON.parse(document.getElementById('map-data').textContent);
   const mapEl = document.getElementById('map');
   const panel = document.getElementById('panel');
@@ -11,6 +13,14 @@
   const byId = Object.fromEntries(territories.map(t => [t.id, t]));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+  // Desktop Mode is remembered for this browser tab, so moving to another map (or opening one from search) keeps it on.
+  const DESK_KEY = 'territoryDeskMode';
+  const deskSaved = () => { try { return sessionStorage.getItem(DESK_KEY) === '1'; } catch (e) { return false; } };
+  const deskSave = on => { try { on ? sessionStorage.setItem(DESK_KEY, '1') : sessionStorage.removeItem(DESK_KEY); } catch (e) {} };
+  const restoreDesk = window === window.top && deskSaved() && !!document.getElementById('desk-btn')   // (not in the Directory's hidden PDF frames)
+    && !window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)').matches;
+  if (restoreDesk) document.body.classList.add('desk');   // lay the page out the wide way straight away, so it doesn't jump when the map arrives
+
   let pinned = null, hovered = null, searchSet = null;
   let deskOn = false, deskLayer = null;   // Desktop Mode (see below)   // searchSet: territories on this map matching the search
 
@@ -19,9 +29,11 @@
   const tid = d => (byAbbr[abbr(d)] || {}).id || null;
 
   let us;
-  try { us = await d3.json(mapEl.dataset.src); }
+  try { us = window.__tmUS || (window.__tmUS = await d3.json(mapEl.dataset.src)); }
   catch (e) { mapEl.textContent = 'Map data failed to load.'; return; }
 
+  mapEl.querySelectorAll(':scope > svg, :scope > .desk-cards').forEach(n => n.remove());   // (soft page change: the previous map's drawing)
+  mapEl.style.removeProperty('--lbl-size');   // (margins stay, so the map glides from its old spot to the new one)
   const svg = d3.select(mapEl).append('svg').attr('viewBox', '0 0 975 610').attr('role', 'group')
     .attr('aria-label', 'Map of US sales territories. Tab to the map, use the arrow keys to move between states, and Enter to keep a territory selected. The same information is in the list of territories and in the text list.');
   const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -160,8 +172,8 @@
   });
   legend.addEventListener('mouseover', e => { const b = e.target.closest('button'); if (b) { hovered = b.dataset.id; render(); } });
   legend.addEventListener('mouseleave', () => { hovered = null; render(); });
-  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header')) { pinned = null; render(); } });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; render(); } });
+  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header')) { pinned = null; render(); } }, sig);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; render(); } }, sig);
 
   // Open positions show who to contact instead: the territory's regional manager, or a name found in the open position's title.
   const isOpen = p => !!p.open || /^\s*open\b/i.test(p.name || '');
@@ -476,7 +488,8 @@
     cards.forEach(c => {
       const g = geom(c);
       c.el.style.left = g.l + 'px'; c.el.style.top = g.t + 'px';
-      c.lines.forEach(l => { lines += `<line class="dl-h" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><line class="dl" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><circle class="dl-dot" cx="${l.dot[0]}" cy="${l.dot[1]}" r="4.5"/>`; });
+      c.el.dataset.side = g.l < 0 ? 'L' : g.l >= W ? 'R' : g.t < 0 ? 'T' : 'B';
+      c.lines.forEach(l => { lines += `<line class="dl-h" pathLength="1" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><line class="dl" pathLength="1" x1="${l.dot[0]}" y1="${l.dot[1]}" x2="${l.end[0]}" y2="${l.end[1]}"/><circle class="dl-dot" cx="${l.dot[0]}" cy="${l.dot[1]}" r="4.5"/>`; });
     });
     const tot = bottomEnd - H > 0 ? bottomEnd - H : 0;
     svgl.style.top = (-VT) + 'px'; svgl.style.height = (H + VT + tot) + 'px';
@@ -494,8 +507,8 @@
   function buildDesk() {
     if (deskLayer) deskLayer.remove();
     deskLayer = document.createElement('div'); deskLayer.className = 'desk-cards';
-    deskLayer.innerHTML = '<svg class="desk-lines" aria-hidden="true"></svg>' + territories.filter(t => (t.contacts || []).length).map(t =>
-      `<section class="desk-card" data-id="${esc(t.id)}" style="--c:${esc(t.color)}"><p class="dc-t"><i></i>${esc(t.name)}</p>${(t.contacts || []).map(c => person(c, t)).join('')}</section>`).join('');
+    deskLayer.innerHTML = '<svg class="desk-lines" aria-hidden="true"></svg>' + territories.filter(t => (t.contacts || []).length).map((t, i) =>
+      `<section class="desk-card" data-id="${esc(t.id)}" style="--c:${esc(t.color)};--i:${i}"><p class="dc-t"><i></i>${esc(t.name)}</p>${(t.contacts || []).map(c => person(c, t)).join('')}</section>`).join('');
     mapEl.appendChild(deskLayer);
     deskLayer.querySelectorAll('.desk-card').forEach(el => {   // hovering a card spotlights its territory on the map
       el.addEventListener('mouseenter', () => { hovered = el.dataset.id; render(); });
@@ -551,14 +564,60 @@
       if (side) { side.style.transition = side.style.opacity = ''; }
     }, 650);
   }
+  function arrivedFlag() {
+    try { const t = +sessionStorage.getItem('territoryDeskArrive'); sessionStorage.removeItem('territoryDeskArrive'); return t && Date.now() - t < 6000; } catch (e) { return false; }
+  }
+  // Changing maps while in Desktop Mode happens in place, with no page load: the cards float off, the next map's data is fetched,
+  // the page text is swapped, and the new cards, lines and colors animate in on the same map. (Anything else loads normally.)
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  async function softNav(url) {
+    const t0 = Date.now();
+    document.body.classList.add('desk-leaving');
+    let doc = null;
+    try {
+      const r = await fetch(url, { credentials: 'same-origin' });
+      if (r.ok) { doc = new DOMParser().parseFromString(await r.text(), 'text/html'); if (!doc.getElementById('map-data') || !doc.getElementById('desk-btn') || !doc.querySelector('main.wrap #map')) doc = null; }
+    } catch (e) { doc = null; }
+    await sleep(Math.max(0, 520 - (Date.now() - t0)));
+    if (!doc) { try { sessionStorage.setItem('territoryDeskArrive', String(Date.now())); } catch (er) {} location.href = url; return; }
+    const main = document.querySelector('main.wrap'), nm = doc.querySelector('main.wrap');
+    nm.querySelector('#map').replaceWith(mapEl);                      // keep the live map element
+    main.className = nm.className; main.replaceChildren(...nm.childNodes);
+    document.getElementById('map-data').textContent = doc.getElementById('map-data').textContent;
+    document.title = doc.title;
+    if (doc.body.dataset.division) document.body.dataset.division = doc.body.dataset.division; else delete document.body.dataset.division;
+    const u = new URL(url, location.href);
+    document.querySelectorAll('.site-header a[href]').forEach(a => { const on = a.pathname === u.pathname; a.classList.toggle('current', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    history.pushState({ tm: 1 }, '', url); window.__tmPath = location.pathname;
+    if (!window.__tmPop) { window.__tmPop = true; window.addEventListener('popstate', () => { if (location.pathname !== window.__tmPath) location.reload(); }); }
+    document.body.classList.remove('desk-leaving');
+    window.scrollTo(0, 0);
+    window.__tmBoot(true);
+  }
+  window.__tmPath = window.__tmPath || location.pathname;
+  document.addEventListener('click', e => {
+    if (!deskOn || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || reduceMotion()) return;
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target || a.hasAttribute('download') || a.origin !== location.origin || a.pathname === location.pathname || !/^https?:$/.test(a.protocol)) return;
+    e.preventDefault();
+    softNav(a.href);
+  }, sig);
+  window.addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('desk-leaving'); }, sig);
   const noDesk = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)');   // phones and tablets never get Desktop Mode (the button is hidden in CSS too)
   if (deskBtn) {
     deskBtn.disabled = false;
-    deskBtn.addEventListener('click', () => { if (!noDesk.matches) setDesk(!deskOn); });
-    noDesk.addEventListener && noDesk.addEventListener('change', () => { if (noDesk.matches && deskOn) setDesk(false); });
+    deskBtn.addEventListener('click', () => { if (noDesk.matches) return; deskSave(!deskOn); setDesk(!deskOn); });
+    noDesk.addEventListener('change', () => { if (noDesk.matches && deskOn) setDesk(false); }, sig);
+    if (restoreDesk && !noDesk.matches) {
+      const arrive = !reduceMotion() && (soft || arrivedFlag());
+      if (arrive) document.body.classList.add('desk-arriving', 'desk-blank'); if (soft) document.body.classList.add('desk-soft');   // new map: cards fly in, lines draw out to their regions, colors fade up
+      document.body.classList.remove('desk'); applyDesk(true);
+      if (arrive) { setTimeout(() => document.body.classList.remove('desk-blank'), 1100); setTimeout(() => document.body.classList.remove('desk-arriving', 'desk-soft'), 2200); }
+    }   // measures the normal width first, then switches (same frame: no flash)
+    else document.body.classList.remove('desk');
     let raf = 0;
     const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(placeDesk); };
-    if (window.ResizeObserver) new ResizeObserver(again).observe(mapEl); else window.addEventListener('resize', again);
+    if (window.ResizeObserver) { const ro = new ResizeObserver(again); ro.observe(mapEl); sig.signal.addEventListener('abort', () => ro.disconnect()); } else window.addEventListener('resize', again, sig);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
   }
 
@@ -567,6 +626,7 @@
   const btn = document.getElementById('pdf-btn');
   if (btn) {
     btn.disabled = false;
+    if (deskOn) btn.textContent = 'Download Landscape PDF';   // (page opened already in Desktop Mode)
     btn.addEventListener('click', async () => {
       const label = btn.textContent;
       btn.disabled = true; btn.textContent = 'Preparing PDF…';
@@ -588,4 +648,5 @@
     try { return await window.TerritoryPDF({ ...pdfCtx(), desk, doc, first }); }
     finally { if (landscape) applyDesk(false); }
   };
-})();
+};
+window.__tmBoot();
