@@ -100,12 +100,10 @@
         </form>
         {{ with site.Params.header }}{{ with .cta }}{{ if .url }}<a class="hdr-cta" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .label | default "Request Change" }}</a>{{ end }}{{ end }}{{ end }}
       </div>
-      <nav class="hdr-drawer" id="hdr-drawer" aria-label="Territory maps">
-        <div class="hdr-drawer-in">
-          {{ range (where site.RegularPages "Section" "divisions").ByWeight }}<a href="{{ .RelPermalink }}" class="{{ .Params.brand }}{{ if eq .Permalink $here.Permalink }} current{{ end }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ .Title }}</a>{{ end }}
-        </div>
-      </nav>
     </div>
+    <nav class="maps-row" id="maps-row" aria-label="Territory maps">
+      {{ range $i, $p := (where site.RegularPages "Section" "divisions").ByWeight }}<a href="{{ $p.RelPermalink }}" class="maps-pill {{ $p.Params.brand }}{{ if eq $p.Permalink $here.Permalink }} current{{ end }}" style="--i:{{ $i }}"{{ if eq $p.Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ $p.Title }}</a>{{ end }}
+    </nav>
   </header>
   {{ block "main" . }}{{ end }}
   {{/* Every division's contacts, for the menu search (works on every page) */}}

@@ -36,6 +36,9 @@ window.__tmBoot = async function (soft) {
   mapEl.style.removeProperty('--lbl-size');   // (margins stay, so the map glides from its old spot to the new one)
   const svg = d3.select(mapEl).append('svg').attr('viewBox', '0 0 975 610').attr('role', 'group')
     .attr('aria-label', 'Map of US sales territories. Tab to the map, use the arrow keys to move between states, and Enter to keep a territory selected. The same information is in the list of territories and in the text list.');
+  // Changing the map text size (Desktop Mode, window resize) must be instant: the abbreviations have a font-size transition for their hover growth,
+  // and it would otherwise make the text visibly swell or shrink after every change. The class switches that transition off for that one style update.
+  const setLbl = v => { mapEl.classList.add('lbl-still'); if (v === null) mapEl.style.removeProperty('--lbl-size'); else mapEl.style.setProperty('--lbl-size', v); void mapEl.offsetWidth; mapEl.classList.remove('lbl-still'); };
   const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const path = d3.geoPath();
   const features = topojson.feature(us, us.objects.states).features;
@@ -371,7 +374,15 @@ window.__tmBoot = async function (soft) {
     Object.keys(lblPos).forEach(a => { if (!OUTSIDE.includes(a)) rects.push([lblPos[a][0] * k - hw, lblPos[a][1] * k - hh, lblPos[a][0] * k + hw, lblPos[a][1] * k + hh]); });
     outside.forEach(o => rects.push([o.cx * k - 5, o.cy * k - 5, o.cx * k + 5, o.cy * k + 5]));
     offY.forEach(y => rects.push([942 * k - 3, y * k - hh, 942 * k + lblPx * 1.9 + 4, y * k + hh]));
-    const hits = (x, y, pad) => rects.some(r => x > r[0] - pad && x < r[2] + pad && y > r[1] - pad && y < r[3] + pad);
+    // (a coarse grid of the label rectangles, so a point is only tested against the few rectangles near it; the result is identical)
+    const CELL = 16, grid = new Map(), gk = (gx, gy) => (gx + 512) * 2048 + (gy + 512);
+    rects.forEach((r, i) => { for (let gx = Math.floor((r[0] - 8) / CELL); gx <= Math.floor((r[2] + 8) / CELL); gx++) for (let gy = Math.floor((r[1] - 8) / CELL); gy <= Math.floor((r[3] + 8) / CELL); gy++) { const key = gk(gx, gy); (grid.get(key) || grid.set(key, []).get(key)).push(i); } });
+    const hits = (x, y, pad) => {
+      const l = grid.get(gk(Math.floor(x / CELL), Math.floor(y / CELL)));
+      if (!l) return false;
+      for (let j = 0; j < l.length; j++) { const r = rects[l[j]]; if (x > r[0] - pad && x < r[2] + pad && y > r[1] - pad && y < r[3] + pad) return true; }
+      return false;
+    };
     const pc = document.createElement('canvas').getContext('2d');
     const edgePts = c => {   // candidate landing points along the card's inner edge
       const g = geom(c), n = 9, out = [];
@@ -409,24 +420,25 @@ window.__tmBoot = async function (soft) {
       return o(p, q, r) * o(p, q, u) < 0 && o(r, u, p) * o(r, u, q) < 0;
     };
     const rectOf = c => { const g = geom(c); return [g.l - 2, g.t - 2, g.l + c.w + 2, g.t + c.h + 2]; };
-    const lineCost = (q, e, others, self) => {
-      const boxes = cards.filter(o => o !== self).map(rectOf);
+    const lineCost = (q, e, others, boxes, limit) => {   // (stops counting as soon as the cost passes `limit`: such a line can't be the best one)
       let v = 0.02 * Math.hypot(q[0] - e[0], q[1] - e[1]), n = Math.max(2, Math.ceil(Math.hypot(q[0] - e[0], q[1] - e[1]) / 3));
       for (let i = 1; i < n; i++) {
         const x = q[0] + (e[0] - q[0]) * i / n, y = q[1] + (e[1] - q[1]) * i / n;
         if (hits(x, y, 2)) v += 60;
         if (boxes.some(r => x > r[0] && x < r[2] && y > r[1] && y < r[3])) v += 4000;   // a line must never run through another card
+        if (v > limit) return v;
       }
-      others.forEach(o => { if (segX(q, e, o.dot, o.end)) v += 800; if (distSeg(o.dot, q, e) < NEAR || distSeg(q, o.dot, o.end) < NEAR) v += 3000; });
+      for (let j = 0; j < others.length; j++) { const o = others[j]; if (segX(q, e, o.dot, o.end)) v += 800; if (distSeg(o.dot, q, e) < NEAR || distSeg(q, o.dot, o.end) < NEAR) v += 3000; if (v > limit) return v; }
       return v;
     };
     const route = c => {
       const others = cards.filter(o => o !== c && o.lines).flatMap(o => o.lines);
-      const mine = [];
+      const mine = [], boxes = cards.filter(o => o !== c).map(rectOf);
       const pick = (cands) => {
         let best = null, bv = Infinity;
         cands.forEach(q => c.edges.forEach(e => {
-          const v = q.pre * 0.1 + lineCost(q, e, others.concat(mine), c) + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
+          const extra = q.pre * 0.1 + 0.05 * Math.abs(e[vert(c.side) ? 1 : 0] - q[vert(c.side) ? 1 : 0]);
+          const v = extra + lineCost(q, e, others.concat(mine), boxes, bv - extra);
           if (v < bv) { bv = v; best = { dot: q, end: e }; }
         }));
         return best;
@@ -475,13 +487,16 @@ window.__tmBoot = async function (soft) {
     const W = mapEl.clientWidth, H = mapEl.clientHeight, k = W / SVGW;
     if (!W || !H) return;
     if (lblBase === null) lblBase = parseFloat(getComputedStyle(mapEl).getPropertyValue('--lbl-size')) || 13;
-    if (normalW) mapEl.style.setProperty('--lbl-size', (lblBase * normalW / W) + 'px');   // map text keeps the size it has in the normal view
+    if (normalW) setLbl((lblBase * normalW / W) + 'px');   // map text keeps the size it has in the normal view
     const GAP = 10, M = DESK_M;
     const cards = [...deskLayer.querySelectorAll('.desk-card')].map(el => {
       const t = byId[el.dataset.id], a = anchorFor(t); if (!a) { el.style.display = 'none'; return null; }
       return { el, id: t.id, color: t.color, ax: a[0] * k, ay: a[1] * k, w: el.offsetWidth, h: el.offsetHeight };
     }).filter(Boolean);
     const lblPx = lblBase * (normalW || W) / SVGW;
+    const sig = [W, H, lblPx, ...cards.map(c => c.id + ':' + c.w + 'x' + c.h)].join('|');   // same map, same cards: nothing to recompute (and nothing to restart)
+    if (deskLayer._sig === sig && deskGeom) return;
+    deskLayer._sig = sig;
     const { geom, VT, bottomEnd } = layoutDesk(W, H, k, cards, lblPx, M, GAP);
     mapEl.style.marginTop = VT + 'px'; mapEl.style.marginBottom = (Math.max(0, bottomEnd - H) + 44) + 'px';
     const svgl = deskLayer.querySelector('.desk-lines'); let lines = '';
@@ -493,7 +508,8 @@ window.__tmBoot = async function (soft) {
     });
     const tot = bottomEnd - H > 0 ? bottomEnd - H : 0;
     svgl.style.top = (-VT) + 'px'; svgl.style.height = (H + VT + tot) + 'px';
-    svgl.setAttribute('viewBox', `${-M} ${-VT} ${W + 2 * M} ${H + VT + tot}`); svgl.innerHTML = lines;
+    svgl.setAttribute('viewBox', `${-M} ${-VT} ${W + 2 * M} ${H + VT + tot}`);
+    if (svgl._h !== lines) { svgl.innerHTML = lines; svgl._h = lines; }   // (identical lines are left alone, so a running draw-in animation is never restarted)
     deskGeom = {   // what the PDF needs to draw this exact layout
       W, H, lblPx,
       cards: cards.map(c => {
@@ -522,26 +538,33 @@ window.__tmBoot = async function (soft) {
     deskBtn.setAttribute('aria-pressed', String(on)); deskBtn.textContent = on ? 'Exit Desktop Mode' : 'Desktop Mode';
     const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Generate Landscape PDF' : 'Generate PDF';
     if (on) buildDesk();
-    else { if (deskLayer) { deskLayer.remove(); deskLayer = null; } mapEl.style.removeProperty('--lbl-size'); mapEl.style.marginTop = mapEl.style.marginBottom = ''; render(); }
+    else { if (deskLayer) { deskLayer.remove(); deskLayer = null; } setLbl(null); mapEl.style.marginTop = mapEl.style.marginBottom = ''; render(); }
   }
   // Switching view: nothing jumps. The map is measured before and after the layout change, then glides from where it was to where it
   // ends up (scale + move), while the cards fade in (or the side panel fades back in). The page is not scrolled and nothing flashes.
-  function setDesk(on) {
-    if (reduceMotion()) { applyDesk(on); return; }
+  function glide(on) {
     const first = mapEl.getBoundingClientRect(), side = document.querySelector('.side');
     // the title, the buttons and the sections below the map also move as the page widens: glide them too
     const head = document.querySelector('.pagehead'), movers = [...(head ? head.querySelectorAll(':scope > div') : []), ...document.querySelectorAll('.national h2, .national .contact, .rev')];   // plus the manager/support sections below the map
     const firstM = movers.map(e => e.getBoundingClientRect());
     const pb = document.getElementById('pdf-btn'), pw0 = pb ? pb.getBoundingClientRect().width : 0;   // the Generate button changes label, so it grows or shrinks too
     mapEl.style.transition = 'none'; mapEl.style.transform = '';
+    if (on) document.body.classList.add('desk-arriving', 'desk-toggle');   // the cards fly in and the lines draw out once the map has settled
     applyDesk(on);
-    if (deskLayer) { deskLayer.style.opacity = '0'; deskLayer.style.transition = 'none'; }
     const last = mapEl.getBoundingClientRect();
-    if (!last.width || !first.width) { if (deskLayer) { deskLayer.style.opacity = ''; deskLayer.style.transition = ''; } return; }
+    if (!last.width || !first.width) { switching = false; return; }
     mapEl.style.transformOrigin = '0 0';
     mapEl.style.transform = `translate(${first.left - last.left}px, ${first.top - last.top}px) scale(${first.width / last.width})`;
     if (!on && side) { side.style.opacity = '0'; side.style.transition = 'none'; }
     void mapEl.offsetWidth;   // commit the starting position
+    // The glide scales the whole map, which would make its text swell and shrink. Counter-scale the text every frame so it stays the same size throughout.
+    const fFinal = parseFloat(on ? mapEl.style.getPropertyValue('--lbl-size') : getComputedStyle(mapEl).getPropertyValue('--lbl-size')) || 13, tText = performance.now();
+    const keepText = () => {
+      const tr = getComputedStyle(mapEl).transform, sc = (tr && tr !== 'none' ? new DOMMatrixReadOnly(tr).a : 1) || 1;
+      if (performance.now() - tText < 560) { setLbl((fFinal / sc) + 'px'); requestAnimationFrame(keepText); }
+      else setLbl(on ? fFinal + 'px' : null);
+    };
+    keepText();
     const EASE = 'transform .5s cubic-bezier(.4,0,.2,1)';
     const lastM = movers.map(e => e.getBoundingClientRect());
     const pw1 = pb ? pb.getBoundingClientRect().width : 0;
@@ -554,15 +577,26 @@ window.__tmBoot = async function (soft) {
     movers.forEach(e => { e.style.transition = EASE; e.style.transform = ''; });
     mapEl.style.transition = EASE; mapEl.style.transform = '';
     if (pb && pb.style.width) { void pb.offsetWidth; pb.style.transition = 'width .5s cubic-bezier(.4,0,.2,1), background-color .4s ease, color .4s ease'; pb.style.width = pw1 + 'px'; }
-    if (deskLayer) { deskLayer.style.transition = 'opacity .35s ease .2s'; deskLayer.style.opacity = '1'; }
     if (!on && side) { side.style.transition = 'opacity .35s ease .15s'; side.style.opacity = '1'; }
     setTimeout(() => {
       mapEl.style.transition = mapEl.style.transform = mapEl.style.transformOrigin = '';
       movers.forEach(e => { e.style.transition = e.style.transform = ''; });
       if (pb) { pb.style.transition = pb.style.width = pb.style.overflow = ''; }
-      if (deskLayer) { deskLayer.style.transition = deskLayer.style.opacity = ''; }
+      switching = false;
       if (side) { side.style.transition = side.style.opacity = ''; }
     }, 650);
+  }
+  const clearDeskFx = () => document.body.classList.remove('desk-arriving', 'desk-blank', 'desk-soft', 'desk-toggle');
+  let switching = false, fxTimer = 0;
+  function setDesk(on) {
+    if (switching) return;
+    if (reduceMotion()) { applyDesk(on); return; }
+    switching = true; clearTimeout(fxTimer); clearDeskFx();
+    if (!on && deskLayer) {   // leaving Desktop Mode: the cards and lines fade away first, then the page glides back
+      deskLayer.style.transition = 'opacity .18s ease'; deskLayer.style.opacity = '0';
+      setTimeout(() => glide(false), 170);
+    } else glide(on);
+    fxTimer = setTimeout(clearDeskFx, 2000);
   }
   function arrivedFlag() {
     try { const t = +sessionStorage.getItem('territoryDeskArrive'); sessionStorage.removeItem('territoryDeskArrive'); return t && Date.now() - t < 6000; } catch (e) { return false; }
@@ -570,16 +604,21 @@ window.__tmBoot = async function (soft) {
   // Changing maps while in Desktop Mode happens in place, with no page load: the cards float off, the next map's data is fetched,
   // the page text is swapped, and the new cards, lines and colors animate in on the same map. (Anything else loads normally.)
   const sleep = ms => new Promise(r => setTimeout(r, ms));
-  async function softNav(url) {
+  let navBusy = false;
+  async function softNav(url, push = true) {
+    if (navBusy) return; navBusy = true;
+    const wasDesk = deskOn, LEAVE = wasDesk ? 'desk-leaving' : 'nm-leaving';
     const t0 = Date.now();
-    document.body.classList.add('desk-leaving');
+    clearTimeout(fxTimer); clearDeskFx(); document.body.classList.remove('nm-arriving', 'nm-blank');   // (an arrival still playing must not hold things in place)
+    document.body.classList.add(LEAVE);
     let doc = null;
     try {
       const r = await fetch(url, { credentials: 'same-origin' });
       if (r.ok) { doc = new DOMParser().parseFromString(await r.text(), 'text/html'); if (!doc.getElementById('map-data') || !doc.getElementById('desk-btn') || !doc.querySelector('main.wrap #map')) doc = null; }
     } catch (e) { doc = null; }
-    await sleep(Math.max(0, 520 - (Date.now() - t0)));
-    if (!doc) { try { sessionStorage.setItem('territoryDeskArrive', String(Date.now())); } catch (er) {} location.href = url; return; }
+    await sleep(Math.max(0, (wasDesk ? 520 : 380) - (Date.now() - t0)));
+    if (!doc) { if (wasDesk) { try { sessionStorage.setItem('territoryDeskArrive', String(Date.now())); } catch (er) {} } location.href = url; return; }
+    const y0 = mapEl.getBoundingClientRect().top + window.scrollY;   // where the map sits on the page now
     const main = document.querySelector('main.wrap'), nm = doc.querySelector('main.wrap');
     nm.querySelector('#map').replaceWith(mapEl);                      // keep the live map element
     main.className = nm.className; main.replaceChildren(...nm.childNodes);
@@ -588,17 +627,35 @@ window.__tmBoot = async function (soft) {
     if (doc.body.dataset.division) document.body.dataset.division = doc.body.dataset.division; else delete document.body.dataset.division;
     const u = new URL(url, location.href);
     document.querySelectorAll('.site-header a[href]').forEach(a => { const on = a.pathname === u.pathname; a.classList.toggle('current', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    history.pushState({ tm: 1 }, '', url); window.__tmPath = location.pathname;
-    if (!window.__tmPop) { window.__tmPop = true; window.addEventListener('popstate', () => { if (location.pathname !== window.__tmPath) location.reload(); }); }
-    document.body.classList.remove('desk-leaving');
-    window.scrollTo(0, 0);
-    window.__tmBoot(true);
+    if (push) history.pushState({ tm: 1 }, '', url); window.__tmPath = location.pathname;
+    if (!window.__tmPop) { window.__tmPop = true; window.addEventListener('popstate', () => { if (location.pathname !== window.__tmPath) { if (window.__tmSoft) window.__tmSoft(location.href, false); else location.reload(); } }); }
+    document.querySelectorAll('.site-header.open, .hdr-maps.open').forEach(n => n.classList.remove('open'));   // (phone menus close once the new map is in)
+    const hm = document.getElementById('hdr-menu'); if (hm) hm.setAttribute('aria-expanded', 'false');
+    if (wasDesk) {
+      const nd = document.getElementById('desk-btn'), np = document.getElementById('pdf-btn');   // the swapped-in buttons already read as they do in Desktop Mode (no label flicker)
+      if (nd) { nd.textContent = 'Exit Desktop Mode'; nd.setAttribute('aria-pressed', 'true'); }
+      if (np) np.textContent = 'Generate Landscape PDF';
+    }
+    document.body.classList.remove(LEAVE);
+    await window.__tmBoot(true);
+    const dy = y0 - (mapEl.getBoundingClientRect().top + window.scrollY);   // the new page head may be taller or shorter: glide the map from its old height on the page
+    if (Math.abs(dy) > 1) {
+      const E = '.6s cubic-bezier(.4,0,.2,1)';
+      mapEl.style.transition = 'none'; mapEl.style.transform = `translateY(${dy}px)`; void mapEl.offsetWidth;
+      mapEl.style.transition = `transform ${E}, margin-top ${E}, margin-bottom ${E}`; mapEl.style.transform = '';
+      setTimeout(() => { mapEl.style.transition = ''; }, 700);
+    }
+    if (window.scrollY > 2) window.scrollTo({ top: 0, behavior: 'smooth' });
+    navBusy = false;
   }
+  window.__tmSoft = (u, push) => softNav(u, push);
   window.__tmPath = window.__tmPath || location.pathname;
+  const mapPaths = () => new Set([...document.querySelectorAll('.maps-pill')].map(a => a.pathname));   // the maps listed in the header
   document.addEventListener('click', e => {
-    if (!deskOn || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || reduceMotion()) return;
+    if (window !== window.top || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || reduceMotion()) return;
     const a = e.target.closest && e.target.closest('a[href]');
     if (!a || a.target || a.hasAttribute('download') || a.origin !== location.origin || a.pathname === location.pathname || !/^https?:$/.test(a.protocol)) return;
+    if (!deskOn && !mapPaths().has(a.pathname)) return;   // normal view: only moves between maps are done in place (everything else loads normally)
     e.preventDefault();
     softNav(a.href);
   }, sig);
@@ -612,9 +669,17 @@ window.__tmBoot = async function (soft) {
       const arrive = !reduceMotion() && (soft || arrivedFlag());
       if (arrive) document.body.classList.add('desk-arriving', 'desk-blank'); if (soft) document.body.classList.add('desk-soft');   // new map: cards fly in, lines draw out to their regions, colors fade up
       document.body.classList.remove('desk'); applyDesk(true);
-      if (arrive) { setTimeout(() => document.body.classList.remove('desk-blank'), 1100); setTimeout(() => document.body.classList.remove('desk-arriving', 'desk-soft'), 2200); }
+      if (arrive) { setTimeout(() => document.body.classList.remove('desk-blank'), 850); setTimeout(() => document.body.classList.remove('desk-arriving', 'desk-soft'), 1900); }
     }   // measures the normal width first, then switches (same frame: no flash)
-    else document.body.classList.remove('desk');
+    else {
+      document.body.classList.remove('desk');
+      if (soft && !reduceMotion()) {   // normal view, new map: colors and text fade up on the map that stayed on screen
+        document.body.classList.add('nm-arriving', 'nm-blank');
+        void document.body.offsetWidth;
+        setTimeout(() => document.body.classList.remove('nm-blank'), 60);
+        setTimeout(() => document.body.classList.remove('nm-arriving'), 1500);
+      }
+    }
     let raf = 0;
     const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(placeDesk); };
     if (window.ResizeObserver) { const ro = new ResizeObserver(again); ro.observe(mapEl); sig.signal.addEventListener('abort', () => ro.disconnect()); } else window.addEventListener('resize', again, sig);
