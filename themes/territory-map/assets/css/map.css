@@ -456,8 +456,8 @@ body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bot
   .maps-pill::before{content:"";flex:none;width:.65rem;height:.65rem;border-radius:50%;background:var(--bc)}
   .maps-pill.water{--bc:var(--water)}
   .maps-pill.land{--bc:var(--land)}
-  .maps-pill:hover,.maps-pill.current{box-shadow:inset 0 0 0 999px var(--hdr-hover)}
-  .maps-pill.current{border-color:transparent;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-2px}   /* active map: one even 2px line, black in light mode and white in dark (an outline follows the pill curve, so the width can't vary) */
+  .maps-pill:not(.current):hover{box-shadow:inset 0 0 0 999px var(--hdr-hover)}
+  .maps-pill.current{background:var(--hdr-fg,var(--fg));border-color:var(--hdr-fg,var(--fg));color:var(--bg);cursor:default}   /* the map you are on: solid black (light) / white (dark), like the chosen buttons on the Directory and Desktop Mode */
   .maps-pill:focus-visible{outline:2px solid var(--hdr-fg,var(--fg));outline-offset:2px}
 }
 @media (min-width:901px) and (max-width:1100px){.maps-pill{font-size:.72rem;letter-spacing:.04em;gap:.4rem;padding:0 .6rem}}   /* narrow windows: long names wrap inside their own pill */
@@ -488,7 +488,7 @@ html{overflow-y:scroll;scrollbar-gutter:stable}
 .dir-search .ico-search{position:absolute;left:1rem;pointer-events:none;opacity:.6}
 .dir-search input{flex:1;box-sizing:border-box;height:calc(1.7rem + .8125rem + 2px);padding:0 4.75rem 0 2.6rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:inherit;font-family:inherit;font-size:.9rem}
 .dir-search input::placeholder{color:inherit;opacity:.55}
-.dir-search input:focus{outline:2px solid var(--citrus,#d7e62d);outline-offset:-1px;border-color:transparent}
+.dir-search input:focus{outline:2px solid var(--fg);outline-offset:-1px;border-color:transparent}
 .dir-search input::-webkit-search-cancel-button{display:none}
 .dir-clear{position:absolute;right:.45rem;padding:.3rem .8rem;border:0;border-radius:999px;background:var(--line);color:inherit;font:inherit;font-size:.75rem;cursor:pointer}
 .dir-clear:hover{filter:brightness(.95)}
