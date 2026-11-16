@@ -69,10 +69,10 @@
   <header class="site-header">
     <div class="hdr-inner">
       {{ with site.Params.header }}
-      <a class="hdr-logo" href="{{ .logoLink | default "/" | relURL }}">
+      <a class="hdr-logo" href="{{ if or (not .logoLink) (eq .logoLink "/") }}{{ site.Home.RelPermalink }}{{ else }}{{ .logoLink | relURL }}{{ end }}">
         {{ with .logo }}<img class="hdr-logo-light{{ if $.Site.Params.header.logoDark }} has-dark{{ end }}" src="{{ . | relURL }}" alt="{{ $.Site.Params.header.logoAlt | default site.Title }}">{{ else }}<span>{{ site.Title }}</span>{{ end }}{{ with .logoDark }}<img class="hdr-logo-dark" src="{{ . | relURL }}" alt="" aria-hidden="true">{{ end }}
       </a>
-      {{ else }}<a class="hdr-logo" href="{{ "/" | relURL }}"><span>{{ site.Title }}</span></a>{{ end }}
+      {{ else }}<a class="hdr-logo" href="{{ site.Home.RelPermalink }}"><span>{{ site.Title }}</span></a>{{ end }}
       <button type="button" class="hdr-menu" id="hdr-menu" aria-expanded="false" aria-controls="hdr-nav">Menu</button>
       <div id="hdr-nav" class="hdr-collapse">
         <div class="hdr-links">
