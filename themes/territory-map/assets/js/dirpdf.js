@@ -1,4 +1,4 @@
-/* Directory page: "Download PDF" buttons. Every map page is loaded in a hidden frame (so the maps, contacts and layouts are exactly
+/* Directory page: "Generate PDF" buttons. Every map page is loaded in a hidden frame (so the maps, contacts and layouts are exactly
    what that page makes) and drawn onto one shared jsPDF document, which is saved here. */
 (function () {
   const root = document.querySelector('.directory'); if (!root) return;
@@ -40,7 +40,7 @@
   }
 
   buttons.forEach(b => b.addEventListener('click', async () => {
-    const label = b.textContent; b.disabled = true; b.textContent = 'Preparing PDF…';
+    const label = b.textContent; b.disabled = true; b.textContent = 'Generating PDF…';
     try {
       const mode = b.dataset.mode, tail = mode === 'landscape' ? '-Landscape' : '';
       if (b.dataset.scope === 'all') await make(pages(), mode, 'SEPRO-Territory-Maps' + tail + '.pdf');

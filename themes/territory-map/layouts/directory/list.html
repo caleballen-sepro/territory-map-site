@@ -8,8 +8,8 @@
       <p>Every contact for every territory map, with the states they cover.</p>
     </div>
     <div class="dir-actions">
-      <button type="button" class="btn dir-pdf" data-scope="all" data-mode="portrait">Download All PDFs</button>
-      <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="all" data-mode="landscape">Download All Landscape PDFs</button>
+      <button type="button" class="btn dir-pdf" data-scope="all" data-mode="portrait">Generate All PDFs</button>
+      <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="all" data-mode="landscape">Generate All Landscape PDFs</button>
     </div>
   </header>
 
@@ -36,8 +36,8 @@
         <div class="dir-head">
           <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with $d.revised }}<span class="dir-rev">Revised {{ . }}</span>{{ end }}</h3>
           <div class="dir-btns">
-            <button type="button" class="btn dir-pdf" data-scope="one" data-mode="portrait" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Download {{ .Title }} PDF">Download PDF</button>
-            <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="one" data-mode="landscape" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Download {{ .Title }} landscape PDF">Download Landscape PDF</button>
+            <button type="button" class="btn dir-pdf" data-scope="one" data-mode="portrait" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Generate {{ .Title }} PDF">Generate PDF</button>
+            <button type="button" class="btn btn-citrus dir-pdf dir-landscape" data-scope="one" data-mode="landscape" data-page="{{ .RelPermalink }}" data-title="{{ .Title }}" aria-label="Generate {{ .Title }} landscape PDF">Generate Landscape PDF</button>
           </div>
         </div>
         <table class="dir-table">

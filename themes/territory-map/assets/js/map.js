@@ -254,7 +254,7 @@ window.__tmBoot = async function (soft) {
   const deep = /^#t=(.+)$/.exec(location.hash);
   if (deep) { const id = decodeURIComponent(deep[1]); if (byId[id] || gById[id]) { pinned = id; render(); } }
 
-  // ---- Desktop Mode (button next to Download PDF) ----
+  // ---- Desktop Mode (button next to Generate PDF) ----
   // A bigger map with every territory's contacts in a glass card placed over its general region, so the whole team is visible at once.
   const deskBtn = document.getElementById('desk-btn');
   const SVGW = 975;
@@ -520,7 +520,7 @@ window.__tmBoot = async function (soft) {
     if (on) normalW = mapEl.clientWidth;   // the map's normal width, so its text can keep the same size in Desktop Mode
     deskOn = on; document.body.classList.toggle('desk', on);
     deskBtn.setAttribute('aria-pressed', String(on)); deskBtn.textContent = on ? 'Exit Desktop Mode' : 'Desktop Mode';
-    const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Download Landscape PDF' : 'Download PDF';
+    const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Generate Landscape PDF' : 'Generate PDF';
     if (on) buildDesk();
     else { if (deskLayer) { deskLayer.remove(); deskLayer = null; } mapEl.style.removeProperty('--lbl-size'); mapEl.style.marginTop = mapEl.style.marginBottom = ''; render(); }
   }
@@ -532,7 +532,7 @@ window.__tmBoot = async function (soft) {
     // the title, the buttons and the sections below the map also move as the page widens: glide them too
     const head = document.querySelector('.pagehead'), movers = [...(head ? head.querySelectorAll(':scope > div') : []), ...document.querySelectorAll('.national h2, .national .contact, .rev')];   // plus the manager/support sections below the map
     const firstM = movers.map(e => e.getBoundingClientRect());
-    const pb = document.getElementById('pdf-btn'), pw0 = pb ? pb.getBoundingClientRect().width : 0;   // the Download button changes label, so it grows or shrinks too
+    const pb = document.getElementById('pdf-btn'), pw0 = pb ? pb.getBoundingClientRect().width : 0;   // the Generate button changes label, so it grows or shrinks too
     mapEl.style.transition = 'none'; mapEl.style.transform = '';
     applyDesk(on);
     if (deskLayer) { deskLayer.style.opacity = '0'; deskLayer.style.transition = 'none'; }
@@ -621,15 +621,15 @@ window.__tmBoot = async function (soft) {
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
   }
 
-  // Download PDF (see pdf.js)
+  // Generate PDF (see pdf.js)
   const pdfCtx = () => ({ data, features, path, abbr, byAbbr, OUTSIDE, lblPos, layoutDesk: (W, H, cards, lblPx, M) => { const k = W / SVGW; cards.forEach(c => { const a = anchorFor(byId[c.id]); c.ax = a[0] * k; c.ay = a[1] * k; }); return layoutDesk(W, H, k, cards, lblPx, M, 10); } });
   const btn = document.getElementById('pdf-btn');
   if (btn) {
     btn.disabled = false;
-    if (deskOn) btn.textContent = 'Download Landscape PDF';   // (page opened already in Desktop Mode)
+    if (deskOn) btn.textContent = 'Generate Landscape PDF';   // (page opened already in Desktop Mode)
     btn.addEventListener('click', async () => {
       const label = btn.textContent;
-      btn.disabled = true; btn.textContent = 'Preparing PDF…';
+      btn.disabled = true; btn.textContent = 'Generating PDF…';
       try { await window.TerritoryPDF({ ...pdfCtx(), desk: deskOn ? deskGeom : null }); }
       catch (err) { alert('Could not create the PDF: ' + err.message); }
       btn.textContent = label; btn.disabled = false;

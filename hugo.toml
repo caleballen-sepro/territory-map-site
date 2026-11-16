@@ -32,7 +32,7 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
   [params.brand]
     water = "#0076D5"        # Pantone 2174C: water divisions (menu, cards, PDF accent)
     land = "#48A345"         # Pantone 7738C: land divisions
-    sunset = "#FE5B38"       # accent: Download PDF button (website only)
+    sunset = "#FE5B38"       # accent: Generate PDF button (website only)
 
   # ---------- Top menu bar ----------
   [params.header]
