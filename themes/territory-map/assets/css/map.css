@@ -296,7 +296,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .copy-btn.done{color:var(--fg);border-color:var(--fg)}
 .copy-btn.fail{color:var(--sunset,#fe5b38);border-color:var(--sunset,#fe5b38)}
 .copy-btn svg{flex:none}
-.contact .copy-btn{display:flex;width:max-content}
+.contact .copy-btn,.dir-table .c-name .copy-btn{display:flex;width:max-content}   /* same button on the map contact boxes and in the Directory */
 .contact .copy-btn .cb-t,.res .copy-btn .cb-t,.copy-btn .cb-t{display:inline;margin:0;color:inherit;font-size:inherit}
 .res-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
 .res-actions .res-go,.res-actions .copy-btn{margin-top:0}
@@ -304,11 +304,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .res-place{padding:.6rem .75rem;border-bottom:2px solid var(--line);background:var(--card);font-size:.9rem}
 .res-place small{display:block;margin-top:.15rem;color:var(--muted);font-size:.75rem}
 /* directory: icon-only copy button in the name cell, shown on row hover (always on touch screens) */
-.dir-table .c-name{position:relative}
-.dir-table .copy-ico{position:absolute;top:50%;right:.35rem;transform:translateY(-50%);margin:0;padding:.3rem;border-color:transparent;background:var(--bg);opacity:0;transition:opacity .12s}
-.dir-table tr:hover .copy-ico,.dir-table .copy-ico:focus-visible,.dir-table .copy-ico.done,.dir-table .copy-ico.fail{opacity:1}
-@media (hover:none){.dir-table .copy-ico{opacity:1}}
-@media (max-width:760px){.dir-table .copy-ico{top:.35rem;right:.5rem;transform:none;opacity:1}}
 @media print{.copy-btn{display:none!important}}
 
 /* regional managers block: the territories each one manages */
@@ -329,7 +324,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
   .copy-btn,.res-go,.legend .lg-pill,.legend .lg-head,.btn,.hdr-menu,.panel .contact a{min-height:44px}
   .panel .contact a,.nat-grid .contact a{display:inline-flex;align-items:center}
   .copy-btn{padding:.5rem 1rem}
-  .dir-table .copy-ico{min-width:44px;min-height:44px;justify-content:center}
   .res-go{display:inline-flex;align-items:center;padding:.5rem 1rem}
 }
 /* high-contrast / forced-colors mode: keep states separable and the selection visible */
@@ -376,7 +370,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
   .desk-card{position:absolute;width:16.5rem;box-sizing:border-box;padding:.6rem .8rem .65rem;border-radius:16px;pointer-events:auto;color:var(--hdr-fg,var(--fg));
     background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
     -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
-    border:1px solid color-mix(in srgb,var(--fg) 16%,transparent);transition:opacity .15s}
+    border:2px solid var(--c,var(--line));transition:opacity .15s}   /* the territory's own colour, exactly as on the map */
   .desk-card:hover{z-index:2}
   .desk-card .dc-t{display:flex;align-items:center;margin:0 0 .15rem;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
   .desk-card .dc-t i{flex:none;width:.65rem;height:.65rem;margin-right:.45rem;border-radius:50%;background:var(--c)}
@@ -398,8 +392,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 .btn-citrus{background:var(--citrus,#d7e62d);color:#0e0906}
 .btn-citrus:hover:not(:disabled){filter:brightness(.95)}
 .dir-actions,.dir-btns{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.6rem}
-.dir-actions .btn,.dir-btns .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
-.dir-btns .btn{padding:.65rem 1.1rem}
+.dir-actions .btn,.dir-btns .btn{padding:.65rem 1.1rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .dir-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem 1rem;margin:0 0 .75rem}
 .dir-head h3{margin:0;flex:1 1 auto}
 .dir-pdf{transition:background-color .2s ease}
