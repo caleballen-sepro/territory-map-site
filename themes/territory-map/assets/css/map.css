@@ -163,7 +163,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 /* ---- Request Change: white pill ---- */
 .hdr-cta{display:inline-flex;align-items:center;align-self:center;padding:.85rem 1.4rem;border:1px solid var(--line);border-radius:999px;background:#fff;color:#0e0906;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;font-size:.8125rem;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;transition:background-color .2s ease}   /* the same white button as Desktop Mode */
 .hdr-cta:hover{background:#f1f1ef}
-.hdr-cta:focus-visible{outline:2px solid var(--citrus,#d7e62d);outline-offset:2px}
+.hdr-cta:focus-visible{outline:2px solid var(--hdr-fg,var(--fg));outline-offset:2px}
 @media (max-width:900px){.hdr-cta{align-self:flex-start;margin:.25rem 0 .4rem .75rem}}
 
 /* ---- menu search ---- */
@@ -171,7 +171,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-search .ico-search{position:absolute;left:.85rem;pointer-events:none;opacity:.6}
 .hdr-search input{width:15rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
 .hdr-search input::placeholder{color:inherit;opacity:.55}
-.hdr-search input:focus{width:22rem;outline:2px solid var(--citrus,#d7e62d);outline-offset:-1px;border-color:transparent}   /* one citrus line: the outline replaces the border */
+.hdr-search input:focus{width:22rem;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-1px;border-color:transparent}   /* one black (light) / white (dark) line: the outline replaces the border */
 .hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
   background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
@@ -359,7 +359,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 #pdf-btn{transition:background-color .4s ease,color .4s ease}
 body.desk #pdf-btn{background:var(--citrus,#d7e62d);color:#0e0906}
 body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
-.btn-white[aria-pressed=true]{border-color:var(--citrus,#d7e62d);box-shadow:inset 0 0 0 1px var(--citrus,#d7e62d)}
+.btn-white[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:var(--bg)}   /* on: solid, like the chosen map button on the Directory */
 .map{position:relative}
 .desk-cards{display:none}
 @media (max-width:899px),(hover:none) and (pointer:coarse){#desk-btn{display:none}}   /* no Desktop Mode on phones and tablets */
@@ -392,7 +392,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 /* map page header: no coloured rule under the title (it can't glide cleanly in Desktop Mode); buttons match the menu items */
 .pagehead-actions .btn{padding:.85rem 1.4rem;border:1px solid transparent;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 .pagehead-actions .btn-white{border-color:var(--line)}
-.pagehead-actions .btn-white[aria-pressed=true]{border-color:var(--citrus,#d7e62d)}
+.pagehead-actions .btn-white[aria-pressed=true]{border-color:var(--fg)}
 
 /* Directory: PDF buttons (same colours as the map pages: orange for portrait, citrus for landscape) */
 .btn-citrus{background:var(--citrus,#d7e62d);color:#0e0906}
@@ -413,6 +413,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 :root[data-theme=dark]{--pill-bg:transparent;--pill-fg:var(--fg);--pill-hover:var(--line)}
 .btn-white,.hdr-cta{background:var(--pill-bg);color:var(--pill-fg)}
 .btn-white:hover:not(:disabled),.hdr-cta:hover{background:var(--pill-hover)}
+.btn-white[aria-pressed=true]:hover:not(:disabled){background:var(--fg)}
 .hdr-cta{border-color:var(--hdr-line,var(--line))}   /* the header's own line colour, so the outline stays visible on the dark glass */
 
 /* Desktop Mode: switching maps */
@@ -456,8 +457,8 @@ body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bot
   .maps-pill.water{--bc:var(--water)}
   .maps-pill.land{--bc:var(--land)}
   .maps-pill:hover,.maps-pill.current{box-shadow:inset 0 0 0 999px var(--hdr-hover)}
-  .maps-pill.current{border-color:transparent;outline:2px solid var(--bc);outline-offset:-2px}   /* active map: one even 2px line in the pill's own brand colour (water blue / land green) (an outline follows the pill curve, so the width can't vary) */
-  .maps-pill:focus-visible{outline:2px solid var(--citrus,#d7e62d);outline-offset:2px}
+  .maps-pill.current{border-color:transparent;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-2px}   /* active map: one even 2px line, black in light mode and white in dark (an outline follows the pill curve, so the width can't vary) */
+  .maps-pill:focus-visible{outline:2px solid var(--hdr-fg,var(--fg));outline-offset:2px}
 }
 @media (min-width:901px) and (max-width:1100px){.maps-pill{font-size:.72rem;letter-spacing:.04em;gap:.4rem;padding:0 .6rem}}   /* narrow windows: long names wrap inside their own pill */
 @media (prefers-reduced-motion:reduce){.maps-row,.maps-pill{transition:none!important}}
