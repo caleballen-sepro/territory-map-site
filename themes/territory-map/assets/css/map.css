@@ -505,3 +505,11 @@ html{overflow-y:scroll;scrollbar-gutter:stable}
 body.dir-page .hdr-results{display:none!important}   /* the page list is the result here */
 @media (prefers-reduced-motion:reduce){.dir-actions,.dir-btns,.dir-jump a{transition:none!important}}
 @media print{.dir-search,.dir-status{display:none}}
+
+/* Map -> Directory: the map page fades out, then the Directory rises from the bottom of the page and fades in (class set by map.js / the <head> script) */
+body.dir-leaving main.wrap{opacity:0;transition:opacity .28s ease}
+@keyframes dirIn{from{opacity:0;transform:translateY(38vh)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){html.dir-enter main.directory{animation:dirIn .6s cubic-bezier(.2,.75,.2,1) backwards}}
+body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .28s ease,transform .28s cubic-bezier(.5,0,.8,.4)}
+@keyframes mapIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:no-preference){html.map-enter main.wrap:not(.directory){animation:mapIn .5s ease backwards}}

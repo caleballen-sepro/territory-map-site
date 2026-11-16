@@ -2,12 +2,11 @@
    It uses the same matching as the menu search (search.js: names, titles, states, ZIP codes, cities, territories, maps), and the menu's own
    search box drives the same filter on this page, so the two always show the same text. The "all maps" Generate buttons hide while anything is filtered, and every
    Generate button hides while a search is on. */
-document.addEventListener('DOMContentLoaded', () => {
-  const main = document.querySelector('main.directory'), S = window.TerritorySearch;
+(() => {   // (runs as soon as the page's lists exist, so a chosen map is already in place on the first paint and nothing shifts)
+  const main = document.querySelector('main.directory');
   const box = document.querySelector('.dir-search'), q = document.getElementById('dir-q'), menuQ = document.getElementById('search');
   const status = document.getElementById('dir-status'), clear = box && box.querySelector('.dir-clear');
-  if (!main || !S || !box || !q) return;
-  box.hidden = false;
+  if (!main || !box || !q) return;
   document.body.classList.add('dir-page');   // (the menu's dropdown list stays closed here: the page list below is the result)
 
   const rows = [...main.querySelectorAll('tr[data-k]')];
@@ -15,10 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const divs = [...main.querySelectorAll('article.dir-div')];
   const sections = [...main.querySelectorAll('.brand-section')];
   const pills = [...main.querySelectorAll('.dir-jump a[data-div]')];
-  let value = '', sel = '', timer = 0;   // value: the search text; sel: the chosen map (a division id) or ''
+  let value = '', sel = '', timer = 0, live = false, lastSig = '|' + '1'.repeat(rows.length);   // live: false while the page itself is still arriving   // value: the search text; sel: the chosen map (a division id) or ''
 
   const apply = () => {
-    const raw = value.trim(), on = !!raw, r = on ? S.filter(raw) : null;
+    const raw = value.trim(), on = !!raw, S = window.TerritorySearch;
+    if (on && !S) return;   // (the search code loads just after this file: the page waits for it below)
+    const r = on ? S.filter(raw) : null;
     main.classList.toggle('dir-q', on); main.classList.toggle('dir-sel', !!sel);
     clear.hidden = !value;
     rows.forEach(tr => { tr.hidden = on && !r.keys.has(tr.dataset.k); });
@@ -30,6 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
       a.classList.toggle('active', a.dataset.div === sel); a.setAttribute('aria-pressed', String(a.dataset.div === sel));
       a.classList.toggle('dim', on && !has);
     });
+    const sig = sel + '|' + rows.map(tr => (tr.hidden ? 0 : 1)).join('');   // the lists changed: let them settle in softly instead of snapping
+    if (live && sig !== lastSig && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      sections.forEach(sc => { if (!sc.hidden && sc.animate) sc.animate([{ opacity: .35, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(.2,.7,.2,1)' }); });
+    }
+    lastSig = sig;
     const shown = rows.filter(tr => !tr.hidden && !tr.closest('[hidden]')).length, name = sel && (pills.find(a => a.dataset.div === sel) || {}).textContent;
     status.textContent = on
       ? (r.place ? `${r.place.label} → ${r.place.states.join(', ')}: ` : '') + (shown ? `${shown} contact${shown === 1 ? '' : 's'} shown${name ? ' in ' + name : ''}`
@@ -60,8 +66,24 @@ document.addEventListener('DOMContentLoaded', () => {
     a.addEventListener('keydown', e => { if (e.key === ' ') { e.preventDefault(); pick(a.dataset.div); } });
   });
 
-  S.ready().then(() => { if (value.trim()) apply(); });   // ZIP and city lookups arrive a moment later
-  const qs = new URLSearchParams(location.search), first = qs.get('q'), mapId = qs.get('map') || location.hash.slice(1);   // (a link ending in #water opens with just that map)
-  if (pills.some(a => a.dataset.div === mapId)) { sel = mapId; apply(); }
-  if (first) set(first, null);
-});
+  // Directory -> a map: the page sinks and fades out, and the map page fades in (html.map-enter, set by the script in baseof.html's <head>)
+  const mapPaths = new Set([...document.querySelectorAll('.maps-pill')].map(a => a.pathname));
+  document.addEventListener('click', e => {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target || a.origin !== location.origin || !mapPaths.has(a.pathname)) return;
+    e.preventDefault();
+    document.body.classList.add('dir-leaving');
+    try { sessionStorage.setItem('territoryMapEnter', String(Date.now())); } catch (er) {}
+    setTimeout(() => { location.href = a.href; }, 280);
+  });
+  window.addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('dir-leaving'); });
+  const qs = new URLSearchParams(location.search), first = qs.get('q'), mapId = qs.get('map') || location.hash.slice(1);   // (an old link ending in #water also opens with just that map)
+  if (pills.some(a => a.dataset.div === mapId)) { sel = mapId; apply(); url(); }   // url() also drops a #hash so the browser doesn't scroll to it
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => { live = true; }, 700);   // (the page's own entrance has finished)
+    const S = window.TerritorySearch; if (!S) return;
+    if (first) set(first, null);
+    S.ready().then(() => { if (value.trim()) apply(); });   // ZIP and city lookups arrive a moment later
+  });
+})();

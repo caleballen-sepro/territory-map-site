@@ -18,13 +18,14 @@
   </nav>
 
   {{/* Filters the lists below as you type (dirsearch.js); the menu search box drives the same filter on this page */}}
-  <div class="dir-search" role="search" hidden>
+  <div class="dir-search" role="search">
     <label class="sr-only" for="dir-q">Filter the directory by name, state, ZIP code or city</label>
     <svg class="ico-search" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="dir-q" type="search" placeholder="Filter by name, state, ZIP code or city" autocomplete="off" spellcheck="false">
     <button type="button" class="dir-clear" hidden>Clear</button>
   </div>
   <p id="dir-status" class="dir-status" role="status" aria-live="polite"></p>
+  <noscript><style>.dir-search{display:none}</style></noscript>   {{/* the box is always in place (nothing shifts when the script starts); without scripting it is simply not shown */}}
 
   {{ range slice "water" "eutrophix" "land" }}
     {{ $b := . }}

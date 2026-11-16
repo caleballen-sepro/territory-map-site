@@ -6,7 +6,7 @@
     <div>
       <h1>{{ .Title }}</h1>
       {{ with .Params.summary }}<p>{{ . }}</p>{{ end }}
-      <p class="listlink"><a href="{{ "directory/" | relURL }}#{{ .Params.territoryData }}">View this map as a text list</a></p>
+      <p class="listlink"><a href="{{ "directory/" | relURL }}?map={{ .Params.territoryData }}">View this map as a text list</a></p>
     </div>
     <div class="pagehead-actions">
       <button type="button" id="desk-btn" class="btn btn-white" aria-pressed="false" disabled>Desktop Mode</button>

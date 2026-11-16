@@ -42,10 +42,12 @@ window.__tmBoot = async function (soft) {
   const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const path = d3.geoPath();
   const features = topojson.feature(us, us.objects.states).features;
+  // The drawing of the states never changes between maps, so it is worked out once (outlines, borders, label spots) and reused when switching maps.
+  const G = window.__tmGeo && window.__tmGeo.us === us ? window.__tmGeo : (window.__tmGeo = { us, d: [], lbl: {} });
 
   const toggle = id => { if (!id) return; pinned = pinned === id ? null : id; hovered = id; render(); };
   const statesSel = svg.append('g').selectAll('path').data(features).join('path')
-    .attr('d', path)
+    .attr('d', (d, i) => G.d[i] || (G.d[i] = path(d)))
     .attr('class', d => 'state' + (byAbbr[abbr(d)] ? '' : ' unassigned'))
     .attr('data-t', d => tid(d))
     .style('--c', d => (byAbbr[abbr(d)] || {}).color || null)
@@ -81,7 +83,7 @@ window.__tmBoot = async function (soft) {
   });
 
   svg.append('path').attr('class', 'borders')
-    .attr('d', path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
+    .attr('d', G.mesh || (G.mesh = path(topojson.mesh(us, us.objects.states, (a, b) => a !== b))));
 
   // ---- State abbreviations ----
   // Each label sits at the state's "visual center" (the point farthest from every border in its
@@ -119,8 +121,8 @@ window.__tmBoot = async function (soft) {
     }
     return [best.x, best.y];
   };
-  const lblPos = {};
-  features.forEach(d => { const a = abbr(d); if (a) lblPos[a] = labelPoint(d); });
+  const lblPos = G.lbl;
+  features.forEach(d => { const a = abbr(d); if (a && !lblPos[a]) lblPos[a] = labelPoint(d); });
 
   // Text color: "auto" picks whichever of the dark/light colors has more contrast against the state's fill.
   const cs = getComputedStyle(mapEl);
@@ -611,6 +613,8 @@ window.__tmBoot = async function (soft) {
     const t0 = Date.now();
     clearTimeout(fxTimer); clearDeskFx(); document.body.classList.remove('nm-arriving', 'nm-blank');   // (an arrival still playing must not hold things in place)
     document.body.classList.add(LEAVE);
+    const u = new URL(url, location.href);   // the menu shows the new map right away, not after the fade
+    document.querySelectorAll('.site-header a[href]').forEach(a => { const on = a.pathname === u.pathname; a.classList.toggle('current', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     let doc = null;
     try {
       const r = await fetch(url, { credentials: 'same-origin' });
@@ -625,8 +629,6 @@ window.__tmBoot = async function (soft) {
     document.getElementById('map-data').textContent = doc.getElementById('map-data').textContent;
     document.title = doc.title;
     if (doc.body.dataset.division) document.body.dataset.division = doc.body.dataset.division; else delete document.body.dataset.division;
-    const u = new URL(url, location.href);
-    document.querySelectorAll('.site-header a[href]').forEach(a => { const on = a.pathname === u.pathname; a.classList.toggle('current', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     if (push) history.pushState({ tm: 1 }, '', url); window.__tmPath = location.pathname;
     if (!window.__tmPop) { window.__tmPop = true; window.addEventListener('popstate', () => { if (location.pathname !== window.__tmPath) { if (window.__tmSoft) window.__tmSoft(location.href, false); else location.reload(); } }); }
     document.querySelectorAll('.site-header.open, .hdr-maps.open').forEach(n => n.classList.remove('open'));   // (phone menus close once the new map is in)
@@ -650,16 +652,24 @@ window.__tmBoot = async function (soft) {
   }
   window.__tmSoft = (u, push) => softNav(u, push);
   window.__tmPath = window.__tmPath || location.pathname;
+  // Leaving for the Directory (menu button, "View this map as a text list"): the page fades out here, and the next page slides up from the bottom (html.dir-enter, set by the script in baseof.html's <head>)
+  const goDirectory = url => {
+    document.body.classList.add('dir-leaving');
+    try { sessionStorage.setItem('territoryDirEnter', String(Date.now())); } catch (er) {}
+    fetch(url, { credentials: 'same-origin' }).catch(() => {});   // (warms the cache while the fade plays)
+    setTimeout(() => { location.href = url; }, 300);
+  };
   const mapPaths = () => new Set([...document.querySelectorAll('.maps-pill')].map(a => a.pathname));   // the maps listed in the header
   document.addEventListener('click', e => {
     if (window !== window.top || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || reduceMotion()) return;
     const a = e.target.closest && e.target.closest('a[href]');
     if (!a || a.target || a.hasAttribute('download') || a.origin !== location.origin || a.pathname === location.pathname || !/^https?:$/.test(a.protocol)) return;
+    if (a.pathname.replace(/\/$/, '').endsWith('/directory')) { e.preventDefault(); goDirectory(a.href); return; }   // map -> Directory: the page fades out, then the Directory rises in
     if (!deskOn && !mapPaths().has(a.pathname)) return;   // normal view: only moves between maps are done in place (everything else loads normally)
     e.preventDefault();
     softNav(a.href);
   }, sig);
-  window.addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('desk-leaving'); }, sig);
+  window.addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('desk-leaving', 'dir-leaving'); }, sig);
   const noDesk = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)');   // phones and tablets never get Desktop Mode (the button is hidden in CSS too)
   if (deskBtn) {
     deskBtn.disabled = false;
