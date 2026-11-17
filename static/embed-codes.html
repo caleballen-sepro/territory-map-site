@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Embed codes · SEPRO Territory Maps</title>
+<style>
+  :root{color-scheme:light dark;--bg:#fff;--fg:#0e0906;--muted:#51544a;--line:#dcdfd7;--code:#f4f5f2}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0b0a;--fg:#fff;--muted:#c3c7ba;--line:#3a3c35;--code:#1a1a18}}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 "Mona Sans","Helvetica Neue",Helvetica,Arial,sans-serif}
+  main{max-width:60rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+  h1{font-weight:300;font-size:2rem;margin:0 0 .25rem} h2{font-weight:500;font-size:1.2rem;margin:0 0 .6rem}
+  p{color:var(--muted);margin:.25rem 0 1rem}
+  .card{border:1px solid var(--line);border-radius:24px;padding:1.25rem 1.4rem;margin:1.25rem 0}
+  pre{margin:.4rem 0 .6rem;padding:.8rem 1rem;background:var(--code);border-radius:14px;overflow-x:auto;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-all}
+  .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+  button,a.btn{font:inherit;font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1.1rem;border:1px solid var(--line);border-radius:999px;background:none;color:var(--fg);cursor:pointer;text-decoration:none}
+  button:hover,a.btn:hover{border-color:var(--fg)}
+  .label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:.8rem 0 0}
+  .opts{display:flex;flex-wrap:wrap;gap:1rem;margin:0 0 1rem;color:var(--muted)} .opts label{display:flex;gap:.4rem;align-items:center}
+  select{font:inherit;padding:.3rem .5rem;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+</style>
+</head>
+<body><main>
+<h1>Embed codes</h1>
+<p>Copy the code for a map and paste it where the map should appear on the web page. Everything below is generated for <strong id="site"></strong>.</p>
+<div class="opts">
+  <label>Look <select id="theme"><option value="">Match the visitor's device</option><option value="light">Always light</option><option value="dark">Always dark</option></select></label>
+  <label>Minimum height <select id="minh"><option>560</option><option>700</option><option>900</option></select> px</label>
+  <label>Type of code <select id="kind"><option value="script">Script (resizes itself, recommended)</option><option value="iframe">Plain iframe (any page builder)</option></select></label>
+</div>
+<div id="list"></div>
+<script>
+(function(){
+  var base=location.href.replace(/[^\/]*(\?.*)?(#.*)?$/,''), maps=[
+    ['Water Team','divisions/water/'],['Municipal & Industrial Team','divisions/municipal-industrial/'],['EutroPHIX','divisions/eutrophix/'],
+    ['Turf & Landscape Team','divisions/turf-landscape/'],['Ornamental Team','divisions/ornamental/'],['All maps (the list)','']];
+  document.getElementById('site').textContent=base;
+  var list=document.getElementById('list'),th=document.getElementById('theme'),mh=document.getElementById('minh'),kd=document.getElementById('kind');
+  var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')};
+  function code(page){
+    if(kd.value==='iframe'){var u=base+page+'?embed=1'+(th.value?'&theme='+th.value:'');
+      return '<iframe src="'+u+'" title="SEPRO territory map" style="width:100%;height:'+(+mh.value+340)+'px;border:0" loading="lazy" allow="clipboard-write; web-share"></iframe>'}
+    return '<script src="'+base+'embed.js" data-page="'+page+'"'+(th.value?' data-theme="'+th.value+'"':'')+(mh.value!=='560'?' data-min-height="'+mh.value+'"':'')+'><\/script>'}
+  function draw(){
+    list.innerHTML='';
+    maps.forEach(function(m){
+      var c=document.createElement('section');c.className='card';
+      var code_=code(m[1]);
+      c.innerHTML='<h2>'+esc(m[0])+'</h2><div class="label">Code to paste</div><pre>'+esc(code_)+'</pre><div class="row"><button type="button" class="cp">Copy code</button><a class="btn" target="_blank" rel="noopener" href="'+base+m[1]+'?embed=1'+(th.value?'&theme='+th.value:'')+'">Open the embedded view</a></div>';
+      c.querySelector('.cp').onclick=function(e){var b=e.target;(navigator.clipboard?navigator.clipboard.writeText(code_):Promise.reject()).then(function(){b.textContent='Copied'},function(){var r=document.createRange();r.selectNodeContents(c.querySelector('pre'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected: press copy'});setTimeout(function(){b.textContent='Copy code'},1800)};
+      list.appendChild(c)})}
+  [th,mh,kd].forEach(function(e){e.onchange=draw});draw();
+})();
+</script>
+</main></body></html>
