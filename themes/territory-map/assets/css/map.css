@@ -537,15 +537,42 @@ body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .2
 .mt-links a[href^=mailto]{white-space:normal;overflow-wrap:break-word;word-break:normal}   /* wraps only at the <wbr> after the @ or before .com (myteam.js) */
 .mt-links .copy-btn{margin-top:.5rem}
 @media (min-width:601px){.mt-card .hs{width:3.6rem;height:3.6rem;border-radius:.65rem;font-size:1.05rem}}
-@media (max-width:600px){.mt-contact{display:grid;grid-template-columns:33% minmax(0,1fr);column-gap:.9rem;align-items:start}.mt-head{display:contents}.mt-head .hs{grid-column:1;grid-row:1/span 2;width:100%;height:auto;aspect-ratio:1;font-size:1.6rem}.mt-head>div{grid-column:2;grid-row:1}.mt-links{grid-column:2;grid-row:2;margin-top:.5rem}}   /* phones: photo a third wide, name and contact details to its right */
-@media (max-width:700px){.mt-row{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr}}   /* phones stack: one row of cards would not fit */
+/* phones: the team is a row of tall swipeable cards (one big card and a peek of the next), headshot on top, a Save to Contacts button along the bottom */
+.mt-save,.mt-nav{display:none}
+@media (max-width:700px){
+.mt-row{display:flex;gap:.85rem;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:1rem .35rem .75rem;scroll-padding:0 .35rem}   /* the page's own side margin already keeps the first card clear of the browser's back-swipe edge */
+.mt-row::-webkit-scrollbar{display:none}
+.mt-row:focus-visible{outline:2px solid var(--fg);outline-offset:-2px;border-radius:12px}
+.mt-card{flex:0 0 88%;box-sizing:border-box;display:flex;flex-direction:column;scroll-snap-align:center;scroll-snap-stop:always;padding:1.1rem 1.1rem 1.2rem;animation:none}
+.mt-map{font-size:.78rem}.mt-reg{font-size:.9rem;margin-bottom:.9rem}
+.mt-card .mt-contact{display:flex;flex-direction:column;flex:1}
+.mt-head{display:block}
+.mt-card .mt-head .hs{width:100%;height:auto;aspect-ratio:1;border-radius:.9rem;font-size:3.2rem;margin-bottom:.9rem}
+.mt-head strong{font-size:1.35rem;line-height:1.2}.mt-head span{font-size:1rem;margin-top:.2rem;color:var(--muted)}
+.mt-links{margin:.8rem 0 1.1rem}
+.mt-links a{display:block;padding:.45rem 0;font-size:1.05rem}   /* roomy tap targets */
+.mt-links .copy-btn{display:none}
+.mt-save{display:flex;align-items:center;justify-content:center;gap:.55rem;width:100%;min-height:3rem;margin-top:auto;padding:0 1rem;border:2px solid var(--fg);border-radius:999px;background:var(--fg);color:var(--bg);font:inherit;font-size:1rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mt-save:active{opacity:.85}.mt-save:disabled{opacity:.7;cursor:default}
+.mt-save.done{background:transparent;color:var(--fg)}
+.mt-nav{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin:.1rem 0 .4rem}
+.mt-nav[hidden]{display:none}
+.mt-pager{display:flex;align-items:center;gap:1.1rem}
+.mt-arrow{display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border:2px solid var(--fg);border-radius:50%;background:transparent;color:var(--fg);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mt-arrow:active{background:var(--fg);color:var(--bg)}
+.mt-count{min-width:4.5rem;text-align:center;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.85rem;color:var(--muted)}
+.mt-all{display:inline-flex;align-items:center;gap:.45rem;min-height:2.75rem;padding:0 .5rem;border:0;background:none;color:var(--muted);font:inherit;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.mt-all[hidden]{display:none}
+.mt-all.done{color:var(--fg)}
+html.mt-has .mt-row:empty{min-height:34rem}
+}
 @keyframes mtIn{from{opacity:0;transform:translateY(10px)}}
 @media (prefers-reduced-motion:reduce){.mt-reveal,.mt-card{transition:none;animation:none}}
 @media print{.myteam{display:none}}
 
 /* My Personal SEPRO Team: if a place was saved on this device, its row is already open (and holds its space) before the script fills it in */
 html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;transition:none}
-html.mt-has .mt-row:empty{min-height:14rem}
+@media (min-width:701px){html.mt-has .mt-row:empty{min-height:14rem}}
 .mt-instant .mt-card{animation:none}
 .mt-intro{margin:0 0 .9rem;line-height:normal;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.8rem;letter-spacing:0;color:var(--muted)}   /* same look as the line under Territory Maps */
 
