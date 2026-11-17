@@ -185,7 +185,7 @@
       }));
       cs.forEach((q, i) => {
         const g = R.geom(q), cx = ox + g.l, cy = oy + g.t, bx = boxes[i], k = bx.k;
-        doc.setFillColor('#f1f1ef').setDrawColor('#c9ccc4').setLineWidth(0.6).roundedRect(cx, cy, q.w, q.h, 8, 8, 'FD');
+        doc.setFillColor('#ffffff').setDrawColor(k.color || '#c9ccc4').setLineWidth(1.5).roundedRect(cx, cy, q.w, q.h, 8, 8, 'FD');   // white box with the territory's own colored outline, like the screen
         bx.out.forEach(o => {
           if (o.rule) { doc.setDrawColor('#d6d8d0').setLineWidth(0.5).line(cx + fz * PADK, cy + o.rule, cx + q.w - fz * PADK, cy + o.rule); return; }
           if (o.dot) doc.setFillColor(k.color).circle(cx + o.dot[0], cy + o.dot[1], o.dot[2], 'F');

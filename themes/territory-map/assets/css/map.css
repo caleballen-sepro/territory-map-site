@@ -362,7 +362,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
   .desk-lines .dl-dot{fill:var(--fg);stroke:var(--bg);stroke-width:2}
   .desk-card{position:absolute;width:18rem;box-sizing:border-box;padding:.6rem .8rem .65rem;border-radius:16px;pointer-events:auto;color:var(--fg);
     background:var(--card);
-    border:2px solid var(--c,var(--line));transition:opacity .15s}   /* the territory's own colour, exactly as on the map */
+    border:2px solid var(--c,var(--line));box-shadow:0 2px 10px rgba(0,0,0,.09),0 1px 3px rgba(0,0,0,.06);transition:opacity .15s}   /* the territory's own colour, exactly as on the map */
   .desk-card:hover{z-index:2}
   .desk-card .dc-t{display:flex;align-items:center;margin:0 0 .15rem;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
   .desk-card .dc-t i{flex:none;width:.65rem;height:.65rem;margin-right:.45rem;border-radius:50%;background:var(--c)}
