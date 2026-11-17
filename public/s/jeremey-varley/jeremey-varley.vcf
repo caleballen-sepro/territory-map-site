@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Varley;Jeremey;;;
+FN:Jeremey Varley
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:317-741-6927
+EMAIL;TYPE=INTERNET,WORK:jeremey.varley@sepro.com
+URL:http://localhost:1313/s/jeremey-varley/
+END:VCARD

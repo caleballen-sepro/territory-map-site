@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Morrow;Billy;;;
+FN:Billy Morrow
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:317-617-3175
+EMAIL;TYPE=INTERNET,WORK:billy.morrow@sepro.com
+URL:http://localhost:1313/s/billy-morrow/
+END:VCARD

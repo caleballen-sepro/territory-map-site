@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Shuler;Scott;;;
+FN:Scott Shuler
+ORG:SEPRO Scientific
+TITLE:Director of Technology & Operations
+TEL;TYPE=WORK,VOICE:317-703-9510
+EMAIL;TYPE=INTERNET,WORK:scotts@eutrophix.com
+URL:http://localhost:1313/s/scott-shuler/
+END:VCARD

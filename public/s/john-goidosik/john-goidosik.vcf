@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Goidosik;John;;;
+FN:John Goidosik
+ORG:SEPRO Scientific
+TITLE:Regional Manager - North
+TEL;TYPE=WORK,VOICE:810-618-5414
+EMAIL;TYPE=INTERNET,WORK:jgoidosik@sepro.com
+URL:http://localhost:1313/s/john-goidosik/
+END:VCARD

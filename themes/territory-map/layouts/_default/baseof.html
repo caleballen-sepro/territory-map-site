@@ -85,7 +85,7 @@
           <div class="hdr-maps-menu" id="hdr-maps-menu">
             {{ $here := . }}
             {{ range (where site.RegularPages "Section" "divisions").ByWeight }}
-            <a href="{{ .RelPermalink }}" class="{{ .Params.brand }}{{ if eq .Permalink $here.Permalink }} current{{ end }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ .Title }}</a>
+            <a href="{{ .RelPermalink }}" class="{{ .Params.brand }}{{ if eq .Permalink $here.Permalink }} current{{ end }}"{{ if eq .Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ .Params.menuTitle | default .Title }}</a>
             {{ end }}
           </div>
         </div>
@@ -103,7 +103,7 @@
       </div>
     </div>
     <nav class="maps-row" id="maps-row" aria-label="Territory maps">
-      {{ range $i, $p := (where site.RegularPages "Section" "divisions").ByWeight }}<a href="{{ $p.RelPermalink }}" class="maps-pill {{ $p.Params.brand }}{{ if eq $p.Permalink $here.Permalink }} current{{ end }}" style="--i:{{ $i }}"{{ if eq $p.Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ $p.Title }}</a>{{ end }}
+      {{ range $i, $p := (where site.RegularPages "Section" "divisions").ByWeight }}<a href="{{ $p.RelPermalink }}" class="maps-pill {{ $p.Params.brand }}{{ if eq $p.Permalink $here.Permalink }} current{{ end }}" style="--i:{{ $i }}"{{ if eq $p.Permalink $here.Permalink }} aria-current="page"{{ end }}>{{ $p.Params.menuTitle | default $p.Title }}</a>{{ end }}
     </nav>
   </header>
   {{ block "main" . }}{{ end }}

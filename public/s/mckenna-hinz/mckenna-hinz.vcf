@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Hinz;McKenna;;;
+FN:McKenna Hinz
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:317-407-8106
+EMAIL;TYPE=INTERNET,WORK:mckenna.hinz@sepro.com
+URL:http://localhost:1313/s/mckenna-hinz/
+END:VCARD

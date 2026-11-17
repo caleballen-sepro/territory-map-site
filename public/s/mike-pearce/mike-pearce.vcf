@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Pearce;Mike;;;
+FN:Mike Pearce
+ORG:SEPRO Scientific
+TITLE:Business Director
+TEL;TYPE=WORK,VOICE:317-552-8272
+EMAIL;TYPE=INTERNET,WORK:mike.pearce@eutrophix.com
+URL:http://localhost:1313/s/mike-pearce/
+END:VCARD

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Slade;Jeremy;;;
+FN:Jeremy Slade
+ORG:SEPRO Scientific
+TITLE:Market Development Manager
+TEL;TYPE=WORK,VOICE:386-628-8500
+EMAIL;TYPE=INTERNET,WORK:jeremy.slade@sepro.com
+URL:http://localhost:1313/s/jeremy-slade/
+END:VCARD

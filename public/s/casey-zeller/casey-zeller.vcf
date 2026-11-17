@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Zeller;Casey;;;
+FN:Casey Zeller
+ORG:SEPRO Scientific
+TITLE:Director\, SEPRO Land
+TEL;TYPE=WORK,VOICE:317-417-6343
+EMAIL;TYPE=INTERNET,WORK:caseyz@sepro.com
+URL:http://localhost:1313/s/casey-zeller/
+END:VCARD

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Snyder;Marc;;;
+FN:Marc Snyder
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:480-915-7940
+EMAIL;TYPE=INTERNET,WORK:marc.snyder@sepro.com
+URL:http://localhost:1313/s/marc-snyder/
+END:VCARD

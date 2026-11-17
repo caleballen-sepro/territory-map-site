@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Hammond;Dr. David;;;
+FN:Dr. David Hammond
+ORG:SEPRO Scientific
+TITLE:Senior Scientist
+TEL;TYPE=WORK,VOICE:510-289-3310
+EMAIL;TYPE=INTERNET,WORK:david.hammond@sepro.com
+URL:http://localhost:1313/s/dr.-david-hammond/
+END:VCARD

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Kauppi;Joey;;;
+FN:Joey Kauppi
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:682-220-5513
+EMAIL;TYPE=INTERNET,WORK:joey.kauppi@sepro.com
+URL:http://localhost:1313/s/joey-kauppi/
+END:VCARD

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Dugan;Pamela;;;Ph.D.
+FN:Pamela Dugan\, Ph.D.
+ORG:SEPRO Scientific
+TITLE:Water Quality Specialist
+TEL;TYPE=WORK,VOICE:317-495-5657
+EMAIL;TYPE=INTERNET,WORK:pamelad@eutrophix.com
+URL:http://localhost:1313/s/pamela-dugan/
+END:VCARD

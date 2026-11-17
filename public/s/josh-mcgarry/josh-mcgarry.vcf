@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:McGarry;Josh;;;
+FN:Josh McGarry
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:813-545-3651
+EMAIL;TYPE=INTERNET,WORK:joshm@sepro.com
+URL:http://localhost:1313/s/josh-mcgarry/
+END:VCARD

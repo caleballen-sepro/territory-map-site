@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Keyes;Ben;;;
+FN:Ben Keyes
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:786-525-0717
+EMAIL;TYPE=INTERNET,WORK:ben.keyes@sepro.com
+URL:http://localhost:1313/s/ben-keyes/
+END:VCARD

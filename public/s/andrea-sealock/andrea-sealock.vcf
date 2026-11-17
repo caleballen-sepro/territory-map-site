@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Sealock;Andrea;;;
+FN:Andrea Sealock
+ORG:SEPRO Scientific
+TITLE:Regional Manager - West
+TEL;TYPE=WORK,VOICE:925-536-6692
+EMAIL;TYPE=INTERNET,WORK:andreas@sepro.com
+URL:http://localhost:1313/s/andrea-sealock/
+END:VCARD

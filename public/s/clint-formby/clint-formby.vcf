@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Formby;Clint;;;
+FN:Clint Formby
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:512-417-5662
+EMAIL;TYPE=INTERNET,WORK:clintf@sepro.com
+URL:http://localhost:1313/s/clint-formby/
+END:VCARD

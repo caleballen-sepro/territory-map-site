@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Burnside;Josh;;;
+FN:Josh Burnside
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:267-605-2381
+EMAIL;TYPE=INTERNET,WORK:josh.burnside@sepro.com
+URL:http://localhost:1313/s/josh-burnside/
+END:VCARD

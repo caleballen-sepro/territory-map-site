@@ -10,4 +10,4 @@ the site crops them to a rounded square, centered a little above the middle so f
 No other change is needed: rebuild or push and the photo replaces the initials box on the map pages.
 If a file has to be named differently, add  photo: "some-file.jpg"  to that person in data/divisions/<map>.yaml.
 
-Headshots are shown on the map pages only (not in Desktop Mode, the Directory or the PDFs).
+Headshots are shown on the map pages and, large, on each person's own page (/s/<name>/); they are also put inside that page's Add to Contacts card (JPEG or PNG under 250 KB). They are not shown in Desktop Mode, the Directory or the PDFs.

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Briscoe;Kyle;;;Ph.D.
+FN:Kyle Briscoe\, Ph.D.
+ORG:SEPRO Scientific
+TITLE:Senior Research Manager – Portfolio Dev.
+TEL;TYPE=WORK,VOICE:252-947-5790
+EMAIL;TYPE=INTERNET,WORK:kyleb@sepro.com
+URL:http://localhost:1313/s/kyle-briscoe/
+END:VCARD

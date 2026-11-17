@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Begitschke;Erick;;;Ph.D.
+FN:Erick Begitschke\, Ph.D.
+ORG:SEPRO Scientific
+TITLE:Technical Development Manager
+TEL;TYPE=WORK,VOICE:252-904-7759
+EMAIL;TYPE=INTERNET,WORK:erick.begitschke@sepro.com
+URL:http://localhost:1313/s/erick-begitschke/
+END:VCARD

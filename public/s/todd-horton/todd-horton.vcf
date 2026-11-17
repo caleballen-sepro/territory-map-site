@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Horton;Todd;;;
+FN:Todd Horton
+ORG:SEPRO Scientific
+TITLE:Regional Manager - South
+TEL;TYPE=WORK,VOICE:864-561-3640
+EMAIL;TYPE=INTERNET,WORK:toddh@sepro.com
+URL:http://localhost:1313/s/todd-horton/
+END:VCARD

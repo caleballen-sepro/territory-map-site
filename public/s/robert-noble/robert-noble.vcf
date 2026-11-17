@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Noble;Robert;;;
+FN:Robert Noble
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:916-952-9814
+EMAIL;TYPE=INTERNET,WORK:robert.noble@sepro.com
+URL:http://localhost:1313/s/robert-noble/
+END:VCARD

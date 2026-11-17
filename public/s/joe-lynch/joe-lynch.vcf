@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Lynch;Joe;;;
+FN:Joe Lynch
+ORG:SEPRO Scientific
+TITLE:National Sales Manager
+TEL;TYPE=WORK,VOICE:973-567-1170
+EMAIL;TYPE=INTERNET,WORK:josephl@sepro.com
+URL:http://localhost:1313/s/joe-lynch/
+END:VCARD

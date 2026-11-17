@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Smith;Cameron;;;
+FN:Cameron Smith
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:407-504-9900
+EMAIL;TYPE=INTERNET,WORK:cameron.smith@sepro.com
+URL:http://localhost:1313/s/cameron-smith/
+END:VCARD

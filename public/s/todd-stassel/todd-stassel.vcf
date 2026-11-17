@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Stassel;Todd;;;
+FN:Todd Stassel
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:417-689-2547
+EMAIL;TYPE=INTERNET,WORK:todds@sepro.com
+URL:http://localhost:1313/s/todd-stassel/
+END:VCARD

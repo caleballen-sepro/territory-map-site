@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Ratajczyk;Bill;;;
+FN:Bill Ratajczyk
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:651-303-1198
+EMAIL;TYPE=INTERNET,WORK:williamr@sepro.com
+URL:http://localhost:1313/s/bill-ratajczyk/
+END:VCARD

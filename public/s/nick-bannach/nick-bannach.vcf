@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Bannach;Nick;;;
+FN:Nick Bannach
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:331-231-0124
+EMAIL;TYPE=INTERNET,WORK:nick.bannach@sepro.com
+URL:http://localhost:1313/s/nick-bannach/
+END:VCARD

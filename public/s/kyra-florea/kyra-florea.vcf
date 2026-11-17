@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Florea;Kyra;;;
+FN:Kyra Florea
+ORG:SEPRO Scientific
+TITLE:Technical Specialist
+TEL;TYPE=WORK,VOICE:720-582-9145
+EMAIL;TYPE=INTERNET,WORK:kyra.florea@sepro.com
+URL:http://localhost:1313/s/kyra-florea/
+END:VCARD
