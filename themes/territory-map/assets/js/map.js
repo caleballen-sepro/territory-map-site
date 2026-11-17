@@ -177,7 +177,7 @@ window.__tmBoot = async function (soft) {
   });
   legend.addEventListener('mouseover', e => { const b = e.target.closest('button'); if (b) { hovered = b.dataset.id; render(); } });
   legend.addEventListener('mouseleave', () => { hovered = null; render(); });
-  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header')) { pinned = null; render(); } }, sig);
+  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header, .team-fold')) { pinned = null; render(); } }, sig);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; render(); } }, sig);
 
   // Open positions show who to contact instead: the territory's regional manager, or a name found in the open position's title.
