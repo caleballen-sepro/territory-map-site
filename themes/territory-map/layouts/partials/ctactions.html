@@ -6,7 +6,6 @@
 {{ $page := printf "s/%s/" $slug | relURL }}{{ $vcf := printf "s/%s/%s.vcf" $slug $slug | relURL }}
 {{ $tel := replaceRE `[^0-9+]` "" ($p.phone | default "") }}
 <div class="ct-actions">
-  {{ if $tel }}<a class="ct-act ct-touch" href="tel:{{ $tel }}">{{ partial "icon.html" "phone" }}<span>Call</span></a><a class="ct-act ct-touch" href="sms:{{ $tel }}">{{ partial "icon.html" "text" }}<span>Text</span></a>{{ end }}
   <a class="ct-act" href="{{ $vcf }}" download>{{ partial "icon.html" "save" }}<span>Save</span></a>
   <button type="button" class="ct-act share-btn" data-url="{{ $page }}" data-name="{{ $p.name }}" data-title="{{ $p.title }}" aria-label="Share {{ $p.name }}'s contact page">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
   {{ if .copy }}{{ partial "copybtn.html" (dict "p" $p) }}{{ end }}

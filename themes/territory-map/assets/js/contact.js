@@ -22,7 +22,10 @@
     e.preventDefault();
     const url = new URL(b.dataset.url || '', location.href).href, name = b.dataset.name || '', title = b.dataset.title || '';
     const data = { title: name + ' · SEPRO Scientific', text: name + (title ? ', ' + title : ''), url };
-    if (touch.matches && navigator.share) { navigator.share(data).catch(() => {}); return; }   // (closing the sheet is not an error)
+    if (touch.matches && navigator.share) {   // closing the sheet is not an error; if the phone refuses to open it, the link is copied instead
+      navigator.share(data).catch(err => { if (!err || err.name !== 'AbortError') copy(url).then(ok => flash(b, ok)); });
+      return;
+    }
     copy(url).then(ok => flash(b, ok));
   });
 })();

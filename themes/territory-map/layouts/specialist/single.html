@@ -51,7 +51,6 @@
       </dl>
       <div class="sp-actions">
         <a class="sp-btn primary" href="{{ $vcf.RelPermalink }}" download="{{ $slug }}.vcf">{{ partial "icon.html" "save" }}<span>Add to Contacts</span></a>
-        {{ if $tel }}<a class="sp-btn sp-touch" href="tel:{{ $tel }}">{{ partial "icon.html" "phone" }}<span>Call</span></a><a class="sp-btn sp-touch" href="sms:{{ $tel }}">{{ partial "icon.html" "text" }}<span>Text</span></a>{{ end }}
         <button type="button" class="sp-btn share-btn" data-url="{{ .RelPermalink }}" data-name="{{ $n }}" data-title="{{ $p.title }}">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
       </div>
     </div>

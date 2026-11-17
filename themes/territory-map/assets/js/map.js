@@ -212,8 +212,8 @@ window.__tmBoot = async function (soft) {
   const nameHtml = c => slugs[nameKey(c)] ? `<strong><a class="ct-name" href="${esc(personBase + slugs[nameKey(c)] + '/')}">${esc(c.name)}</a></strong>` : `<strong>${esc(c.name)}</strong>`;
   const actions = c => {
     const slug = slugs[nameKey(c)]; if (!slug) return c.phone || c.email ? copyBtn(vcard(c)) : '';
-    const tel = String(c.phone || '').replace(/[^\d+]/g, ''), page = personBase + slug + '/';
-    return `<div class="ct-actions">${tel ? `<a class="ct-act ct-touch" href="tel:${esc(tel)}">${ico('phone')}<span>Call</span></a><a class="ct-act ct-touch" href="sms:${esc(tel)}">${ico('text')}<span>Text</span></a>` : ''}`
+    const page = personBase + slug + '/';
+    return `<div class="ct-actions">`
       + `<a class="ct-act" href="${esc(page + slug + '.vcf')}" download>${ico('save')}<span>Save</span></a>`
       + `<button type="button" class="ct-act share-btn" data-url="${esc(page)}" data-name="${esc(c.name)}" data-title="${esc(c.title || '')}" aria-label="Share ${esc(c.name)}\u2019s contact page">${ico('share')}<span class="cb-t">Share</span></button>`
       + `${copyBtn(vcard(c))}</div>`;
