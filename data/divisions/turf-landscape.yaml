@@ -71,7 +71,7 @@ territories:
         phone: "512-417-5662"
         email: "clintf@sepro.com"
   - id: southeast
-    name: "Southeast (Open)"
+    name: "Southeast"
     color: "#ab97c0"
     states: [VA, NC, SC, GA, AL, MS, TN]
     contacts:

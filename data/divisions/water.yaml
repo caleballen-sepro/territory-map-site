@@ -95,7 +95,7 @@ territories:
         phone: "810-618-5414"
         email: "jgoidosik@sepro.com"
   - id: mid-atlantic
-    name: "Mid-Atlantic (Open)"
+    name: "Mid-Atlantic"
     group: "South Region"
     color: "#ab97c0"
     states: [WV, VA, NC, MD, DE, DC]
@@ -108,7 +108,7 @@ territories:
         phone: "864-561-3640"
         email: "toddh@sepro.com"
   - id: southeast-open
-    name: "Southeast (Open)"
+    name: "Southeast"
     group: "South Region"
     color: "#6b9b6a"
     states: [TN, AL, GA, SC]

@@ -201,12 +201,8 @@ window.__tmBoot = async function (soft) {
   const headshot = c => `<div class="hs${photos[c.name] ? ' has-photo' : ''}" aria-hidden="true">${photos[c.name] ? `<img src="${esc(peopleBase + photos[c.name])}" alt="" width="160" height="160" decoding="async">` : esc(initials(c.name).toUpperCase())}</div>`;
   const person = (c, t) => {
     const cover = coverFor(c, t);
-    if (cover.length) return `
-    <div class="contact open">
-      <strong>${esc(c.name)}</strong>
-      ${cover.map(m => `<span>Contact ${esc(m.name)}${m.title ? ', ' + esc(m.title) : ''}</span>${links(m)}`).join('<br>')}
-      ${copyBtn(cover.map(vcard).join('\n\n'))}
-    </div>`;
+    if (cover.length) return cover.map(m => person(m, null)).join('');   // an open spot simply shows the regional manager as a normal contact
+    if (isOpen(c)) return '';
     const body = `
       <strong>${esc(c.name)}</strong>
       ${c.title ? `<span>${esc(c.title)}</span>` : ''}

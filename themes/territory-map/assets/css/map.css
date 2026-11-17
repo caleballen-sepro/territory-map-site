@@ -292,7 +292,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .contact .copy-btn .cb-t,.res .copy-btn .cb-t,.copy-btn .cb-t{display:inline;margin:0;color:inherit;font-size:inherit}
 .res-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
 .res-actions .res-go,.res-actions .copy-btn{margin-top:0}
-.contact.open strong{color:var(--muted);font-weight:500}
 .res-place{padding:.6rem .75rem;border-bottom:2px solid var(--line);background:var(--card);font-size:.9rem}
 .res-place small{display:block;margin-top:.15rem;color:var(--muted);font-size:.75rem}
 /* directory: icon-only copy button in the name cell, shown on row hover (always on touch screens) */

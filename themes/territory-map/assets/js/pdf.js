@@ -214,8 +214,8 @@
       if (ms.length) {
         const k = ms.map(m => m.name).join('|'); let g = byKey.get(k);
         if (!g) { g = { managers: ms, terrs: [], members: [] }; byKey.set(k, g); groups.push(g); }
-        g.terrs.push(t); (t.contacts || []).forEach(p => g.members.push({ t, p }));
-      } else (t.contacts || []).forEach(p => loose.push({ t, p }));
+        g.terrs.push(t); (t.contacts || []).filter(p => !p.open && !/^\s*open\b/i.test(p.name || '')).forEach(p => g.members.push({ t, p }));
+      } else (t.contacts || []).filter(p => !p.open && !/^\s*open\b/i.test(p.name || '')).forEach(p => loose.push({ t, p }));
     });
     const grouped = groups.length > 0;
     if (grouped && loose.length) groups.push({ managers: [], terrs: [], members: loose.splice(0) });

@@ -98,13 +98,8 @@
     const dot = t ? `<i style="background:${esc(t.color)}"></i>` : '';
     const go = !tg ? '' : cur && window.TerritoryMap ? `<button type="button" class="res-go" data-id="${esc(tg)}">Show on map</button>`
       : `<a class="res-go" href="${esc(e.dv.url)}#t=${encodeURIComponent(tg)}">Open map</a>`;
-    if (cover.length) {   // open position: show who to contact
-      return `<li class="res"><div class="res-main"><strong>${esc(p.name)}</strong>` +
-        cover.map(m => `<span>Contact ${esc(m.name)}${m.title ? ', ' + esc(m.title) : ''}</span>`).join('') +
-        `<span class="res-meta">${dot}${esc(meta)}</span></div>` +
-        cover.map(m => `<div class="res-links">${links(m)}</div>`).join('') +
-        `<div class="res-actions">${go}${copyBtn(cover.map(vcard).join('\n\n'))}</div></li>`;
-    }
+    if (cover.length) return cover.map(m => `<li class="res"><div class="res-main"><strong>${esc(m.name)}</strong>${m.title ? `<span>${esc(m.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
+      `<div class="res-links">${links(m)}</div><div class="res-actions">${go}${m.phone || m.email ? copyBtn(vcard(m)) : ''}</div></li>`).join('');   // an open spot simply lists the regional manager
     return `<li class="res"><div class="res-main"><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
       `<div class="res-links">${links(p)}</div><div class="res-actions">${go}${p.phone || p.email ? copyBtn(vcard(p)) : ''}</div></li>`;
   };

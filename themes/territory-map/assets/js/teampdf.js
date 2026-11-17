@@ -109,7 +109,7 @@
           }
           const tx = cx + hs + 12 * k, tw = CW - hs - 12 * k; let ty = cy + 8 * k;
           doc.setFillColor(tc).circle(tx + 3 * k, ty - 2.5 * k, 3 * k, 'F');
-          setF(fz(8), true).setTextColor(SUB); doc.text(clean(x.t.name + (x.open ? ' (open)' : '')).toUpperCase(), tx + 11 * k, ty, { maxWidth: tw - 11 * k }); ty += 14 * k;
+          setF(fz(8), true).setTextColor(SUB); doc.text(clean(x.t.name).toUpperCase(), tx + 11 * k, ty, { maxWidth: tw - 11 * k }); ty += 14 * k;
           setF(fz(12, 7), true).setTextColor(INK); doc.text(clean(p.name), tx, ty, { maxWidth: tw }); ty += 12 * k;
           setF(fz(9, 6), false).setTextColor(SUB); doc.splitTextToSize(clean(p.title || ''), tw).slice(0, 2).forEach(l => { doc.text(l, tx, ty); ty += 10.5 * k; });
           ty += k;
