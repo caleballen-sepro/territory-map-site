@@ -193,6 +193,11 @@ window.__tmBoot = async function (soft) {
   const COPY = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   const copyBtn = text => `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copy contact details">${COPY}<span class="cb-t">Copy</span></button>`;
   const links = c => `${c.phone ? `<a href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${esc(c.phone)}</a><br>` : ''}${c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ''}`;
+  // Headshots (map pages only, not Desktop Mode): a rounded square with the photo, or the person's initials until one is added (static/people/README.txt)
+  const photos = data.photos || {}, peopleBase = data.peopleBase || 'people/';
+  Object.values(photos).forEach(f => { new Image().src = peopleBase + f; });   // (warm the cache so the box doesn't flicker when it redraws)
+  const initials = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '')[0] || '') + (w.length > 1 ? w[w.length - 1][0] : ''); };
+  const headshot = c => `<div class="hs${photos[c.name] ? ' has-photo' : ''}" aria-hidden="true">${photos[c.name] ? `<img src="${esc(peopleBase + photos[c.name])}" alt="" width="160" height="160" decoding="async">` : esc(initials(c.name).toUpperCase())}</div>`;
   const person = (c, t) => {
     const cover = coverFor(c, t);
     if (cover.length) return `
@@ -201,13 +206,12 @@ window.__tmBoot = async function (soft) {
       ${cover.map(m => `<span>Contact ${esc(m.name)}${m.title ? ', ' + esc(m.title) : ''}</span>${links(m)}`).join('<br>')}
       ${copyBtn(cover.map(vcard).join('\n\n'))}
     </div>`;
-    return `
-    <div class="contact">
+    const body = `
       <strong>${esc(c.name)}</strong>
       ${c.title ? `<span>${esc(c.title)}</span>` : ''}
       ${links(c)}
-      ${c.phone || c.email ? copyBtn(vcard(c)) : ''}
-    </div>`;
+      ${c.phone || c.email ? copyBtn(vcard(c)) : ''}`;
+    return `<div class="contact has-hs">${headshot(c)}<div class="ct-body">${body}</div></div>`;
   };
   const pinLine = () => `<p class="pin">${pinned ? '📌 Pinned. Click again or press Esc to release.' : 'Click to pin'}</p>`;
 
@@ -320,7 +324,7 @@ window.__tmBoot = async function (soft) {
           if (ov > 0.5) { moved = true; a.pos -= ov / 2; b.pos += ov / 2; }
         }
         if (col.length) {
-          const lo = vert(sd) ? 0 : -M + 0, first = col[0], f = first.pos - first[size] / 2; if (f < lo) { col.forEach(c => c.pos += lo - f); moved = true; }
+          const lo = vert(sd) ? 0 : -M, first = col[0], f = first.pos - first[size] / 2; if (f < lo) { col.forEach(c => c.pos += lo - f); moved = true; }
           if (!vert(sd)) { const last = col[col.length - 1], over = last.pos + last[size] / 2 - (W + M); if (over > 0) { col.forEach(c => c.pos -= over); moved = true; } }
         }
         if (!moved) break;

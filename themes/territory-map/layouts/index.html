@@ -1,9 +1,34 @@
 {{ define "main" }}
 <main class="wrap">
+  {{/* My Personal SEPRO Team: type a ZIP code, city or state (or use your location) and see your technical specialist from every map, in one row (myteam.js) */}}
+  {{ $d3 := "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" }}{{ if fileExists "static/vendor/d3.min.js" }}{{ $d3 = "vendor/d3.min.js" | relURL }}{{ end }}
+  {{ $topo := "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" }}{{ if fileExists "static/vendor/topojson-client.min.js" }}{{ $topo = "vendor/topojson-client.min.js" | relURL }}{{ end }}
+  {{ $mapdata := site.Params.mapDataURL }}{{ if fileExists "static/vendor/us-states.json" }}{{ $mapdata = "vendor/us-states.json" | relURL }}{{ end }}
+  {{ $pdfjs := "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" }}{{ if fileExists "static/vendor/jspdf.umd.min.js" }}{{ $pdfjs = "vendor/jspdf.umd.min.js" | relURL }}{{ end }}
+  <section class="myteam" id="myteam" aria-labelledby="myteam-h" data-jspdf="{{ $pdfjs }}" data-hdrlogo="{{ with site.Params.header.logo }}{{ . | relURL }}{{ end }}" data-d3="{{ $d3 }}" data-topo="{{ $topo }}" data-map="{{ $mapdata }}">
+    <h2 id="myteam-h">My Personal SEPRO Team</h2>
+    <p class="mt-intro">Share your location to find the contacts for your area.</p>
+    <div class="myteam-bar">
+      <div class="dir-search" role="search">
+        <label class="sr-only" for="mt-q">Find your technical specialists by ZIP code, city or state</label>
+        <svg class="ico-search" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="mt-q" type="search" placeholder="Enter your ZIP code, city or state" autocomplete="off" spellcheck="false">
+        <button type="button" class="dir-clear" hidden>Clear</button>
+      </div>
+      <button type="button" id="mt-loc" class="btn mt-loc" hidden><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Use my location</button>
+      <button type="button" id="team-pdf" class="btn mt-loc" hidden>Generate PDF of My Team</button>
+    </div>
+    <p id="mt-status" class="dir-status" role="status" aria-live="polite"></p>
+    <div id="mt-reveal" class="mt-reveal" aria-hidden="true"><div class="mt-reveal-in"><div id="mt-row" class="mt-row"></div></div></div>
+  </section>
   <header class="pagehead">
     <h1>{{ site.Params.heading | default .Title }}</h1>
     <p>{{ site.Params.intro }}</p>
   </header>
   {{ partial "cards.html" . }}
 </main>
+{{ $tp := resources.Get "js/teampdf.js" | minify | fingerprint }}
+<script src="{{ $tp.RelPermalink }}" integrity="{{ $tp.Data.Integrity }}"></script>
+{{ $mt := resources.Get "js/myteam.js" | minify | fingerprint }}
+<script src="{{ $mt.RelPermalink }}" integrity="{{ $mt.Data.Integrity }}"></script>
 {{ end }}

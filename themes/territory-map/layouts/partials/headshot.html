@@ -1,0 +1,5 @@
+{{/* Headshot box for a contact on the map pages. Usage: partial "headshot.html" (dict "name" .name "photos" $photos)
+     With a photo the picture fills a rounded square; without one it shows the person's initials. Photos are found by name (see static/people/README.txt). */}}
+{{ $f := index .photos .name }}
+{{ $w := split (strings.TrimSpace .name) " " }}
+<div class="hs{{ if $f }} has-photo{{ end }}" aria-hidden="true">{{ if $f }}<img src="{{ printf "people/%s" $f | relURL }}" alt="" width="160" height="160" loading="lazy" decoding="async">{{ else }}{{ upper (substr (index $w 0) 0 1) }}{{ if gt (len $w) 1 }}{{ upper (substr (index $w (sub (len $w) 1)) 0 1) }}{{ end }}{{ end }}</div>

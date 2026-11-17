@@ -121,11 +121,28 @@
       const pHits = entries.filter(e => e.kind !== 'national' && [...e.abbrs].some(a => set.has(a)));
       hits = [...pHits, ...textHits.filter(e => !pHits.includes(e))];
     }
-    return { toks, place, usePlace, set, hits };
+    // team: a search for one place (a state, or a ZIP code or city in one state) - used by My Personal SEPRO Team and its PDF
+    const tr = raw.trim(), ab = usePlace && place.states.length === 1 ? place.states[0] : stByName[norm(tr)] || (/^[a-z]{2}$/i.test(tr) && isAbbr(tr.toLowerCase()) ? tr.toUpperCase() : null);
+    const team = ab ? { abbr: ab, state: stName[ab] || ab, label: usePlace && place.states.length === 1 ? place.label : stName[ab] || ab } : null;
+    return { toks, place, usePlace, set, hits, team };
   };
-  window.TerritorySearch = {   // used by the Directory page's own search box (dirsearch.js)
+  // The technical specialist for a state, map by map (the home page "My Personal SEPRO Team" and its PDF): the territory's specialists,
+  // never anyone whose job title says manager; an open position shows the regional manager to contact instead; a territory whose only contact is a manager lists that manager (last resort).
+  const specialists = abbr => {
+    const out = [];
+    (data.all || []).forEach(dv => (dv.territories || []).filter(t => (t.states || []).some(s => String(s).toUpperCase() === abbr)).forEach(t => {
+      const seen = new Set(), add = (p, open) => { const k = p.name + '|' + t.id; if (!seen.has(k)) { seen.add(k); out.push({ dv: { id: dv.id, title: dv.nav || dv.title, brand: dv.brand, group: dv.group || dv.brand }, t: { id: t.id, name: t.name, color: t.color }, p, open: !!open }); } };
+      const cs = t.contacts || [], isMgr = p => /manager/i.test(p.title || '');
+      cs.forEach(p => { if (!isOpen(p)) { if (!isMgr(p)) add(p); } else (t.managers || []).forEach(m => add(m, true)); });
+      if (!out.some(o => o.dv.id === dv.id && o.t.id === t.id)) cs.forEach(p => { if (!isOpen(p)) add(p); });   // last resort: a territory with only a manager lists that manager
+    }));
+    return out;
+  };
+  window.TerritorySearch = {
+    specialists,
+    photos: data.photos || {}, peopleBase: data.peopleBase || '',   // used by the Directory page's own search box (dirsearch.js)
     ready: () => places ? Promise.resolve() : loadPlaces(),
-    filter: raw => { const q = compute(String(raw).trim()); return { keys: new Set(q.hits.map(e => e.key)), count: q.hits.length, place: q.usePlace ? { label: q.place.label, states: q.place.states.map(a => stName[a] || a) } : null }; }
+    filter: raw => { const q = compute(String(raw).trim()); return { keys: new Set(q.hits.map(e => e.key)), count: q.hits.length, place: q.usePlace ? { label: q.place.label, states: q.place.states.map(a => stName[a] || a) } : null, team: q.team }; }
   };
 
   const highlight = ids => { if (window.TerritoryMap) window.TerritoryMap.highlight(ids); };

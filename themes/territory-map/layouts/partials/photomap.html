@@ -1,0 +1,11 @@
+{{/* Headshots for everyone in every division: person's name -> file in static/people (a file named like the person with dashes, or `photo:` on the person). Returns a dict. */}}
+{{ $files := dict }}
+{{ if fileExists "static/people" }}{{ range readDir "static/people" }}{{ if findRE `(?i)\.(jpe?g|png|webp|avif)$` .Name }}{{ $files = merge $files (dict (lower (replaceRE `\.[^.]+$` "" .Name)) .Name) }}{{ end }}{{ end }}{{ end }}
+{{ $photos := dict }}
+{{ range (where site.RegularPages "Section" "divisions") }}{{ $dd := index site.Data.divisions .Params.territoryData }}
+  {{ $people := slice }}
+  {{ range $dd.national }}{{ $people = $people | append . }}{{ end }}
+  {{ range $dd.territories }}{{ range .contacts }}{{ $people = $people | append . }}{{ end }}{{ range .managers }}{{ $people = $people | append . }}{{ end }}{{ end }}
+  {{ range $people }}{{ $f := .photo | default (index $files (lower (urlize .name))) }}{{ if $f }}{{ $photos = merge $photos (dict .name $f) }}{{ end }}{{ end }}
+{{ end }}
+{{ return $photos }}

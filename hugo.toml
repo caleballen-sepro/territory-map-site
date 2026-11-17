@@ -8,7 +8,7 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
 
 [params]
   heading = "Territory Maps"
-  intro = "Choose a division to find the contact for your area."
+  intro = "Choose a division to see their complete territory map."
   description = "Find the SEPRO Scientific specialist for your area. Territory maps and contacts for Water, Municipal & Industrial, EutroPHIX, Turf & Landscape and Ornamental."   # shown in link previews
   # Pre-projected US states TopoJSON. To self-host: save this file to static/us-states.json
   # and change this to "/us-states.json"
@@ -47,11 +47,6 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
     glass = "72%"             # how solid the pill is (lower = more see-through); the blur shows through
     textColor = "#0e0906"
     accentColor = "#0e0906"   # dot/underline for a division with no brand set
-
-    # White pill button at the far right of the menu
-    [params.header.cta]
-      label = "Request Change"
-      url = "https://form.asana.com/?k=DfF_ciyQctDcd1gDI5gTLA&d=11504317866398"
 
   # ---------- Page text (style guide: Helvetica Neue + DM Mono) ----------
   [params.typography]

@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ $divs := (where site.RegularPages "Section" "divisions").ByWeight }}
 {{ $pdfjs := "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" }}{{ if fileExists "static/vendor/jspdf.umd.min.js" }}{{ $pdfjs = "vendor/jspdf.umd.min.js" | relURL }}{{ end }}
-<main class="wrap directory" data-jspdf="{{ $pdfjs }}">
+<main class="wrap directory" data-jspdf="{{ $pdfjs }}" data-hdrlogo="{{ with site.Params.header.logo }}{{ . | relURL }}{{ end }}">
   <header class="pagehead pagehead-row">
     <div>
       <h1>{{ .Title }}</h1>

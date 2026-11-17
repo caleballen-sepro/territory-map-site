@@ -111,8 +111,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 /* ---- DM Mono for captions and detail copy (style guide: used sparingly) ---- */
 .pagehead p,.card p,.panel .hint,.panel .pin,.panel .states,.rev{font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.8rem;letter-spacing:0}
 
-/* ---- Request Change: white pill at the far right of the menu ---- */
-
 /* header logo: color version on the light pill, white version on the dark pill */
 .hdr-logo img.hdr-logo-dark{display:none}
 :root[data-theme=dark] .hdr-logo img.hdr-logo-light.has-dark{display:none}
@@ -160,19 +158,14 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .res-go:hover{background:var(--fg);color:var(--bg)}
 .res-more{padding:.6rem .75rem;font-size:.8rem;color:var(--muted)}
 
-/* ---- Request Change: white pill ---- */
-.hdr-cta{display:inline-flex;align-items:center;align-self:center;padding:.85rem 1.4rem;border:1px solid var(--line);border-radius:999px;background:#fff;color:#0e0906;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;font-size:.8125rem;font-weight:500;line-height:1;white-space:nowrap;cursor:pointer;transition:background-color .2s ease}   /* the same white button as Desktop Mode */
-.hdr-cta:hover{background:#f1f1ef}
-.hdr-cta:focus-visible{outline:2px solid var(--hdr-fg,var(--fg));outline-offset:2px}
-@media (max-width:900px){.hdr-cta{align-self:flex-start;margin:.25rem 0 .4rem .75rem}}
 
 /* ---- menu search ---- */
 .hdr-search{position:relative;display:flex;align-items:center}
 .hdr-search .ico-search{position:absolute;left:.85rem;pointer-events:none;opacity:.6}
-.hdr-search input{width:15rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
+.hdr-search input{width:27rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
 .hdr-search input::placeholder{color:inherit;opacity:.55}
-.hdr-search input:focus{width:22rem;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-1px;border-color:transparent}   /* one black (light) / white (dark) line: the outline replaces the border */
-.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
+.hdr-search input:focus{width:34rem;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-1px;border-color:transparent}   /* one black (light) / white (dark) line: the outline replaces the border */
+.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:100%;box-sizing:border-box;padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
   background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   border:1px solid var(--hdr-edge,rgba(255,255,255,.65));
@@ -243,7 +236,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 
 /* ---- Directory page: text only, colored by brand (water blue / land green) ---- */
 .dir-jump{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 2rem}
-.dir-jump a{padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;color:inherit;text-decoration:none;font-size:.85rem}
+.dir-jump a{padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;color:inherit;text-decoration:none;font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase}
 .dir-jump a:hover{background:var(--line)}
 .dir-div{--bc:var(--line);margin:0 0 2.5rem;scroll-margin-top:110px}
 .dir-div.water{--bc:var(--water)}
@@ -367,7 +360,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
   .desk-lines .dl-h{stroke:var(--bg);stroke-width:4;stroke-linecap:round}
   .desk-lines .dl{stroke:var(--fg);stroke-width:1.5;stroke-linecap:round}
   .desk-lines .dl-dot{fill:var(--fg);stroke:var(--bg);stroke-width:2}
-  .desk-card{position:absolute;width:16.5rem;box-sizing:border-box;padding:.6rem .8rem .65rem;border-radius:16px;pointer-events:auto;color:var(--hdr-fg,var(--fg));
+  .desk-card{position:absolute;width:18rem;box-sizing:border-box;padding:.6rem .8rem .65rem;border-radius:16px;pointer-events:auto;color:var(--hdr-fg,var(--fg));
     background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
     -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
     border:2px solid var(--c,var(--line));transition:opacity .15s}   /* the territory's own colour, exactly as on the map */
@@ -399,15 +392,14 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
 @media (max-width:899px),(hover:none) and (pointer:coarse){.dir-landscape{display:none}}   /* landscape needs the wide Desktop Mode layout */
 @media print{.dir-actions,.dir-btns{display:none!important}}
 
-/* Dark mode: the white buttons (Request Change, Desktop Mode) behave like the territory pills on the Directory:
+/* Dark mode: the white button (Desktop Mode) behave like the territory pills on the Directory:
    clear with a thin line and the theme's text colour, filling with the line colour on hover. */
 :root{--pill-bg:#fff;--pill-fg:#0e0906;--pill-hover:#f1f1ef}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--pill-bg:transparent;--pill-fg:var(--fg);--pill-hover:var(--line)}}
 :root[data-theme=dark]{--pill-bg:transparent;--pill-fg:var(--fg);--pill-hover:var(--line)}
-.btn-white,.hdr-cta{background:var(--pill-bg);color:var(--pill-fg)}
-.btn-white:hover:not(:disabled),.hdr-cta:hover{background:var(--pill-hover)}
+.btn-white{background:var(--pill-bg);color:var(--pill-fg)}
+.btn-white:hover:not(:disabled){background:var(--pill-hover)}
 .btn-white[aria-pressed=true]:hover:not(:disabled){background:var(--fg)}
-.hdr-cta{border-color:var(--hdr-line,var(--line))}   /* the header's own line colour, so the outline stays visible on the dark glass */
 
 /* Desktop Mode: switching maps */
 body.desk .state{transition:opacity .15s,filter .15s,fill .6s ease}
@@ -456,7 +448,7 @@ body.desk-soft #map{transition:margin-top .6s cubic-bezier(.4,0,.2,1),margin-bot
 @media (min-width:901px) and (max-width:1100px){.maps-pill{font-size:.72rem;letter-spacing:.04em;gap:.4rem;padding:0 .6rem}}   /* narrow windows: long names wrap inside their own pill */
 @media (prefers-reduced-motion:reduce){.maps-row,.maps-pill{transition:none!important}}
 
-/* the search field is exactly as tall as the Request Change button */
+/* the menu search field is as tall as the other pill buttons */
 @media (min-width:901px){.hdr-search input{box-sizing:border-box;height:calc(1.7rem + .8125rem + 2px);padding-top:0;padding-bottom:0}}
 
 /* Desktop Mode: hovering a territory never changes the size or weight of its abbreviations (the map text stays exactly the same; the territory is spotlighted by the dimming of the others) */
@@ -506,3 +498,55 @@ body.dir-leaving main.wrap{opacity:0;transition:opacity .28s ease}
 body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .28s ease,transform .28s cubic-bezier(.5,0,.8,.4)}
 @keyframes mapIn{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:no-preference){html.map-enter main.wrap:not(.directory){animation:mapIn .5s ease backwards}}
+
+/* Headshots on the map pages' contact boxes: a rounded square (photo, or initials until one is added); not in Desktop Mode */
+.contact.has-hs{display:flex;align-items:flex-start;gap:.9rem}
+.ct-body{flex:1;min-width:0}
+.hs{position:relative;flex:none;display:flex;align-items:center;justify-content:center;width:5rem;height:5rem;border-radius:.9rem;overflow:hidden;font-size:1.35rem;font-weight:600;letter-spacing:.04em;
+  background:color-mix(in srgb,var(--c,var(--bc,var(--muted))) 16%,var(--bg));color:color-mix(in srgb,var(--c,var(--bc,var(--muted))) 58%,var(--fg))}
+.hs img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.hs.has-photo{background:color-mix(in srgb,var(--fg) 8%,var(--bg))}
+/* phones: each contact is a card, a large photo on top and the details below */
+@media (max-width:600px){.contact.has-hs{flex-direction:column;align-items:stretch;gap:.7rem}.contact.has-hs .hs{width:100%;height:auto;aspect-ratio:4/3;border-radius:.9rem;font-size:2.6rem}.contact.has-hs .ct-body{flex:none;width:100%}}
+@media (min-width:901px){.desk-card .contact.has-hs{gap:.6rem}.desk-card .hs{width:3.6rem;height:3.6rem;border-radius:.65rem;font-size:1.05rem}}   /* smaller in the Desktop Mode cards */
+@media print{.hs{display:none}}
+.ct-body a{overflow-wrap:anywhere}
+
+/* Home: "My Personal SEPRO Team" - the search, then your specialists side by side in one row */
+.myteam{margin:0 0 2.25rem}
+.myteam h2{margin:0 0 .25rem;font-size:var(--fs-h1,2rem);font-weight:var(--fw-head,300);line-height:1.2}   /* as large as the page title */
+.myteam-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+.myteam-bar .dir-search{flex:1 1 18rem;margin:0}
+.mt-loc{display:inline-flex;align-items:center;gap:.5rem;box-sizing:border-box;height:calc(1.7rem + .8125rem + 2px);padding:0 1.1rem;border:2px solid var(--fg);border-radius:999px;background:transparent;color:var(--fg);font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1;transition:background-color .2s ease}
+.mt-loc[hidden]{display:none}
+.mt-loc:hover:not(:disabled){background:var(--line)}
+.mt-loc:active,.mt-loc:disabled{background:var(--fg);color:var(--bg);opacity:1}
+.myteam .dir-status{margin:.5rem 0 0}
+.mt-reveal{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transition:grid-template-rows .45s cubic-bezier(.2,.7,.2,1),opacity .3s ease,visibility 0s .45s}
+.mt-reveal.on{grid-template-rows:1fr;opacity:1;visibility:visible;transition-delay:0s}
+.mt-reveal-in{min-height:0;overflow:hidden;padding:0 2px}
+.mt-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(13rem,1fr);gap:1rem;overflow-x:auto;padding:1rem 0 .5rem}
+.mt-card{min-width:0;padding:.9rem 1rem 1rem;border:2px solid var(--c,var(--line));border-radius:12px;background:var(--card);animation:mtIn .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
+.mt-map{margin:0 0 .15rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.mt-reg{display:flex;align-items:center;gap:.4rem;margin:0 0 .7rem;font-size:.8rem;color:var(--muted)}
+.mt-reg i{flex:none;width:.6rem;height:.6rem;border-radius:50%;background:var(--c)}
+.mt-card .contact{margin:0;padding:0;border:0}
+.mt-head{display:flex;align-items:flex-start;gap:.7rem}
+.mt-head>div:last-child{min-width:0}
+.mt-head strong,.mt-head span{display:block}
+.mt-links{margin-top:.65rem}
+.mt-links a{display:block;white-space:nowrap}
+.mt-links a[href^=mailto]{white-space:normal;overflow-wrap:break-word;word-break:normal}   /* wraps only at the <wbr> after the @ or before .com (myteam.js) */
+.mt-links .copy-btn{margin-top:.5rem}
+@media (min-width:601px){.mt-card .hs{width:3.6rem;height:3.6rem;border-radius:.65rem;font-size:1.05rem}}
+@media (max-width:600px){.mt-head{flex-direction:column;align-items:stretch}.mt-head .hs{width:100%;height:auto;aspect-ratio:4/3;border-radius:.9rem;font-size:2.6rem}}
+@media (max-width:700px){.mt-row{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:1fr}}   /* phones stack: one row of cards would not fit */
+@keyframes mtIn{from{opacity:0;transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){.mt-reveal,.mt-card{transition:none;animation:none}}
+@media print{.myteam{display:none}}
+
+/* My Personal SEPRO Team: if a place was saved on this device, its row is already open (and holds its space) before the script fills it in */
+html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;transition:none}
+html.mt-has .mt-row:empty{min-height:14rem}
+.mt-instant .mt-card{animation:none}
+.mt-intro{margin:0 0 .9rem;line-height:normal;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.8rem;letter-spacing:0;color:var(--muted)}   /* same look as the line under Territory Maps */

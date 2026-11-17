@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{ partial "head-meta.html" . }}
   <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
-  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}try{if(sessionStorage.getItem('mapsTray')==='1')document.documentElement.classList.add('maps-open')}catch(e){}try{var d=+sessionStorage.getItem('territoryDirEnter');if(d){sessionStorage.removeItem('territoryDirEnter');if(Date.now()-d<6000)document.documentElement.classList.add('dir-enter')}}catch(e){}try{var n=+sessionStorage.getItem('territoryMapEnter');if(n){sessionStorage.removeItem('territoryMapEnter');if(Date.now()-n<6000)document.documentElement.classList.add('map-enter')}}catch(e){}</script>
+  <script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}{{ if .IsHome }}try{if(localStorage.getItem('myTeam'))document.documentElement.classList.add('mt-has')}catch(e){}{{ end }}try{if(sessionStorage.getItem('mapsTray')==='1')document.documentElement.classList.add('maps-open')}catch(e){}try{var d=+sessionStorage.getItem('territoryDirEnter');if(d){sessionStorage.removeItem('territoryDirEnter');if(Date.now()-d<6000)document.documentElement.classList.add('dir-enter')}}catch(e){}try{var n=+sessionStorage.getItem('territoryMapEnter');if(n){sessionStorage.removeItem('territoryMapEnter');if(Date.now()-n<6000)document.documentElement.classList.add('map-enter')}}catch(e){}</script>
   {{ with site.Params.typography }}{{ if or .fontURL .monoURL }}<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>{{ end }}
   {{ with .fontURL }}<link rel="stylesheet" href="{{ . }}">{{ end }}
@@ -76,6 +76,7 @@
       <button type="button" class="hdr-menu" id="hdr-menu" aria-expanded="false" aria-controls="hdr-nav">Menu</button>
       <div id="hdr-nav" class="hdr-collapse">
         <div class="hdr-links">
+          <a class="hdr-link{{ if .IsHome }} current{{ end }}" href="{{ site.Home.RelPermalink }}"{{ if .IsHome }} aria-current="page"{{ end }}>Home</a>
         <div class="hdr-maps">
           <button type="button" class="hdr-maps-btn" id="hdr-maps-btn" aria-expanded="false" aria-haspopup="true" aria-controls="hdr-maps-menu">Maps
             <svg class="caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -98,7 +99,6 @@
             <ul id="results" class="results"></ul>
           </div>
         </form>
-        {{ with site.Params.header }}{{ with .cta }}{{ if .url }}<a class="hdr-cta" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .label | default "Request Change" }}</a>{{ end }}{{ end }}{{ end }}
       </div>
     </div>
     <nav class="maps-row" id="maps-row" aria-label="Territory maps">
@@ -108,8 +108,8 @@
   {{ block "main" . }}{{ end }}
   {{/* Every division's contacts, for the menu search (works on every page) */}}
   {{ $all := slice }}
-  {{ range (where site.RegularPages "Section" "divisions").ByWeight }}{{ $dd := index site.Data.divisions .Params.territoryData }}{{ $all = $all | append (dict "id" .Params.territoryData "title" .Title "nav" (.Params.navTitle | default .Title) "url" .RelPermalink "brand" .Params.brand "territories" $dd.territories "national" $dd.national) }}{{ end }}
-  <script id="search-data" type="application/json">{{ dict "all" $all "states" site.Data.states | jsonify | safeJS }}</script>
+  {{ range (where site.RegularPages "Section" "divisions").ByWeight }}{{ $dd := index site.Data.divisions .Params.territoryData }}{{ $all = $all | append (dict "id" .Params.territoryData "title" .Title "nav" (.Params.navTitle | default .Title) "url" .RelPermalink "brand" .Params.brand "group" (.Params.group | default .Params.brand) "territories" $dd.territories "national" $dd.national) }}{{ end }}
+  <script id="search-data" type="application/json">{{ dict "all" $all "states" site.Data.states "photos" (partial "photomap.html" .) "peopleBase" ("people/" | relURL) | jsonify | safeJS }}</script>
   {{ $srch := resources.Get "js/search.js" | minify | fingerprint }}
   <script src="{{ $srch.RelPermalink }}" integrity="{{ $srch.Data.Integrity }}"></script>
   {{ $cp := resources.Get "js/copy.js" | minify | fingerprint }}
@@ -128,6 +128,7 @@
       var wide=matchMedia('(min-width:901px)'),root=document.documentElement;
       var syncTray=function(){if(wide.matches)mb.setAttribute('aria-expanded',String(root.classList.contains('maps-open')))};
       syncTray();wide.addEventListener&&wide.addEventListener('change',function(){mw.classList.remove('open');mb.setAttribute('aria-expanded','false');syncTray()});
+      if(document.querySelector('main.directory,#myteam')&&root.classList.contains('maps-open'))requestAnimationFrame(function(){requestAnimationFrame(function(){root.classList.remove('maps-open');syncTray();try{sessionStorage.removeItem('mapsTray')}catch(e){}})});   // landing on the Directory or the home page: the maps row folds away
       mb.addEventListener('click',function(){
         if(wide.matches){var t=root.classList.toggle('maps-open');mb.setAttribute('aria-expanded',String(t));try{t?sessionStorage.setItem('mapsTray','1'):sessionStorage.removeItem('mapsTray')}catch(e){}return}   // desktop: a second pill drops in under the menu and stays open
         var o=mw.classList.toggle('open');mb.setAttribute('aria-expanded',String(o))});
