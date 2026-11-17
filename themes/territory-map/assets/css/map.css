@@ -561,9 +561,6 @@ body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .2
 .mt-arrow{display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border:2px solid var(--fg);border-radius:50%;background:transparent;color:var(--fg);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mt-arrow:active{background:var(--fg);color:var(--bg)}
 .mt-count{min-width:4.5rem;text-align:center;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.85rem;color:var(--muted)}
-.mt-all{display:inline-flex;align-items:center;gap:.45rem;min-height:2.75rem;padding:0 .5rem;border:0;background:none;color:var(--muted);font:inherit;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.mt-all[hidden]{display:none}
-.mt-all.done{color:var(--fg)}
 html.mt-has .mt-row:empty{min-height:34rem}
 }
 @keyframes mtIn{from{opacity:0;transform:translateY(10px)}}

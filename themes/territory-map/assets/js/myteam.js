@@ -32,9 +32,9 @@
     // ---- Phones: the team is a row of swipeable cards, each with a Save to Contacts button ----
     let team = [];
     const nav = document.createElement('div'); nav.className = 'mt-nav'; nav.hidden = true;
-    nav.innerHTML = '<div class="mt-pager"><button type="button" class="mt-arrow" data-d="-1" aria-label="Previous specialist">' + ARROW(-1) + '</button><span class="mt-count" aria-live="polite"></span><button type="button" class="mt-arrow" data-d="1" aria-label="Next specialist">' + ARROW(1) + '</button></div><button type="button" class="mt-all">' + SAVE + '<span></span></button>';
+    nav.innerHTML = '<div class="mt-pager"><button type="button" class="mt-arrow" data-d="-1" aria-label="Previous specialist">' + ARROW(-1) + '</button><span class="mt-count" aria-live="polite"></span><button type="button" class="mt-arrow" data-d="1" aria-label="Next specialist">' + ARROW(1) + '</button></div>';
     row.after(nav);
-    const count = nav.querySelector('.mt-count'), allBtn = nav.querySelector('.mt-all');
+    const count = nav.querySelector('.mt-count');
     const phone = matchMedia('(max-width:700px)');
     const cards = () => [...row.querySelectorAll('.mt-card')];
     const here = () => { const cs = cards(), mid = row.scrollLeft + row.clientWidth / 2; let b = 0, bd = 1e9; cs.forEach((c, i) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bd) { bd = d; b = i; } }); return b; };
@@ -49,7 +49,7 @@
       const on = phone.matches && team.length > 0;
       row.setAttribute('role', 'region'); row.setAttribute('aria-roledescription', 'carousel'); row.setAttribute('aria-label', 'Your SEPRO team');
       if (on) row.tabIndex = 0; else row.removeAttribute('tabindex');   // focus the row and the arrow keys scroll it; no extra tab stop where the cards sit in a grid
-      nav.hidden = !(phone.matches && team.length > 1); row.scrollLeft = 0; allBtn.hidden = team.length < 2; allBtn.lastChild.textContent = 'Save all ' + team.length + ' to Contacts'; mark();
+      nav.hidden = !(phone.matches && team.length > 1); row.scrollLeft = 0; mark(); if (on) setTimeout(prime, 250);
     };
     phone.addEventListener('change', carousel);
 
@@ -64,14 +64,14 @@
         return { type: (b.type.split('/')[1] || 'jpeg').toUpperCase().replace('JPG', 'JPEG'), data: String(d).split(',')[1] };
       } catch (e) { return null; }
     };
-    const vcard = async x => {
+    const vcard = async (x, note) => {
       const p = x.p, w = String(p.name).trim().split(/\s+/); let suffix = ''; if (w.length > 2 && /^(jr|sr|ii|iii|iv)\.?$/i.test(w[w.length - 1])) suffix = w.pop();
       const last = w.length > 1 ? w.pop() : '', first = w.join(' '), ph = await photo64(p);
       const L = ['BEGIN:VCARD', 'VERSION:3.0', 'N:' + [last, first, '', '', suffix].map(vEsc).join(';'), 'FN:' + vEsc(p.name), 'ORG:SEPRO Scientific'];
       if (p.title) L.push('TITLE:' + vEsc(p.title));
       if (p.phone) L.push('TEL;TYPE=WORK,VOICE:' + vEsc(p.phone));
       if (p.email) L.push('EMAIL;TYPE=INTERNET,WORK:' + vEsc(p.email));
-      L.push('NOTE:' + vEsc(x.dv.title + ' - ' + x.t.name));
+      L.push('NOTE:' + vEsc(note || x.dv.title + ' - ' + x.t.name));
       if (ph) L.push('PHOTO;ENCODING=b;TYPE=' + ph.type + ':' + ph.data);
       L.push('END:VCARD'); return L.map(fold).join('\r\n');
     };
@@ -81,14 +81,19 @@
     };
     const saved = (b, label) => { const t = b.lastChild, was = label || t.textContent; t.textContent = 'Contact file ready'; b.classList.add('done'); setTimeout(() => { t.textContent = was; b.classList.remove('done'); b.disabled = false; }, 2600); };
     const fileName = n => String(n).replace(/[^\w]+/g, '_').replace(/^_|_$/g, '') + '.vcf';
-    row.addEventListener('click', async e => {
-      const b = e.target.closest('.mt-save'); if (!b || b.disabled) return; const x = team[+b.dataset.i]; if (!x) return;
-      b.disabled = true; const was = b.lastChild.textContent; b.lastChild.textContent = 'Preparing…';
-      try { download(fileName(x.p.name), await vcard(x)); saved(b, was); } catch (err) { b.lastChild.textContent = was; b.disabled = false; }
-    });
-    allBtn.addEventListener('click', async () => {
-      if (allBtn.disabled || !team.length) return; allBtn.disabled = true; const was = allBtn.lastChild.textContent; allBtn.lastChild.textContent = 'Preparing…';
-      try { download('SEPRO_Team.vcf', (await Promise.all(team.map(vcard))).join('\r\n')); saved(allBtn, was); } catch (err) { allBtn.lastChild.textContent = was; allBtn.disabled = false; }
+    // Each person's file is built ahead of the tap (a phone only lets a download start straight from a tap, and fetching the photo first can take too long),
+    // so a tap starts the download at once.
+    let ready = [], built = 0;
+    const prime = () => { const id = ++built; ready = []; team.forEach((x, i) => vcard(x).then(t => { if (id === built) ready[i] = t; }).catch(() => {})); };
+    const tap = (b, name, text, build) => {   // download now if the file is ready; otherwise build it first
+      if (b.disabled) return; const was = b.lastChild.textContent;
+      if (text) { download(name, text); saved(b, was); return; }
+      b.disabled = true; b.lastChild.textContent = 'Preparing…';
+      build().then(t => { download(name, t); saved(b, was); }).catch(() => { b.lastChild.textContent = was; b.disabled = false; });
+    };
+    row.addEventListener('click', e => {
+      const b = e.target.closest('.mt-save'); if (!b) return; const i = +b.dataset.i, x = team[i]; if (!x) return;
+      tap(b, fileName(x.p.name), ready[i], () => vcard(x));
     });
 
     const KEY = 'myTeam';   // the last place found, kept on this device only, so the team is still there when you come back
