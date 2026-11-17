@@ -52,7 +52,7 @@ window.__tmBoot = async function (soft) {
     .attr('data-t', d => tid(d))
     .style('--c', d => (byAbbr[abbr(d)] || {}).color || null)
     .on('mouseenter', (e, d) => { hovered = tid(d); render(); })
-    .on('mouseleave', () => { hovered = null; render(); })
+    .on('mouseleave', () => { if (deskOn) { hovered = null; render(); } })   // normal view: the last region stays up when the pointer leaves, so the contact box doesn't flicker away and back (Esc or a click elsewhere puts it away)
     .on('click', (e, d) => { e.stopPropagation(); toggle(tid(d)); });
   statesSel.append('title').text(d => stateName(d));
 
@@ -71,7 +71,7 @@ window.__tmBoot = async function (soft) {
       ring.attr('d', el.matches(':focus-visible') ? path(d) : null);
       hovered = tid(d); render();
     });
-    el.addEventListener('blur', () => { ring.attr('d', null); hovered = null; render(); });
+    el.addEventListener('blur', () => { ring.attr('d', null); if (deskOn) { hovered = null; render(); } });
     el.addEventListener('keydown', e => {
       const move = n => { e.preventDefault(); const nx = kb[(i + n + kb.length) % kb.length]; nx.focus(); };
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(tid(d)); }
@@ -176,9 +176,9 @@ window.__tmBoot = async function (soft) {
     pinned = pinned === b.dataset.id ? null : b.dataset.id; render();
   });
   legend.addEventListener('mouseover', e => { const b = e.target.closest('button'); if (b) { hovered = b.dataset.id; render(); } });
-  legend.addEventListener('mouseleave', () => { hovered = null; render(); });
-  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header, .team-fold')) { pinned = null; render(); } }, sig);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; render(); } }, sig);
+  legend.addEventListener('mouseleave', () => { if (deskOn) { hovered = null; render(); } });
+  document.addEventListener('click', e => { if (!e.target.closest('.panel, .legend, .site-header, .team-fold')) { pinned = null; hovered = null; render(); } }, sig);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = null; hovered = null; render(); } }, sig);
 
   // Open positions show who to contact instead: the territory's regional manager, or a name found in the open position's title.
   const isOpen = p => !!p.open || /^\s*open\b/i.test(p.name || '');
@@ -273,7 +273,7 @@ window.__tmBoot = async function (soft) {
   // Used by the menu search (search.js): pin a territory / region, or highlight a set of territories.
   window.TerritoryMap = {
     pin(id) { if (byId[id] || gById[id]) { pinned = id; hovered = null; render(); mapEl.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'nearest' }); } },
-    highlight(ids) { searchSet = ids && ids.size ? ids : null; render(); }
+    highlight(ids) { searchSet = ids && ids.size ? ids : null; if (searchSet) hovered = null; render(); }   // a search takes over from a lingering hover
   };
 
   // Regional managers / support: a button under the map opens and closes them (collapsed on arrival; Desktop Mode opens them too).
@@ -588,7 +588,7 @@ window.__tmBoot = async function (soft) {
   }
   function applyDesk(on) {
     if (on) normalW = mapEl.clientWidth;   // the map's normal width, so its text can keep the same size in Desktop Mode
-    deskOn = on; document.body.classList.toggle('desk', on);
+    deskOn = on; hovered = null; document.body.classList.toggle('desk', on);
     document.querySelectorAll('.team-fold').forEach(f => window.__tmFoldSet && window.__tmFoldSet(f, on));   // Desktop Mode opens the managers/support area (the button still closes it); leaving closes it
     deskBtn.setAttribute('aria-pressed', String(on)); deskBtn.textContent = on ? 'Exit Desktop Mode' : 'Desktop Mode';
     const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Generate Landscape PDF' : 'Generate PDF';

@@ -4,7 +4,7 @@
 :root[data-theme=dark]{color-scheme:dark;--bg:#0b0b0a;--fg:#fff;--muted:#c3c7ba;--card:#1a1a18;--line:#3a3c35;--none:#51544a;--lbl-na:#fff;--hdr-bg:var(--hdr-bg-dark,#1f1f1d);--hdr-fg:#fff;--hdr-sheen:rgba(255,255,255,.10);--hdr-edge:rgba(255,255,255,.16);--hdr-line:rgba(255,255,255,.4);--hdr-field:rgba(255,255,255,.1);--hdr-hover:rgba(0,0,0,.4)}
 *{box-sizing:border-box}
 body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;font-family:var(--font,"Helvetica Neue",Helvetica,Arial,sans-serif);font-size:var(--fs-base,16px);line-height:var(--lh,1.5);font-weight:var(--fw-body,400);background:var(--bg);color:var(--fg)}
-.wrap{max-width:1200px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.wrap{max-width:1600px;margin:0 auto;padding:1.5rem 1rem 3rem}
 
 /* top navigation */
 
@@ -680,3 +680,11 @@ a.copy-btn{text-decoration:none}
 @media (min-width:701px){.mt-row{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(auto-fill,minmax(16.5rem,1fr));overflow-x:visible}}   /* wider cards: they wrap onto a second row instead of scrolling sideways */
 @media (min-width:701px){.mt-card.mt-newrow{grid-column-start:1}}   /* when cards need a second row: Water on the first row, Land on the second */
 .pass-btn{display:inline-flex;-webkit-appearance:none;appearance:none;visibility:visible}   /* Share is always shown, on every phone */
+.site-header{box-sizing:border-box;max-width:1600px;margin-left:auto;margin-right:auto}   /* the menu lines up with the page content on very wide screens (same 1600px as seproscientific.com) */
+/* Side breathing room: the page and the menu keep a margin that grows with the window (1.25rem on a phone up to 3.5rem), until the 1600px maximum is reached */
+:root{--gutter:clamp(1.25rem,5vw,3.5rem)}
+.wrap{padding-left:var(--gutter);padding-right:var(--gutter)}
+.site-header{padding-left:var(--gutter);padding-right:var(--gutter)}
+@media print{.wrap{padding-left:1rem;padding-right:1rem}}
+.wrap,.site-header{max-width:calc(1600px + 2 * var(--gutter))}   /* 1600px of content plus the margin on each side */
+body.desk .wrap{max-width:min(1800px,97vw)}
