@@ -29,9 +29,9 @@
         <div class="contact mt-contact">
           <div class="mt-head">${hs}<div><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}</div></div>
           <div class="mt-links">${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${mail(p.email)}</a>` : ''}
-          <div class="mt-dsk"><button type="button" class="copy-btn" data-copy="${esc(vc)}" aria-label="Copy ${esc(p.name)}'s contact details">${COPY}<span class="cb-t">Copy</span></button>${sl ? `<button type="button" class="copy-btn share-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(14)}<span class="cb-t">Share</span></button><a class="copy-btn" href="${esc(page + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>` : ''}</div></div>
+          <div class="mt-dsk"><button type="button" class="copy-btn" data-copy="${esc(vc)}" aria-label="Copy ${esc(p.name)}'s contact details">${COPY}<span class="cb-t">Copy</span></button>${sl ? `<button type="button" class="copy-btn pass-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(14)}<span class="cb-t">Share</span></button><a class="copy-btn" href="${esc(page + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>` : ''}</div></div>
         </div>
-        <div class="mt-btns"><button type="button" class="mt-save" data-i="${i}">${SAVE}<span>Save to Contacts</span></button>${sl ? `<button type="button" class="mt-share share-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(18)}<span class="cb-t">Share</span></button>` : ''}</div></article>`;
+        <div class="mt-btns"><button type="button" class="mt-save" data-i="${i}">${SAVE}<span>Save to Contacts</span></button>${sl ? `<button type="button" class="mt-pass pass-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(18)}<span class="cb-t">Share</span></button>` : ''}</div></article>`;
     };
     // ---- Phones: the team is a row of swipeable cards, each with a Save to Contacts button ----
     let team = [];

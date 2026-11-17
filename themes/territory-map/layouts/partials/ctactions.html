@@ -7,7 +7,7 @@
 {{ $tel := replaceRE `[^0-9+]` "" ($p.phone | default "") }}
 <div class="ct-actions">
   <a class="ct-act" href="{{ $vcf }}" download>{{ partial "icon.html" "save" }}<span>Save</span></a>
-  <button type="button" class="ct-act share-btn" data-url="{{ $page }}" data-name="{{ $p.name }}" data-title="{{ $p.title }}" aria-label="Share {{ $p.name }}'s contact page">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
+  <button type="button" class="ct-act pass-btn" data-url="{{ $page }}" data-name="{{ $p.name }}" data-title="{{ $p.title }}" aria-label="Share {{ $p.name }}'s contact page">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
   {{ if .copy }}{{ partial "copybtn.html" (dict "p" $p) }}{{ end }}
 </div>
 {{ else if .copy }}{{ partial "copybtn.html" (dict "p" $p) }}{{ end }}

@@ -1,4 +1,4 @@
-/* "Share" buttons: <button class="share-btn" data-url="/s/rory-roten/" data-name="..." data-title="...">.
+/* "Share" buttons: <button class="pass-btn" data-url="/s/rory-roten/" data-name="..." data-title="...">.
    Phones and tablets open the system share sheet (Messages, Mail, Teams, AirDrop...); a computer copies the person's link and says so on the button. */
 (function () {
   const fallback = text => {
@@ -18,10 +18,10 @@
     clearTimeout(b._t); b._t = setTimeout(() => { b.classList.remove('done', 'fail'); if (l) l.textContent = was || 'Share'; }, 1800);
   };
   document.addEventListener('click', e => {
-    const b = e.target.closest('.share-btn'); if (!b) return;
+    const b = e.target.closest('.pass-btn'); if (!b) return;
     e.preventDefault();
-    const url = new URL(b.dataset.url || '', location.href).href, name = b.dataset.name || '', title = b.dataset.title || '';
-    const data = { title: name + ' · SEPRO Scientific', text: name + (title ? ', ' + title : ''), url };
+    const url = new URL(b.dataset.url || '', location.href).href;
+    const data = { url };   // just the link, so the message is a tappable link and nothing else
     if (touch.matches && navigator.share) {   // closing the sheet is not an error; if the phone refuses to open it, the link is copied instead
       navigator.share(data).catch(err => { if (!err || err.name !== 'AbortError') copy(url).then(ok => flash(b, ok)); });
       return;

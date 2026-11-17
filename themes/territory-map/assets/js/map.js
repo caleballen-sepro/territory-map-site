@@ -215,7 +215,7 @@ window.__tmBoot = async function (soft) {
     const page = personBase + slug + '/';
     return `<div class="ct-actions">`
       + `<a class="ct-act" href="${esc(page + slug + '.vcf')}" download>${ico('save')}<span>Save</span></a>`
-      + `<button type="button" class="ct-act share-btn" data-url="${esc(page)}" data-name="${esc(c.name)}" data-title="${esc(c.title || '')}" aria-label="Share ${esc(c.name)}\u2019s contact page">${ico('share')}<span class="cb-t">Share</span></button>`
+      + `<button type="button" class="ct-act pass-btn" data-url="${esc(page)}" data-name="${esc(c.name)}" data-title="${esc(c.title || '')}" aria-label="Share ${esc(c.name)}\u2019s contact page">${ico('share')}<span class="cb-t">Share</span></button>`
       + `${copyBtn(vcard(c))}</div>`;
   };
   const person = (c, t, acts = true) => {   // acts=false: the compact Desktop Mode cards, which stay as they are (and are what the PDF reads)

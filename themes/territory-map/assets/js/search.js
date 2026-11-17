@@ -35,7 +35,7 @@
   const shareIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>';
   const saveIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>';
   const pageBtns = p => { const sl = slugs[String(p.name || '').trim()]; if (!sl) return '';
-    return `<button type="button" class="copy-btn share-btn" data-url="${esc(personBase + sl + '/')}" data-name="${esc(p.name)}" data-title="${esc(p.title || '')}" aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc}<span class="cb-t">Share</span></button>`
+    return `<button type="button" class="copy-btn pass-btn" data-url="${esc(personBase + sl + '/')}" data-name="${esc(p.name)}" data-title="${esc(p.title || '')}" aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc}<span class="cb-t">Share</span></button>`
       + `<a class="copy-btn" href="${esc(personBase + sl + '/' + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>`; };
   const links = p => `${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : ''}`;
 

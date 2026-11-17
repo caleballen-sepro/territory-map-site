@@ -612,7 +612,7 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 .dir-table .dir-acts .copy-btn{margin:0;display:inline-flex;width:auto;text-decoration:none}
 .dir-table .dir-acts a.copy-btn{color:var(--muted)}
 .desk-card .ct-actions{display:none}
-@media print{.ct-actions,.dir-acts,.share-btn,.sp-actions{display:none!important}}
+@media print{.ct-actions,.dir-acts,.pass-btn,.sp-actions{display:none!important}}
 
 .specialist{padding-top:1.5rem;padding-bottom:3rem}
 .sp-card{display:grid;grid-template-columns:minmax(0,17rem) minmax(0,1fr) auto;gap:2rem 2.5rem;align-items:start;padding:2rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r-box)}
@@ -654,7 +654,7 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 .contact .ct-actions a.ct-act[href],.ct-body .ct-actions a.ct-act{display:inline-flex;align-items:center;min-height:0;padding:.25rem .7rem;white-space:nowrap;overflow-wrap:normal;text-decoration:none}   /* (beats the plain-link rules above, so the buttons never take the e-mail link's shape) */
 @media (hover:none) and (pointer:coarse){.contact .ct-actions a.ct-act[href],.ct-body .ct-actions a.ct-act{padding:.5rem .9rem;min-height:44px}}
 a.copy-btn{text-decoration:none}
-.res-actions a.copy-btn,.res-actions .share-btn{margin-top:0}
+.res-actions a.copy-btn,.res-actions .pass-btn{margin-top:0}
 .dir-jump a{display:inline-flex;align-items:center;box-sizing:border-box;white-space:nowrap;line-height:1.2;max-width:100%}   /* each pill stays one line and one piece; a long name moves to the next row instead of wrapping inside its pill */
 @media (max-width:600px){.dir-jump a{padding:.45rem .8rem;letter-spacing:.05em}}
 
@@ -669,14 +669,14 @@ a.copy-btn{text-decoration:none}
 @media (max-width:700px){
   .mt-card .mt-btns{display:flex;gap:.6rem;margin-top:auto;width:100%}
   .mt-card .mt-btns .mt-save{margin-top:0;flex:1 1 auto;width:auto}
-  .mt-share{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;flex:none;min-height:3rem;padding:0 1.1rem;border:2px solid var(--fg);border-radius:999px;background:transparent;color:var(--fg);font:inherit;font-size:.95rem;font-weight:500;cursor:pointer}
-  .mt-share .cb-t{position:static;display:inline}
-  .mt-share.done{background:var(--fg);color:var(--bg)}
+  .mt-pass{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;flex:none;min-height:3rem;padding:0 1.1rem;border:2px solid var(--fg);border-radius:999px;background:transparent;color:var(--fg);font:inherit;font-size:.95rem;font-weight:500;cursor:pointer}
+  .mt-pass .cb-t{position:static;display:inline}
+  .mt-pass.done{background:var(--fg);color:var(--bg)}
 }
-@media (max-width:700px){.mt-card .mt-btns .mt-save{padding:0 .8rem;gap:.4rem;font-size:.95rem}.mt-card .mt-btns .mt-save span{white-space:nowrap}.mt-share{padding:0 .95rem;font-size:.95rem}}
-@media (max-width:700px){.mt-card .mt-btns .mt-save{padding:0 .7rem;font-size:.9rem}.mt-share{padding:0 .85rem;font-size:.9rem;gap:.4rem}}
-@media (max-width:700px){.mt-share{width:3rem;padding:0}.mt-share .cb-t{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0)}.mt-card .mt-btns .mt-save{padding:0 .9rem;font-size:.95rem}}   /* Share is a round icon button beside Save to Contacts */
+@media (max-width:700px){.mt-card .mt-btns .mt-save{padding:0 .8rem;gap:.4rem;font-size:.95rem}.mt-card .mt-btns .mt-save span{white-space:nowrap}.mt-pass{padding:0 .95rem;font-size:.95rem}}
+@media (max-width:700px){.mt-card .mt-btns .mt-save{padding:0 .7rem;font-size:.9rem}.mt-pass{padding:0 .85rem;font-size:.9rem;gap:.4rem}}
+@media (max-width:700px){.mt-pass{width:3rem;padding:0}.mt-pass .cb-t{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0)}.mt-card .mt-btns .mt-save{padding:0 .9rem;font-size:.95rem}}   /* Share is a round icon button beside Save to Contacts */
 @media (min-width:701px){.mt-row{grid-auto-columns:minmax(16.5rem,1fr)}.mt-dsk .copy-btn{padding:.2rem .5rem;font-size:.74rem}}
 @media (min-width:701px){.mt-row{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(auto-fill,minmax(16.5rem,1fr));overflow-x:visible}}   /* wider cards: they wrap onto a second row instead of scrolling sideways */
 @media (min-width:701px){.mt-card.mt-newrow{grid-column-start:1}}   /* when cards need a second row: Water on the first row, Land on the second */
-.share-btn{display:inline-flex;-webkit-appearance:none;appearance:none;visibility:visible}   /* Share is always shown, on every phone */
+.pass-btn{display:inline-flex;-webkit-appearance:none;appearance:none;visibility:visible}   /* Share is always shown, on every phone */
