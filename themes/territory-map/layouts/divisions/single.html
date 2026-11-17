@@ -30,11 +30,19 @@
       <ul id="legend" class="legend"></ul>
       <section id="panel" class="panel" aria-live="polite"></section>
     </aside>
-  </div>
-
+  {{/* Regional managers (listed once, with the territories each manages), computed first so the fold's label and count can use them */}}
+  {{ $mnames := slice }}{{ $mlist := slice }}
+  {{ range $d.territories }}{{ range .managers }}{{ if not (in $mnames .name) }}{{ $mnames = $mnames | append .name }}{{ $mlist = $mlist | append . }}{{ end }}{{ end }}{{ end }}
+  {{ $ntitle := $d.nationalTitle | default "National Team" }}
+  {{ $label := cond (and $d.national $mlist) (printf "%s & Regional Managers" $ntitle) (cond (ne (len $mlist) 0) "Regional Managers" $ntitle) }}
+  {{ if or $d.national $mlist }}
+  <div class="team-fold{{ if not (and $d.national $mlist) }} single{{ end }}">
+    <button type="button" class="fold-toggle" aria-expanded="false" aria-controls="team-fold-body"><span class="fold-label">{{ $label }}</span><span class="fold-count">{{ add (len ($d.national | default slice)) (len $mlist) }} people</span><svg class="caret" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="fold-body" id="team-fold-body"><div class="fold-in">
+  {{ end }}
   {{ with $d.national }}
   <section class="national">
-    <h2>{{ $d.nationalTitle | default "National Team" }}</h2>
+    <h2>{{ $ntitle }}</h2>
     <div class="nat-grid">
       {{ range . }}
       <div class="contact has-hs">
@@ -43,7 +51,7 @@
         <strong>{{ .name }}</strong>
         {{ with .title }}<span>{{ . }}</span>{{ end }}
         {{ with .phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a><br>{{ end }}
-        {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+        {{ with .email }}<a href="mailto:{{ . }}">{{ partial "mail.html" . }}</a>{{ end }}
         {{ partial "copybtn.html" (dict "p" .) }}
         </div>
       </div>
@@ -52,9 +60,6 @@
   </section>
   {{ end }}
 
-  {{/* Regional managers: listed once here, each with the territories they manage (not repeated on every contact card) */}}
-  {{ $mnames := slice }}{{ $mlist := slice }}
-  {{ range $d.territories }}{{ range .managers }}{{ if not (in $mnames .name) }}{{ $mnames = $mnames | append .name }}{{ $mlist = $mlist | append . }}{{ end }}{{ end }}{{ end }}
   {{ if $mlist }}
   <section class="national managers">
     <h2>Regional Managers</h2>
@@ -66,7 +71,7 @@
         <strong>{{ .name }}</strong>
         {{ with .title }}<span>{{ . }}</span>{{ end }}
         {{ with .phone }}<a href="tel:{{ replaceRE `[^0-9+]` "" . }}">{{ . }}</a><br>{{ end }}
-        {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+        {{ with .email }}<a href="mailto:{{ . }}">{{ partial "mail.html" . }}</a>{{ end }}
         <ul class="mgr-terrs">
           {{ range $d.territories }}{{ $t := . }}{{ $has := false }}{{ range .managers }}{{ if eq .name $m.name }}{{ $has = true }}{{ end }}{{ end }}{{ if $has }}<li><i style="background:{{ $t.color }}"></i>{{ $t.name }}</li>{{ end }}{{ end }}
         </ul>
@@ -77,6 +82,11 @@
     </div>
   </section>
   {{ end }}
+  {{ if or $d.national $mlist }}
+    </div></div>
+  </div>
+  {{ end }}
+  </div>
 
   {{ with $d.revised }}<p class="rev">Revised {{ . }}</p>{{ end }}
 </main>

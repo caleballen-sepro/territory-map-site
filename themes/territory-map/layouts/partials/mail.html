@@ -1,0 +1,2 @@
+{{- /* An email address that may wrap only after the @ or before its last ".com", never mid-word */ -}}
+{{- . | htmlEscape | replaceRE "@" "@<wbr>" | replaceRE `\.([a-z]{2,})$` "<wbr>.$1" | safeHTML -}}

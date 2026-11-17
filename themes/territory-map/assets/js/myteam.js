@@ -17,9 +17,9 @@
       const p = x.p, f = TS.photos[p.name];
       const hs = f ? `<div class="hs has-photo" aria-hidden="true"><img src="${esc(TS.peopleBase + f)}" alt="" loading="lazy" decoding="async"></div>` : `<div class="hs" aria-hidden="true">${esc(initials(p.name))}</div>`;
       const vc = [p.name, p.title, p.phone, p.email].filter(Boolean).join('\n');
-      return `<article class="mt-card" style="--c:${esc(x.t.color || '')};--i:${i}">
+      return `<article class="mt-card ${esc(x.dv.brand || '')}" style="--i:${i}">
         <p class="mt-map">${esc(x.dv.title)}</p>
-        <p class="mt-reg"><i></i>${esc(x.t.name)}${x.open ? ' (open)' : ''}</p>
+        <p class="mt-reg">${esc(x.t.name)}${x.open ? ' (open)' : ''}</p>
         <div class="contact mt-contact">
           <div class="mt-head">${hs}<div><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}</div></div>
           <div class="mt-links">${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${mail(p.email)}</a>` : ''}

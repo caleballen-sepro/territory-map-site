@@ -12,16 +12,17 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .pagehead p{margin:0;font-size:var(--fs-intro,1rem);color:var(--muted)}
 
 /* home cards */
-.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
 .card{display:block;height:100%;padding:1.25rem;background:var(--card);border:1px solid var(--line);border-radius:12px;color:inherit;text-decoration:none;transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
-.card h3{margin:0 0 .4rem;font-size:1.15rem;font-weight:var(--fw-head,300)}
+.card h3{margin:0 0 .5rem;font-size:1.6rem;line-height:1.15;font-weight:var(--fw-head,300)}
 .card p{margin:0 0 1rem;color:var(--muted);font-size:.92rem}
 .chips{display:flex;flex-wrap:wrap;gap:4px}
 .chips i{width:14px;height:14px;border-radius:50%;display:block}
 
-.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:1.5rem;align-items:start}
-@media (max-width:800px){.layout{grid-template-columns:1fr}}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);grid-template-rows:auto 1fr;gap:0 1.5rem;align-items:start}
+.layout>.map{grid-area:1/1}.layout>.side{grid-area:1/2/3/3}.layout>.team-fold{grid-area:2/1}   /* the managers/support button sits right under the map, so a tall card in the right column can never push it */
+@media (max-width:800px){.layout{grid-template-columns:1fr;grid-template-rows:none}.layout>.map,.layout>.side,.layout>.team-fold{grid-area:auto}.layout>.side{margin-top:1.5rem}}
 
 /* map */
 .map svg{width:100%;height:auto;display:block}
@@ -58,8 +59,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 /* always-visible national block */
 .national{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line)}
 .national h2{margin:0 0 1rem;font-size:1.1rem;font-weight:var(--fw-head,300)}
-.nat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem 1.5rem}
-.nat-grid .contact{border-top:0;padding-top:0;margin:0}
+.nat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem 1.5rem}
+.nat-grid .contact{margin:0;padding:1rem;background:var(--card);border:1px solid var(--line);border-radius:10px}   /* boxed like the side panel */
 .rev{margin:1.5rem 0 0;font-size:.8rem;color:var(--muted);text-align:right}
 
 /* page header with Generate PDF button */
@@ -104,8 +105,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .wrap.land{--bc:var(--land)}
 .pagehead{padding-bottom:1rem;margin-bottom:1.5rem;border-bottom:3px solid var(--bc,var(--line))}
 .pagehead-row{border-bottom:0;padding-bottom:0}
-.card.water{border-top:4px solid var(--water)}
-.card.land{border-top:4px solid var(--land)}
 .panel h2,.card h3,.national h2,.pagehead h1{font-weight:var(--fw-head,300)}
 
 /* ---- DM Mono for captions and detail copy (style guide: used sparingly) ---- */
@@ -316,6 +315,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 @media (pointer:coarse){
   .copy-btn,.res-go,.legend .lg-pill,.legend .lg-head,.btn,.hdr-menu,.panel .contact a{min-height:44px}
   .panel .contact a,.nat-grid .contact a{display:inline-flex;align-items:center}
+  .panel .contact a[href^=mailto],.nat-grid .contact a[href^=mailto]{display:inline-block;min-height:0;padding:.6rem 0}   /* (inline-flex would turn each <wbr> piece of an email into its own flex item and break it anywhere) */
   .copy-btn{padding:.5rem 1rem}
   .res-go{display:inline-flex;align-items:center;padding:.5rem 1rem}
 }
@@ -370,7 +370,7 @@ body.desk #pdf-btn:hover:not(:disabled){filter:brightness(.95)}
   .desk-card .contact{margin:0;padding:.35rem 0 0;font-size:.9rem;line-height:1.3}
   .desk-card .contact+.contact{margin-top:.35rem;border-top:1px solid color-mix(in srgb,var(--fg) 14%,transparent)}
   .desk-card .contact span{font-size:.82rem;color:inherit;opacity:.75}
-  .desk-card .contact a{overflow-wrap:anywhere}
+  .desk-card .contact a{white-space:nowrap}.desk-card .contact a[href^=mailto]{white-space:normal;overflow-wrap:break-word}
   .map .desk-card .copy-btn svg{width:14px;height:14px;display:inline-block}
   .desk-card .copy-btn{margin-top:.4rem;padding:.15rem .6rem;font-size:.76rem}
 }
@@ -510,7 +510,7 @@ body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .2
 @media (max-width:600px){.contact.has-hs .hs{width:33%;height:auto;aspect-ratio:1;font-size:1.6rem}.contact.has-hs .ct-body{flex:1;min-width:0}}   /* phones: the photo is a third of the box, the details sit to its right */
 @media (min-width:901px){.desk-card .contact.has-hs{gap:.6rem}.desk-card .hs{width:3.6rem;height:3.6rem;border-radius:.65rem;font-size:1.05rem}}   /* smaller in the Desktop Mode cards */
 @media print{.hs{display:none}}
-.ct-body a{overflow-wrap:anywhere}
+.ct-body a{white-space:nowrap}.ct-body a[href^=mailto]{white-space:normal;overflow-wrap:break-word}
 
 /* Home: "My Personal SEPRO Team" - the search, then your specialists side by side in one row */
 .myteam{margin:0 0 2.25rem}
@@ -528,8 +528,8 @@ body.dir-leaving main.directory{transform:translateY(24px);transition:opacity .2
 .mt-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(13rem,1fr);gap:1rem;overflow-x:auto;padding:1rem 0 .5rem}
 .mt-card{min-width:0;padding:.9rem 1rem 1rem;border:2px solid var(--c,var(--line));border-radius:12px;background:var(--card);animation:mtIn .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
 .mt-map{margin:0 0 .15rem;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.mt-card.water{--c:var(--water)}.mt-card.land{--c:var(--land)}   /* the card follows its brand (the region colors only mean something on the map) */
 .mt-reg{display:flex;align-items:center;gap:.4rem;margin:0 0 .7rem;font-size:.8rem;color:var(--muted)}
-.mt-reg i{flex:none;width:.6rem;height:.6rem;border-radius:50%;background:var(--c)}
 .mt-card .contact{margin:0;padding:0;border:0}
 .mt-head{display:flex;align-items:flex-start;gap:.7rem}
 .mt-head>div:last-child{min-width:0}
@@ -550,3 +550,28 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 html.mt-has .mt-row:empty{min-height:14rem}
 .mt-instant .mt-card{animation:none}
 .mt-intro{margin:0 0 .9rem;line-height:normal;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.8rem;letter-spacing:0;color:var(--muted)}   /* same look as the line under Territory Maps */
+
+/* Regional managers and support: collapsed under the map until opened (Desktop Mode opens it, and print shows it) */
+.team-fold{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line)}
+.fold-toggle{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .9rem;border:1px solid var(--line);border-radius:999px;background:none;color:inherit;font:inherit;font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .2s}
+.fold-toggle:hover{background:var(--line)}
+.fold-count{opacity:.6}
+.fold-count:before{content:"\00b7";margin-right:.5rem}
+.fold-toggle .caret{flex:none;transition:transform .3s ease}
+.fold-toggle[aria-expanded=true] .caret{transform:rotate(180deg)}
+.fold-toggle:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.team-fold.single .national h2{display:none}
+.team-fold .fold-in>.national:first-child{margin-top:1.25rem}
+.fold-body{height:0;overflow:hidden;overflow-anchor:none}
+.fold-in{visibility:hidden;transition:visibility 0s .46s}
+.team-fold.open .fold-body{height:auto}
+.team-fold.open .fold-in{visibility:visible;transition-delay:0s}
+.team-fold .national{margin-top:0;padding-top:0;border-top:0}
+.team-fold .national+.national{margin-top:1.5rem}
+/* no JavaScript: everything shows (a <noscript> style would leak into the page when a map is swapped in place, so this is a media query) */
+@media (scripting:none){.fold-toggle{display:none}.fold-body{height:auto}.fold-in{visibility:visible}}
+@media print{.fold-toggle{display:none}.fold-body{height:auto!important}.fold-in{visibility:visible!important}}
+@media (prefers-reduced-motion:reduce){.fold-in,.fold-toggle .caret{transition:none}}
+/* iPhone and iPad Safari zoom the page when a text field under 16px is tapped */
+@media (pointer:coarse){html body input[type=search],html body input[type=text]{font-size:16px}}
+@media (max-width:600px){.fold-toggle{border-radius:1.4rem;text-align:left}.fold-count{display:none}}   /* phones: the label alone, wrapping inside the pill */

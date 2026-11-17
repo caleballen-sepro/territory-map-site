@@ -192,7 +192,8 @@ window.__tmBoot = async function (soft) {
   const vcard = p => [p.name, p.title, p.phone, p.email].filter(Boolean).join('\n');
   const COPY = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   const copyBtn = text => `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copy contact details">${COPY}<span class="cb-t">Copy</span></button>`;
-  const links = c => `${c.phone ? `<a href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${esc(c.phone)}</a><br>` : ''}${c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : ''}`;
+  const mail = e => esc(e).replace('@', '@<wbr>').replace(/\.([a-z]{2,})$/i, '<wbr>.$1');   // an email wraps only after the @ or before .com
+  const links = c => `${c.phone ? `<a href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${esc(c.phone)}</a><br>` : ''}${c.email ? `<a href="mailto:${esc(c.email)}">${mail(c.email)}</a>` : ''}`;
   // Headshots (map pages only, not Desktop Mode): a rounded square with the photo, or the person's initials until one is added (static/people/README.txt)
   const photos = data.photos || {}, peopleBase = data.peopleBase || 'people/';
   Object.values(photos).forEach(f => { new Image().src = peopleBase + f; });   // (warm the cache so the box doesn't flicker when it redraws)
@@ -215,6 +216,22 @@ window.__tmBoot = async function (soft) {
   };
   const pinLine = () => `<p class="pin">${pinned ? '📌 Pinned. Click again or press Esc to release.' : 'Click to pin'}</p>`;
 
+  // The side card for a territory or region (colour + markup); render() shows it.
+  function panelHtml(id) {
+    const t = byId[id], g = gById[id];
+    if (g) return { c: g.terrs[0].color, html: `
+        <p class="eyebrow">Region</p>
+        <h2>${esc(g.name)}</h2>
+        ${pinLine()}
+        ${g.terrs.map(x => `<p class="terr"><i style="background:${esc(x.color)}"></i>${esc(x.name)}</p>${(x.contacts || []).map(c => person(c, x)).join('')}`).join('')}` };
+    return { c: t.color, html: `
+      ${t.group ? `<p class="eyebrow">${esc(t.group)}</p>` : ''}
+      <h2>${esc(t.name)}</h2>
+      ${pinLine()}
+      ${(t.contacts || []).map(c => person(c, t)).join('')}
+      <p class="states">${esc([...new Set((t.states || []).map(a => String(a).toUpperCase()))].sort().join(', '))}</p>` };
+  }
+
   function render() {
     const id = pinned || hovered;   // pinned wins, so moving the mouse doesn't lose the card
     const t = byId[id], g = gById[id];
@@ -234,22 +251,7 @@ window.__tmBoot = async function (soft) {
         : '<p class="hint">Hover over a region to see who covers it. Click a region to keep its details on screen.</p>';
       return;
     }
-    if (g) {   // region card: every territory in it with its specialists (managers are listed at the bottom of the page)
-      panel.style.setProperty('--c', g.terrs[0].color);
-      panel.innerHTML = `
-        <p class="eyebrow">Region</p>
-        <h2>${esc(g.name)}</h2>
-        ${pinLine()}
-        ${g.terrs.map(x => `<p class="terr"><i style="background:${esc(x.color)}"></i>${esc(x.name)}</p>${(x.contacts || []).map(c => person(c, x)).join('')}`).join('')}`;
-      return;
-    }
-    panel.style.setProperty('--c', t.color);
-    panel.innerHTML = `
-      ${t.group ? `<p class="eyebrow">${esc(t.group)}</p>` : ''}
-      <h2>${esc(t.name)}</h2>
-      ${pinLine()}
-      ${(t.contacts || []).map(c => person(c, t)).join('')}
-      <p class="states">${esc([...new Set((t.states || []).map(a => String(a).toUpperCase()))].sort().join(', '))}</p>`;
+    const ph = panelHtml(id); panel.style.setProperty('--c', ph.c); panel.innerHTML = ph.html;
   }
   render();
 
@@ -258,6 +260,37 @@ window.__tmBoot = async function (soft) {
     pin(id) { if (byId[id] || gById[id]) { pinned = id; hovered = null; render(); mapEl.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'nearest' }); } },
     highlight(ids) { searchSet = ids && ids.size ? ids : null; render(); }
   };
+
+  // Regional managers / support: a button under the map opens and closes them (collapsed on arrival; Desktop Mode opens them too).
+  // The height glides between its measured start and end, and the contents fade and drift in. Delegated, so it keeps working
+  // after a map is swapped in place. (Defined once; applyDesk uses it as well.)
+  if (!window.__tmFold) {
+    window.__tmFold = true;
+    window.__tmFoldSet = (f, on) => {
+      const body = f.querySelector('.fold-body'), inner = f.querySelector('.fold-in'), b = f.querySelector('.fold-toggle');
+      if (b) b.setAttribute('aria-expanded', String(on));
+      if (f.classList.contains('open') === on) return;
+      const calm = !body || !body.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      const h0 = calm ? 0 : body.getBoundingClientRect().height;   // where it is right now (even mid-glide)
+      const s0 = window.scrollY;   // (read before the layout changes, which can clamp the scroll position)
+      if (!calm) body.getAnimations().concat(inner.getAnimations()).forEach(a => a.cancel());
+      f.classList.toggle('open', on);
+      if (calm) return;
+      const h1 = body.getBoundingClientRect().height, finalH = document.documentElement.scrollHeight, E = 'cubic-bezier(.4,0,.2,1)';
+      const anim = body.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }], { duration: 460, easing: E });
+      if (!on) {   // closing while scrolled down: the page gets shorter, so scroll back with it, in step, instead of the browser snapping it up
+        const sf = Math.max(0, finalH - window.innerHeight);
+        window.scrollTo({ top: s0, behavior: 'instant' });   // undo the clamp from measuring; the animation's first frame is the old height again
+        if (s0 > sf + 1) {
+          const step = () => { const pr = anim.effect.getComputedTiming().progress; window.scrollTo({ top: s0 + (sf - s0) * (pr == null ? 1 : pr), behavior: 'instant' }); if (anim.playState === 'running') requestAnimationFrame(step); };
+          requestAnimationFrame(step);
+        }
+      }
+      inner.animate(on ? [{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }] : [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px)' }],
+        { duration: on ? 380 : 260, delay: on ? 90 : 0, easing: E, fill: 'backwards' });
+    };
+    document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('.fold-toggle'); if (!b) return; const f = b.closest('.team-fold'); window.__tmFoldSet(f, !f.classList.contains('open')); });
+  }
 
   // Links like  /divisions/water/#t=florida  open with that territory (or "g:West Region") pinned
   const deep = /^#t=(.+)$/.exec(location.hash);
@@ -541,6 +574,7 @@ window.__tmBoot = async function (soft) {
   function applyDesk(on) {
     if (on) normalW = mapEl.clientWidth;   // the map's normal width, so its text can keep the same size in Desktop Mode
     deskOn = on; document.body.classList.toggle('desk', on);
+    document.querySelectorAll('.team-fold').forEach(f => window.__tmFoldSet && window.__tmFoldSet(f, on));   // Desktop Mode opens the managers/support area (the button still closes it); leaving closes it
     deskBtn.setAttribute('aria-pressed', String(on)); deskBtn.textContent = on ? 'Exit Desktop Mode' : 'Desktop Mode';
     const pb = document.getElementById('pdf-btn'); if (pb && !pb.disabled) pb.textContent = on ? 'Generate Landscape PDF' : 'Generate PDF';
     if (on) buildDesk();
