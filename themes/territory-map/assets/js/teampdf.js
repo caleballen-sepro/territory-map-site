@@ -119,7 +119,7 @@
       const shot = shots[p.name];
       if (shot) { doc.addImage(shot, 'JPEG', x, y, S, S); return; }
       const n = parseInt(tc.slice(1), 16), tint = v => Math.round(255 - (255 - v) * 0.16), hex = v => ('0' + v.toString(16)).slice(-2);   // no photo yet: initials in a tint of the region color
-      doc.setFillColor('#' + hex(tint(n >> 16)) + hex(tint((n >> 8) & 255)) + hex(tint(n & 255))); doc.roundedRect(x, y, S, S, S * 0.12, S * 0.12, 'F');
+      doc.setFillColor('#' + hex(tint(n >> 16)) + hex(tint((n >> 8) & 255)) + hex(tint(n & 255))); doc.roundedRect(x, y, S, S, S * 0.2, S * 0.2, 'F');
       doc.setFont('helvetica', 'bold').setFontSize(S * 0.32).setTextColor(lum(tc) > 0.62 ? '#51544a' : tc);
       doc.text(initials(p.name), x + S / 2, y + S / 2, { align: 'center', baseline: 'middle' });
     };

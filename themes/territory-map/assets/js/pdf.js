@@ -185,7 +185,7 @@
       }));
       cs.forEach((q, i) => {
         const g = R.geom(q), cx = ox + g.l, cy = oy + g.t, bx = boxes[i], k = bx.k;
-        doc.setFillColor('#ffffff').setDrawColor(k.color || '#c9ccc4').setLineWidth(1.5).roundedRect(cx, cy, q.w, q.h, 8, 8, 'FD');   // white box with the territory's own colored outline, like the screen
+        doc.setFillColor('#ffffff').setDrawColor(k.color || '#c9ccc4').setLineWidth(1.5).roundedRect(cx, cy, q.w, q.h, 18, 18, 'FD');   // white box with the territory's own colored outline, like the screen
         bx.out.forEach(o => {
           if (o.rule) { doc.setDrawColor('#d6d8d0').setLineWidth(0.5).line(cx + fz * PADK, cy + o.rule, cx + q.w - fz * PADK, cy + o.rule); return; }
           if (o.dot) doc.setFillColor(k.color).circle(cx + o.dot[0], cy + o.dot[1], o.dot[2], 'F');
@@ -238,7 +238,7 @@
         H: pg => (hdrH ? hdrH + HG : 0) + body(pg),
         draw: (x, y, pg) => {
           if (hdrH) {
-            doc.setFillColor('#edefe9').setDrawColor(LIGHT).setLineWidth(0.5).roundedRect(x, y, colW, hdrH, 4, 4, 'FD');
+            doc.setFillColor('#edefe9').setDrawColor(LIGHT).setLineWidth(0.5).roundedRect(x, y, colW, hdrH, Math.min(18, hdrH / 2), Math.min(18, hdrH / 2), 'FD');
             let yy = y + PAD;
             g.managers.forEach((m, i) => { drawStack(hs[i], x + PAD, yy); yy += hs[i].h + 6; });
             g.terrs.forEach((t, i) => doc.setFillColor(t.color).circle(x + PAD + r + i * (2 * r + 5), yy + r, r, 'F'));   // one dot per region they cover
