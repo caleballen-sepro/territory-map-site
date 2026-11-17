@@ -1,0 +1,14 @@
+{{/* Everyone who gets a personal page: name -> {name, title, phone, email, slug}. The first division a person appears in supplies their details. Open positions are skipped.
+     The slug is the name without credentials ("Rory Roten, Ph.D." -> rory-roten); content/s/_content.gotmpl uses the same rule to create the pages. */}}
+{{ $out := dict }}
+{{ range (where site.RegularPages "Section" "divisions").ByWeight }}{{ $dd := index site.Data.divisions .Params.territoryData }}
+  {{ $people := slice }}
+  {{ range $dd.national }}{{ $people = $people | append . }}{{ end }}
+  {{ range $dd.territories }}{{ range .contacts }}{{ $people = $people | append . }}{{ end }}{{ range .managers }}{{ $people = $people | append . }}{{ end }}{{ end }}
+  {{ range $people }}{{ $n := strings.TrimSpace .name }}
+    {{ if and $n (not .open) (not (findRE `(?i)^open\b` $n)) (not (isset $out $n)) }}
+      {{ $out = merge $out (dict $n (dict "name" $n "title" (.title | default "") "phone" (.phone | default "") "email" (.email | default "") "slug" (urlize (strings.TrimSpace (index (split $n ",") 0))))) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ return $out }}

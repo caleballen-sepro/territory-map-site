@@ -30,6 +30,13 @@
   const vcard = p => [p.name, p.title, p.phone, p.email].filter(Boolean).join('\n');
   const ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   const copyBtn = text => `<button type="button" class="copy-btn" data-copy="${esc(text)}" aria-label="Copy contact details">${ICON}<span class="cb-t">Copy</span></button>`;
+  // Share (copies the person's own page link) and Save to Contacts (their contact card): for everyone who has a page (search-data "slugs")
+  const slugs = data.slugs || {}, personBase = data.personBase || 's/';
+  const shareIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>';
+  const saveIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>';
+  const pageBtns = p => { const sl = slugs[String(p.name || '').trim()]; if (!sl) return '';
+    return `<button type="button" class="copy-btn share-btn" data-url="${esc(personBase + sl + '/')}" data-name="${esc(p.name)}" data-title="${esc(p.title || '')}" aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc}<span class="cb-t">Share</span></button>`
+      + `<a class="copy-btn" href="${esc(personBase + sl + '/' + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>`; };
   const links = p => `${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : ''}`;
 
   const setOpen = v => { box.classList.toggle('open', v); input.setAttribute('aria-expanded', String(v)); };
@@ -99,9 +106,9 @@
     const go = !tg ? '' : cur && window.TerritoryMap ? `<button type="button" class="res-go" data-id="${esc(tg)}">Show on map</button>`
       : `<a class="res-go" href="${esc(e.dv.url)}#t=${encodeURIComponent(tg)}">Open map</a>`;
     if (cover.length) return cover.map(m => `<li class="res"><div class="res-main"><strong>${esc(m.name)}</strong>${m.title ? `<span>${esc(m.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
-      `<div class="res-links">${links(m)}</div><div class="res-actions">${go}${m.phone || m.email ? copyBtn(vcard(m)) : ''}</div></li>`).join('');   // an open spot simply lists the regional manager
+      `<div class="res-links">${links(m)}</div><div class="res-actions">${go}${m.phone || m.email ? copyBtn(vcard(m)) : ''}${pageBtns(m)}</div></li>`).join('');   // an open spot simply lists the regional manager
     return `<li class="res"><div class="res-main"><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
-      `<div class="res-links">${links(p)}</div><div class="res-actions">${go}${p.phone || p.email ? copyBtn(vcard(p)) : ''}</div></li>`;
+      `<div class="res-links">${links(p)}</div><div class="res-actions">${go}${p.phone || p.email ? copyBtn(vcard(p)) : ''}${pageBtns(p)}</div></li>`;
   };
 
   // Who matches a search (shared by the menu list and the Directory filter): a ZIP or city means everyone covering that state, anything else is a text match.
@@ -135,7 +142,7 @@
   };
   window.TerritorySearch = {
     specialists,
-    photos: data.photos || {}, peopleBase: data.peopleBase || '',   // used by the Directory page's own search box (dirsearch.js)
+    photos: data.photos || {}, peopleBase: data.peopleBase || '', slugs, personBase,   // used by the Directory page's own search box (dirsearch.js)
     ready: () => places ? Promise.resolve() : loadPlaces(),
     filter: raw => { const q = compute(String(raw).trim()); return { keys: new Set(q.hits.map(e => e.key)), count: q.hits.length, place: q.usePlace ? { label: q.place.label, states: q.place.states.map(a => stName[a] || a) } : null, team: q.team }; }
   };

@@ -1,0 +1,65 @@
+{{ define "main" }}
+{{ $n := .Params.person }}{{ $slug := .Params.slug }}
+{{ $sm := partialCached "specmap.html" "all" }}{{ $p := index $sm $n }}
+{{ $photos := partialCached "photomap.html" "all" }}{{ $f := index $photos $n }}
+{{ $parts := split (strings.TrimSpace (index (split $n ",") 0)) " " }}
+{{ $cred := "" }}{{ if gt (len (split $n ",")) 1 }}{{ $cred = strings.TrimSpace (delimit (after 1 (split $n ",")) ", ") }}{{ end }}
+{{ $tel := replaceRE `[^0-9+]` "" ($p.phone | default "") }}
+
+{{/* Where this person works: every division they appear in */}}
+{{ $roles := slice }}
+{{ range (where site.RegularPages "Section" "divisions").ByWeight }}{{ $pg := . }}{{ $dd := index site.Data.divisions .Params.territoryData }}
+  {{ $w := slice }}
+  {{ range $dd.national }}{{ if eq (strings.TrimSpace .name) $n }}{{ $w = $w | append ($dd.nationalTitle | default "National Team") }}{{ end }}{{ end }}
+  {{ range $dd.territories }}{{ $t := . }}
+    {{ range .contacts }}{{ if eq (strings.TrimSpace .name) $n }}{{ $w = $w | append $t.name }}{{ end }}{{ end }}
+    {{ range .managers }}{{ if eq (strings.TrimSpace .name) $n }}{{ $w = $w | append $t.name }}{{ end }}{{ end }}
+  {{ end }}
+  {{ if $w }}{{ $roles = $roles | append (dict "pg" $pg "where" ($w | uniq)) }}{{ end }}
+{{ end }}
+
+{{/* The contact file (vCard 3.0), written at build time to /s/<slug>/<slug>.vcf. Phones offer to add it to Contacts; the headshot is embedded when it is a JPEG or PNG under 250 KB. */}}
+{{ $last := "" }}{{ $first := strings.TrimSpace (index (split $n ",") 0) }}
+{{ if gt (len $parts) 1 }}{{ $last = index $parts (sub (len $parts) 1) }}{{ $first = delimit (first (sub (len $parts) 1) $parts) " " }}{{ end }}
+{{ $v := slice "BEGIN:VCARD" "VERSION:3.0" (printf "N:%s;%s;;;%s" (partial "vesc.html" $last) (partial "vesc.html" $first) (partial "vesc.html" $cred)) (printf "FN:%s" (partial "vesc.html" $n)) "ORG:SEPRO Scientific" }}
+{{ with $p.title }}{{ $v = $v | append (printf "TITLE:%s" (partial "vesc.html" .)) }}{{ end }}
+{{ with $p.phone }}{{ $v = $v | append (printf "TEL;TYPE=WORK,VOICE:%s" (partial "vesc.html" .)) }}{{ end }}
+{{ with $p.email }}{{ $v = $v | append (printf "EMAIL;TYPE=INTERNET,WORK:%s" (partial "vesc.html" .)) }}{{ end }}
+{{ $v = $v | append (printf "URL:%s" .Permalink) }}
+{{ if $f }}{{ $path := printf "static/people/%s" $f }}{{ if fileExists $path }}{{ $raw := os.ReadFile $path }}
+  {{ if lt (len $raw) 250000 }}{{ $ty := "" }}{{ if findRE `(?i)\.jpe?g$` $f }}{{ $ty = "JPEG" }}{{ else if findRE `(?i)\.png$` $f }}{{ $ty = "PNG" }}{{ end }}
+    {{ if $ty }}{{ $v = $v | append (printf "PHOTO;ENCODING=b;TYPE=%s:%s" $ty (base64Encode $raw | replaceRE `(.{74})` "$1\r\n ")) }}{{ end }}
+  {{ end }}
+{{ end }}{{ end }}
+{{ $v = $v | append "END:VCARD" }}
+{{ $vcf := resources.FromString (printf "s/%s/%s.vcf" $slug $slug) (printf "%s\r\n" (delimit $v "\r\n")) }}
+{{ $qr := images.QR .Permalink (dict "level" "medium" "scale" 6) }}
+
+<main class="wrap specialist">
+  <article class="sp-card">
+    <div class="sp-photo{{ if $f }} has-photo{{ end }}">{{ if $f }}<img src="{{ printf "people/%s" $f | relURL }}" alt="Headshot of {{ $n }}" decoding="async">{{ else }}<span aria-hidden="true">{{ upper (substr (index $parts 0) 0 1) }}{{ if gt (len $parts) 1 }}{{ upper (substr (index $parts (sub (len $parts) 1)) 0 1) }}{{ end }}</span>{{ end }}</div>
+    <div class="sp-body">
+      <p class="eyebrow">SEPRO Scientific</p>
+      <h1>{{ $n }}</h1>
+      {{ with $p.title }}<p class="sp-title">{{ . }}</p>{{ end }}
+      {{ if $roles }}<ul class="sp-roles">
+        {{ range $roles }}{{ $pg := .pg }}<li class="{{ $pg.Params.brand }}"><i></i><a href="{{ $pg.RelPermalink }}">{{ $pg.Title }}</a><span>{{ delimit .where " · " }}</span></li>{{ end }}
+      </ul>{{ end }}
+      <dl class="sp-lines">
+        {{ with $p.phone }}<div><dt>Phone</dt><dd><a href="tel:{{ $tel }}">{{ . }}</a></dd></div>{{ end }}
+        {{ with $p.email }}<div><dt>Email</dt><dd><a href="mailto:{{ . }}">{{ partial "mail.html" . }}</a></dd></div>{{ end }}
+      </dl>
+      <div class="sp-actions">
+        <a class="sp-btn primary" href="{{ $vcf.RelPermalink }}" download="{{ $slug }}.vcf">{{ partial "icon.html" "save" }}<span>Add to Contacts</span></a>
+        {{ if $tel }}<a class="sp-btn sp-touch" href="tel:{{ $tel }}">{{ partial "icon.html" "phone" }}<span>Call</span></a><a class="sp-btn sp-touch" href="sms:{{ $tel }}">{{ partial "icon.html" "text" }}<span>Text</span></a>{{ end }}
+        <button type="button" class="sp-btn share-btn" data-url="{{ .RelPermalink }}" data-name="{{ $n }}" data-title="{{ $p.title }}">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
+      </div>
+    </div>
+    <figure class="sp-qr">
+      <img src="{{ $qr.RelPermalink }}" width="{{ $qr.Width }}" height="{{ $qr.Height }}" alt="QR code for this page">
+      <figcaption>Scan to open this page</figcaption>
+    </figure>
+  </article>
+  <p class="sp-back"><a href="{{ "directory/" | relURL }}">All specialists in the Directory</a></p>
+</main>
+{{ end }}

@@ -11,7 +11,7 @@
     ? navigator.clipboard.writeText(text).then(() => true, () => fallback(text))
     : Promise.resolve(fallback(text)));
   document.addEventListener('click', e => {
-    const b = e.target.closest('.copy-btn'); if (!b) return;
+    const b = e.target.closest('.copy-btn'); if (!b || b.tagName === 'A' || b.classList.contains('share-btn')) return;   // (Share and Save-to-Contacts look the same but do their own thing)
     e.preventDefault();
     const label = b.querySelector('.cb-t'), was = label ? label.textContent : '', aria = b.getAttribute('aria-label');
     write(b.dataset.copy || '').then(ok => {

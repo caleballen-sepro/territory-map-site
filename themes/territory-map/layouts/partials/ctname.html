@@ -1,0 +1,2 @@
+{{/* A contact's name, linked to their own page. Usage: partial "ctname.html" $person */}}
+{{ $r := index (partialCached "specmap.html" "all") (strings.TrimSpace .name) }}<strong>{{ if $r }}<a class="ct-name" href="{{ printf "s/%s/" $r.slug | relURL }}">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}</strong>

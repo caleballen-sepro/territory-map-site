@@ -1,0 +1,2 @@
+{{- /* Escapes a value for a vCard line (commas, semicolons, line breaks) */ -}}
+{{- . | replaceRE `\r?\n` `\n` | replaceRE `([,;])` `\$1` | safeHTML -}}

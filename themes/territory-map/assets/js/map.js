@@ -199,15 +199,34 @@ window.__tmBoot = async function (soft) {
   Object.values(photos).forEach(f => { new Image().src = peopleBase + f; });   // (warm the cache so the box doesn't flicker when it redraws)
   const initials = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '')[0] || '') + (w.length > 1 ? w[w.length - 1][0] : ''); };
   const headshot = c => `<div class="hs${photos[c.name] ? ' has-photo' : ''}" aria-hidden="true">${photos[c.name] ? `<img src="${esc(peopleBase + photos[c.name])}" alt="" width="160" height="160" decoding="async">` : esc(initials(c.name).toUpperCase())}</div>`;
-  const person = (c, t) => {
+  // Contact buttons (Call and Text are for phones, see map.css): each person with a page (data.slugs) gets Email, Save to Contacts (their static .vcf), Share (copies their page link) and Copy
+  const slugs = data.slugs || {}, personBase = data.personBase || 's/';
+  const ICON = {
+    phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    text: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+    save: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+    share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>' };
+  const ico = k => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+  const nameKey = c => String(c.name || '').trim();
+  const nameHtml = c => slugs[nameKey(c)] ? `<strong><a class="ct-name" href="${esc(personBase + slugs[nameKey(c)] + '/')}">${esc(c.name)}</a></strong>` : `<strong>${esc(c.name)}</strong>`;
+  const actions = c => {
+    const slug = slugs[nameKey(c)]; if (!slug) return c.phone || c.email ? copyBtn(vcard(c)) : '';
+    const tel = String(c.phone || '').replace(/[^\d+]/g, ''), page = personBase + slug + '/';
+    return `<div class="ct-actions">${tel ? `<a class="ct-act ct-touch" href="tel:${esc(tel)}">${ico('phone')}<span>Call</span></a><a class="ct-act ct-touch" href="sms:${esc(tel)}">${ico('text')}<span>Text</span></a>` : ''}`
+      + `<a class="ct-act" href="${esc(page + slug + '.vcf')}" download>${ico('save')}<span>Save</span></a>`
+      + `<button type="button" class="ct-act share-btn" data-url="${esc(page)}" data-name="${esc(c.name)}" data-title="${esc(c.title || '')}" aria-label="Share ${esc(c.name)}\u2019s contact page">${ico('share')}<span class="cb-t">Share</span></button>`
+      + `${copyBtn(vcard(c))}</div>`;
+  };
+  const person = (c, t, acts = true) => {   // acts=false: the compact Desktop Mode cards, which stay as they are (and are what the PDF reads)
     const cover = coverFor(c, t);
-    if (cover.length) return cover.map(m => person(m, null)).join('');   // an open spot simply shows the regional manager as a normal contact
+    if (cover.length) return cover.map(m => person(m, null, acts)).join('');   // an open spot simply shows the regional manager as a normal contact
     if (isOpen(c)) return '';
     const body = `
-      <strong>${esc(c.name)}</strong>
+      ${acts ? nameHtml(c) : `<strong>${esc(c.name)}</strong>`}
       ${c.title ? `<span>${esc(c.title)}</span>` : ''}
       ${links(c)}
-      ${c.phone || c.email ? copyBtn(vcard(c)) : ''}`;
+      ${acts ? actions(c) : (c.phone || c.email ? copyBtn(vcard(c)) : '')}`;
     return `<div class="contact has-hs">${headshot(c)}<div class="ct-body">${body}</div></div>`;
   };
   const pinLine = () => `<p class="pin">${pinned ? '📌 Pinned. Click again or press Esc to release.' : 'Click to pin'}</p>`;
@@ -559,7 +578,7 @@ window.__tmBoot = async function (soft) {
     if (deskLayer) deskLayer.remove();
     deskLayer = document.createElement('div'); deskLayer.className = 'desk-cards';
     deskLayer.innerHTML = '<svg class="desk-lines" aria-hidden="true"></svg>' + territories.filter(t => (t.contacts || []).length).map((t, i) =>
-      `<section class="desk-card" data-id="${esc(t.id)}" style="--c:${esc(t.color)};--i:${i}"><p class="dc-t"><i></i>${esc(t.name)}</p>${(t.contacts || []).map(c => person(c, t)).join('')}</section>`).join('');
+      `<section class="desk-card" data-id="${esc(t.id)}" style="--c:${esc(t.color)};--i:${i}"><p class="dc-t"><i></i>${esc(t.name)}</p>${(t.contacts || []).map(c => person(c, t, false)).join('')}</section>`).join('');
     mapEl.appendChild(deskLayer);
     deskLayer.querySelectorAll('.desk-card').forEach(el => {   // hovering a card spotlights its territory on the map
       el.addEventListener('mouseenter', () => { hovered = el.dataset.id; render(); });

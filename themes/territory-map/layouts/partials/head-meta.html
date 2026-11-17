@@ -1,4 +1,6 @@
 {{/* Search-engine opt-out, favicon, description and link-preview (Open Graph / Twitter) tags. Included from baseof.html. */}}
+{{- $ogimg := "og-image.png" | absURL -}}
+{{- if eq .Type "specialist" }}{{ with index (partialCached "photomap.html" "all") .Params.person }}{{ $ogimg = printf "people/%s" . | absURL }}{{ end }}{{ end -}}
 {{- $title := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) -}}
 {{- $desc := .Params.description | default .Params.summary | default site.Params.description | default site.Title -}}
 <meta name="robots" content="noindex, nofollow, noarchive, noai, noimageai">
@@ -14,11 +16,11 @@
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $desc }}">
 <meta property="og:url" content="{{ .Permalink }}">
-<meta property="og:image" content="{{ "og-image.png" | absURL }}">
-<meta property="og:image:width" content="1200">
+<meta property="og:image" content="{{ $ogimg }}">
+{{ if ne .Type "specialist" }}<meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="SEPRO Scientific">
-<meta name="twitter:card" content="summary_large_image">
+{{ end }}<meta property="og:image:alt" content="SEPRO Scientific">
+<meta name="twitter:card" content="{{ if eq .Type "specialist" }}summary{{ else }}summary_large_image{{ end }}">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $desc }}">
-<meta name="twitter:image" content="{{ "og-image.png" | absURL }}">
+<meta name="twitter:image" content="{{ $ogimg }}">

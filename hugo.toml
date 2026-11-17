@@ -48,17 +48,17 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
     textColor = "#0e0906"
     accentColor = "#0e0906"   # dot/underline for a division with no brand set
 
-  # ---------- Page text (style guide: Helvetica Neue + DM Mono) ----------
+  # ---------- Page text (Mona Sans, the same font as seproscientific.com, + DM Mono) ----------
   [params.typography]
-    fontURL = ""             # Helvetica Neue is a system font, nothing to load. Put a web-font URL here to use another font.
-    fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif'
+    fontURL = "https://fonts.googleapis.com/css2?family=Mona+Sans:wght@300;400;500;600;700&display=swap"   # Mona Sans from Google Fonts. Clear this to use only system fonts.
+    fontFamily = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif'   # (Helvetica Neue shows until Mona Sans has loaded, or if it can't)
     monoURL = "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&display=swap"
     monoFamily = '"DM Mono", ui-monospace, Menlo, Consolas, monospace'   # captions and detail copy
     baseSize = "16px"
     lineHeight = "1.5"
-    bodyWeight = "400"       # Helvetica Neue Regular
+    bodyWeight = "400"       # Mona Sans Regular
     h1Size = "2.25rem"
-    headingWeight = "300"    # Helvetica Neue Light, sentence case
+    headingWeight = "300"    # Mona Sans Light, sentence case
     introSize = "0.9rem"
     legendSize = "0.9rem"
     panelTitleSize = "1.4rem"
@@ -69,7 +69,7 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
   # Leave a value "" to use the theme default.
   [params.mapLabels]
     # Brand font, set explicitly so the labels always use it.
-    fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif'
+    fontFamily = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif'
     size = "13px"            # map units: scales with the map's width
     weight = "700"
     letterSpacing = "0.02em"
@@ -99,3 +99,7 @@ disableKinds = ["sitemap", "rss", "taxonomy", "term"]
   [params.pdf]
     mapWidth = 564     # pt. Map width on every PDF (564 = full width, max). Lower it (e.g. 520) to leave more room for contacts
     maxFontSize = 12   # pt (12 is the most it will use). Text is as large as fits, up to this.
+
+  # ---------- Embedding on other SEPRO pages (see README "Embedding") ----------
+  [params.embed]
+    allowedHosts = ["www.seproscientific.com", "seproscientific.com"]   # pages on these sites may show the embedded view in an iframe (a courtesy check, not security); the site you are on is always allowed

@@ -19,7 +19,7 @@ It appears on the home page and in the top navigation automatically.
 - Each territory has `contacts:` (specialists) and optional `managers:` (shown below them, e.g. a regional manager) and optional `group:` (small label above the name).
 
 ## State abbreviations
-Each label is placed at the state's visual center (not the plain centroid), in the brand font (Helvetica Neue), with no shadow or outline. Text color is chosen per state, dark or light, whichever has more contrast on that state's color.
+Each label is placed at the state's visual center (not the plain centroid), in the brand font (Mona Sans), with no shadow or outline. Text color is chosen per state, dark or light, whichever has more contrast on that state's color.
 `[params.mapLabels]` in hugo.toml controls the font, size, weight, letter spacing, upper/lowercase, the auto-contrast colors (`darkColor`, `lightColor`) or one forced `color`, an optional outline (off by default), the offshore labels' color, leader lines, and which small states are labeled offshore. For anything else, edit `.lbl`, `.lbl.out` and `.leader` in `assets/css/custom.css`.
 The PDF uses the same label positions but Helvetica (browser-built PDFs can't use web fonts without embedding the font file).
 
@@ -46,7 +46,7 @@ Each division page has a **Generate PDF** button. The PDF is built in the browse
 
 ## Brand: colors, fonts, logos
 Follows the SEPRO Scientific style guide.
-- **Fonts:** Helvetica Neue (Light for headlines in sentence case, Regular for body; a system font) and DM Mono for captions/detail copy (loaded from Google Fonts). Set in `[params.typography]`. The PDF uses Helvetica.
+- **Fonts:** Mona Sans (the same font as seproscientific.com; Light for headlines in sentence case, Regular for body; loaded from Google Fonts, with Helvetica Neue as the fallback) and DM Mono for captions/detail copy (loaded from Google Fonts). Set in `[params.typography]`. The PDF uses Helvetica.
 - **Colors:** `[params.brand]` in hugo.toml: `water` blue, `land` green, `sunset` orange (Generate PDF button, white text). Page neutrals (black, dark grey, light grey, white) are the CSS variables at the top of `map.css`.
 - **Division color:** each division's content file has `brand: "water"` or `brand: "land"`. It colors that division's dot/underline in the menu, its home-page card, the line under its page title and a small bar in its PDF.
 - **Logos:** `static/logos/` holds the master logo (a white version in the menu bar) and the Water and Land logos. The Water and Land logos appear in the PDFs (top right, set by `logo:` in each division's content file) and as the section headers on the landing page (`[params.landing.water]` / `[params.landing.eutrophix]` / `[params.landing.land]` in hugo.toml, with a dark-mode version for each). They are not shown on the division pages themselves. EutroPHIX has its own logo (`sepro-eutrophix.svg` and a dark-mode version), its own section between Water and Land on the landing page and in the Directory (`[params.landing.eutrophix]`; a division joins a section with `group:` in its content file, default its `brand:`), and its own cut of the logo in the PDF header. The tagline is converted to outlines, so it looks the same on every computer.
@@ -120,3 +120,18 @@ The state abbreviations keep exactly the same on-screen size in Desktop Mode, in
 - **Crawlers:** `static/robots.txt` asks every crawler to stay out and names the known AI crawlers explicitly; every page also carries `noindex, nofollow, noarchive, noai, noimageai`. Link-preview bots (Slack, Teams, etc.) are still allowed so shared links show a preview. This is a request that honest crawlers follow; it does not stop a scraper that ignores it (that takes a login or a service like Cloudflare in front of the site).
 
 - Open positions no longer say "open": the regional manager shows as a normal contact (map cards, Desktop Mode, search, PDFs); "(Open)" removed from territory names.
+
+
+## Contact buttons, personal pages and embedding
+
+- **Contact buttons.** Every contact box on the map pages (side panel and the National Team / Regional Managers fold) and every Directory row has: *Call* and *Text* (phones and tablets only), *Save* (downloads the person's contact card), *Share* and *Copy*. The Desktop Mode cards stay compact and unchanged. Code: `ctactions.html`, `ctname.html`, `icon.html` in `layouts/partials/`; `actions()` in `map.js`; `contact.js` (Share); styles at the bottom of `map.css`.
+- **Personal pages.** Everyone in the division data gets a page at `/s/<name>/` (`/s/rory-roten/`, credentials like "Ph.D." are left out of the address): large headshot, title, the divisions and territories they cover, phone, email, an *Add to Contacts* button (a `.vcf` card with the photo, written at build time to `/s/<name>/<name>.vcf`, so it works the same on every phone and computer), Call / Text / Share, and a QR code of the page. The pages are generated from the same YAML as the maps (`content/s/_content.gotmpl`, layout `layouts/specialist/single.html`), so there is nothing extra to maintain. A person who appears in several divisions has ONE page (matched by exact name, so spell it the same everywhere). Open positions get no page. Link previews (Teams, Messages, LinkedIn) show the person's headshot.
+  - **Share** copies the person's link on a computer and opens the phone's share sheet (Messages, Mail, Teams, AirDrop) on a phone.
+  - The page's address is the person's name, so it never changes unless the name does. If someone leaves, remove them from the YAML: their page disappears with them (add a redirect in your hosting if old links should go somewhere).
+  - Headshots: only JPEG and PNG under 250 KB are put inside the contact card (the page shows any format). See `static/people/README.txt`.
+  - Needs Hugo 0.141 or newer (QR codes, content adapters); the GitHub workflow uses 0.158.
+- **Embedding on seproscientific.com (or any page).** Add `?embed=1` to any address of this site and it shows without the header, search box, buttons and extras: just the page and a link to the full site. To put it on a web page, paste this where the map should appear:
+
+      <script src="https://findmyspecialist.site/embed.js" data-page="divisions/water/"></script>
+
+  `data-page` is any page of this site (`divisions/water/`, `divisions/turf-landscape/`, or empty for the list of maps). Optional: `data-theme="light"` or `"dark"` (default follows the visitor's device), `data-min-height="560"`, `data-title`. The frame resizes itself to its content (no scrollbars), links stay inside it, and Save / Share work from inside it. `params.embed.allowedHosts` in `hugo.toml` lists the sites allowed to show it (a courtesy check, not security: GitHub Pages cannot send frame-blocking headers). `static/embed-example.html` is a working example.

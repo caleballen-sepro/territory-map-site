@@ -14,20 +14,24 @@
     // an email may only wrap after the @ or before its last ".com" (".org" ...), never in the middle of a word
     const mail = e => esc(e).replace('@', '@<wbr>').replace(/\.([a-z]{2,})$/i, '<wbr>.$1');
     const SAVE = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>';
+    const shareIc = n => `<svg viewBox="0 0 24 24" width="${n}" height="${n}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>`;
+    const saveIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>';
     const ARROW = d => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + (d < 0 ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7') + '"/></svg>';
     const card = (x, i, all) => {
       const p = x.p, f = TS.photos[p.name];
       const hs = f ? `<div class="hs has-photo" aria-hidden="true"><img src="${esc(TS.peopleBase + f)}" alt="" loading="lazy" decoding="async"></div>` : `<div class="hs" aria-hidden="true">${esc(initials(p.name))}</div>`;
       const vc = [p.name, p.title, p.phone, p.email].filter(Boolean).join('\n');
-      return `<article class="mt-card ${esc(x.dv.brand || '')}" style="--i:${i}" role="group" aria-roledescription="slide" aria-label="${esc(p.name)}, ${i + 1} of ${all.length}">
+      const sl = (TS.slugs || {})[String(p.name).trim()], page = sl ? (TS.personBase || 's/') + sl + '/' : '';
+      const shareAttrs = `data-url="${esc(page)}" data-name="${esc(p.name)}" data-title="${esc(p.title || '')}"`;
+      return `<article class="mt-card ${esc(x.dv.brand || '')}${x.dv.brand === 'land' && i > 0 && all[i - 1].dv.brand !== 'land' ? ' mt-newrow' : ''}" style="--i:${i}" role="group" aria-roledescription="slide" aria-label="${esc(p.name)}, ${i + 1} of ${all.length}">
         <p class="mt-map">${esc(x.dv.title)}</p>
         <p class="mt-reg">${esc(x.t.name)}</p>
         <div class="contact mt-contact">
           <div class="mt-head">${hs}<div><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}</div></div>
           <div class="mt-links">${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${mail(p.email)}</a>` : ''}
-          <button type="button" class="copy-btn" data-copy="${esc(vc)}" aria-label="Copy ${esc(p.name)}'s contact details">${COPY}<span class="cb-t">Copy</span></button></div>
+          <div class="mt-dsk"><button type="button" class="copy-btn" data-copy="${esc(vc)}" aria-label="Copy ${esc(p.name)}'s contact details">${COPY}<span class="cb-t">Copy</span></button>${sl ? `<button type="button" class="copy-btn share-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(14)}<span class="cb-t">Share</span></button><a class="copy-btn" href="${esc(page + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>` : ''}</div></div>
         </div>
-        <button type="button" class="mt-save" data-i="${i}">${SAVE}<span>Save to Contacts</span></button></article>`;
+        <div class="mt-btns"><button type="button" class="mt-save" data-i="${i}">${SAVE}<span>Save to Contacts</span></button>${sl ? `<button type="button" class="mt-share share-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(18)}<span class="cb-t">Share</span></button>` : ''}</div></article>`;
     };
     // ---- Phones: the team is a row of swipeable cards, each with a Save to Contacts button ----
     let team = [];
@@ -101,7 +105,7 @@
     const pdf = document.getElementById('team-pdf');
     const hide = () => { reveal.classList.remove('on'); reveal.setAttribute('aria-hidden', 'true'); document.documentElement.classList.remove('mt-has'); if (pdf) pdf.hidden = true; nav.hidden = true; };
     const show = (t, via, where) => {
-      const list = TS.specialists(t.abbr);
+      const isLand = x => x.dv.brand === 'land', list = TS.specialists(t.abbr).slice().sort((a, b) => isLand(a) - isLand(b));   // Water side first, then Land (the order of the phone cards too); on a computer the Land cards start their own row
       if (!list.length) return false;
       row.innerHTML = list.map((x, i) => card(x, i, list)).join(''); team = list; carousel();
       if (pdf) { pdf.dataset.abbr = t.abbr; pdf.dataset.state = t.state; pdf.dataset.label = t.label; pdf.hidden = false; }   // the team PDF (teampdf.js) for this place
