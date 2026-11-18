@@ -704,3 +704,7 @@ body.desk .wrap{max-width:min(1800px,97vw)}
 .contact strong,.ct-body strong,.mt-card strong,.desk-card strong,.dir-table .c-name strong,a.ct-name{white-space:normal;overflow-wrap:anywhere;min-width:0;max-width:100%}
 .ct-body a.ct-name,.desk-card a.ct-name,.contact a.ct-name{white-space:normal;overflow-wrap:anywhere}
 .contact,.mt-card,.desk-card{min-width:0}
+
+/* No lonely last words: paragraphs and details keep at least two words on their last line; headings and short labels wrap into even lines. (Older browsers ignore this and wrap as before.) */
+p,li,dd,.contact span,.sp-title,.sp-roles span,.mt-head span,.hint{text-wrap:pretty}
+h1,h2,h3,h4,.eyebrow,.panel h2,.pagehead p,.dir-jump a,.maps-pill,.sp-btn,.btn{text-wrap:balance}
