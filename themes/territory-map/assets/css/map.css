@@ -164,7 +164,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-search input{width:27rem;padding:.6rem 1rem .6rem 2.3rem;border:1px solid var(--hdr-line);border-radius:999px;background:var(--hdr-field);color:inherit;font-family:inherit;font-size:.85rem;transition:width .2s}
 .hdr-search input::placeholder{color:inherit;opacity:.55}
 .hdr-search input:focus{width:34rem;outline:2px solid var(--hdr-fg,var(--fg));outline-offset:-1px;border-color:transparent}   /* one black (light) / white (dark) line: the outline replaces the border */
-.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:min(26rem,92vw);padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
+.hdr-results{display:none;position:absolute;top:calc(100% + 18px);right:0;width:100%;box-sizing:border-box;padding:.6rem .6rem .4rem;border-radius:18px;color:inherit;z-index:60;font-weight:400;
   background:color-mix(in srgb,var(--hdr-bg,#ebebeb) var(--hdr-glass,72%),transparent);
   -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
   border:1px solid var(--hdr-edge,rgba(255,255,255,.65));
@@ -606,8 +606,10 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 .ct-actions .ct-act span{color:inherit;font-size:inherit;display:inline;margin:0}
 .ct-actions .ct-touch,.sp-touch{display:none!important}   /* Call and Text only where a phone can use them */
 @media (hover:none) and (pointer:coarse){.ct-actions .ct-touch,.sp-touch{display:inline-flex!important}.contact .ct-actions .ct-act,.contact .ct-actions .copy-btn{padding:.5rem .9rem;min-height:44px}}
-.ct-name{color:inherit;text-decoration:none}.ct-name:hover,.ct-name:focus-visible{text-decoration:underline}
-.contact strong a.ct-name,.dir-table .c-name strong a{text-decoration:none}
+/* ALL contact links (names, phone numbers, email addresses) share one look: grey underline, nearly black (white in dark mode) on hover */
+a.ct-name,.contact a:not(.ct-act):not(.copy-btn),.dir-table td a:not(.copy-btn),.mt-links a,.res a:not(.res-go):not(.copy-btn),.sp-lines a,.sp-roles a{text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:1px;text-underline-offset:.15em;transition:text-decoration-color .15s}
+a.ct-name{color:inherit}
+a.ct-name:hover,a.ct-name:focus-visible,.contact a:not(.ct-act):not(.copy-btn):hover,.contact a:not(.ct-act):not(.copy-btn):focus-visible,.dir-table td a:not(.copy-btn):hover,.dir-table td a:not(.copy-btn):focus-visible,.mt-links a:hover,.mt-links a:focus-visible,.res a:not(.res-go):not(.copy-btn):hover,.res a:not(.res-go):not(.copy-btn):focus-visible,.sp-lines a:hover,.sp-lines a:focus-visible,.sp-roles a:hover,.sp-roles a:focus-visible{text-decoration-color:color-mix(in srgb,var(--fg) 95%,transparent)}
 .dir-table .dir-acts{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
 .dir-table .dir-acts .copy-btn{margin:0;display:inline-flex;width:auto;text-decoration:none}
 .dir-table .dir-acts a.copy-btn{color:var(--muted)}
@@ -645,10 +647,16 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 
 /* ---- Embedded view: ?embed=1 (an <iframe> on another SEPRO page). Just the page itself and a link to the full site: no header, search or buttons. ---- */
 .embed-foot{display:none}
-.embed .site-header,.embed .theme-fab,.embed .pagehead-actions,.embed .listlink,.embed .dir-pdf,.embed .sp-back{display:none!important}
+.embed .site-header,.embed .theme-fab,.embed .pagehead-actions,.embed .listlink,.embed .rev,.embed .dir-rev,.embed .team-fold,.embed .dir-pdf,.embed .sp-back{display:none!important}
 .embed .wrap{padding-top:.75rem}
-.embed .embed-foot{display:block;margin:1rem 0 .5rem;padding:0 clamp(.75rem,2vw,1.5rem);text-align:center;font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase}
-.embed .embed-foot a{color:var(--muted)}
+.embed .layout{grid-template-columns:minmax(0,2fr) minmax(0,1fr);grid-template-rows:auto;gap:0 1.5rem}   /* map takes two thirds, the details boxes sit beside it */
+.embed .layout>.map{grid-area:1/1}
+.embed .layout>.side{grid-area:1/2;margin:0}
+.embed .legend{display:none}   /* no territory pills in a frame: just the map and the boxes */
+@media (max-width:800px){.embed .layout{grid-template-columns:1fr}.embed .layout>.map,.embed .layout>.side{grid-area:auto}.embed .layout>.side{margin-top:1rem}}
+.embed .embed-foot{display:block;margin:1.25rem 0 .75rem;padding:0 clamp(.75rem,2vw,1.5rem);text-align:center}
+.embed .embed-foot a.embed-more{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.7rem 1.3rem;border:1px solid var(--line);border-radius:999px;background:none;color:var(--fg);font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;line-height:1.2}
+.embed .embed-foot a.embed-more:hover{border-color:var(--fg)}
 .embed-back{margin:0 0 .75rem;padding:.4rem .9rem;border:1px solid var(--line);border-radius:999px;background:none;color:var(--muted);font:inherit;font-size:.8125rem;cursor:pointer}
 .embed-back:hover{color:var(--fg);border-color:var(--fg)}
 .contact .ct-actions a.ct-act[href],.ct-body .ct-actions a.ct-act{display:inline-flex;align-items:center;min-height:0;padding:.25rem .7rem;white-space:nowrap;overflow-wrap:normal;text-decoration:none}   /* (beats the plain-link rules above, so the buttons never take the e-mail link's shape) */
@@ -688,3 +696,8 @@ a.copy-btn{text-decoration:none}
 @media print{.wrap{padding-left:1rem;padding-right:1rem}}
 .wrap,.site-header{max-width:calc(1600px + 2 * var(--gutter))}   /* 1600px of content plus the margin on each side */
 body.desk .wrap{max-width:min(1800px,97vw)}
+
+/* Names never cross a box edge: they wrap at spaces like any text (and, only if one word is still too long, inside the word). Phones stay on one line; emails keep their own wrapping. */
+.contact strong,.ct-body strong,.mt-card strong,.desk-card strong,.dir-table .c-name strong,a.ct-name{white-space:normal;overflow-wrap:anywhere;min-width:0;max-width:100%}
+.ct-body a.ct-name,.desk-card a.ct-name,.contact a.ct-name{white-space:normal;overflow-wrap:anywhere}
+.contact,.mt-card,.desk-card{min-width:0}

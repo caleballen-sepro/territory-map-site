@@ -34,6 +34,7 @@
   const slugs = data.slugs || {}, personBase = data.personBase || 's/';
   const shareIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>';
   const saveIc = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>';
+  const nameLink = p => { const sl = slugs[String(p.name || '').trim()]; return sl ? `<a class="ct-name" href="${esc(personBase + sl + '/')}">${esc(p.name)}</a>` : esc(p.name); };
   const pageBtns = p => { const sl = slugs[String(p.name || '').trim()]; if (!sl) return '';
     return `<button type="button" class="copy-btn pass-btn" data-url="${esc(personBase + sl + '/')}" data-name="${esc(p.name)}" data-title="${esc(p.title || '')}" aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc}<span class="cb-t">Share</span></button>`
       + `<a class="copy-btn" href="${esc(personBase + sl + '/' + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>`; };
@@ -105,9 +106,9 @@
     const dot = t ? `<i style="background:${esc(t.color)}"></i>` : '';
     const go = !tg ? '' : cur && window.TerritoryMap ? `<button type="button" class="res-go" data-id="${esc(tg)}">Show on map</button>`
       : `<a class="res-go" href="${esc(e.dv.url)}#t=${encodeURIComponent(tg)}">Open map</a>`;
-    if (cover.length) return cover.map(m => `<li class="res"><div class="res-main"><strong>${esc(m.name)}</strong>${m.title ? `<span>${esc(m.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
+    if (cover.length) return cover.map(m => `<li class="res"><div class="res-main"><strong>${nameLink(m)}</strong>${m.title ? `<span>${esc(m.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
       `<div class="res-links">${links(m)}</div><div class="res-actions">${go}${m.phone || m.email ? copyBtn(vcard(m)) : ''}${pageBtns(m)}</div></li>`).join('');   // an open spot simply lists the regional manager
-    return `<li class="res"><div class="res-main"><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
+    return `<li class="res"><div class="res-main"><strong>${nameLink(p)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}<span class="res-meta">${dot}${esc(meta)}</span></div>` +
       `<div class="res-links">${links(p)}</div><div class="res-actions">${go}${p.phone || p.email ? copyBtn(vcard(p)) : ''}${pageBtns(p)}</div></li>`;
   };
 

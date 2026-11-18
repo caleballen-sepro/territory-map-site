@@ -118,7 +118,7 @@
   <script src="{{ $cp.RelPermalink }}" integrity="{{ $cp.Data.Integrity }}"></script>
   {{ $ct := resources.Get "js/contact.js" | minify | fingerprint }}
   <script src="{{ $ct.RelPermalink }}" integrity="{{ $ct.Data.Integrity }}"></script>
-  <p class="embed-foot"><a href="{{ .Permalink }}" target="_blank" rel="noopener">Open the full SEPRO Territory Maps site</a></p>
+  <p class="embed-foot"><a class="embed-more" href="{{ .Permalink }}" target="_blank" rel="noopener">For more in-depth territory details, click here</a></p>
   <script>
   /* Embedded view (?embed=1, for an <iframe> on another SEPRO page; see README "Embedding"): the page drops its header and extras, tells the parent page how tall it is, and keeps links inside the frame. */
   (function(){
@@ -128,6 +128,8 @@
       var h='';try{var ao=location.ancestorOrigins;h=new URL(ao&&ao.length?ao[0]:document.referrer).hostname}catch(e){}
       if(h&&h!==location.hostname&&h!=='localhost'&&allowed.indexOf(h)<0){document.body.innerHTML='<p style="padding:2rem;font:16px/1.5 sans-serif">This page can only be shown on SEPRO websites. <a href="'+location.pathname+'" target="_top">Open it here</a>.</p>';return}
     }
+    var unlink=function(){document.querySelectorAll('a.ct-name').forEach(function(a){var f=document.createDocumentFragment();while(a.firstChild)f.appendChild(a.firstChild);a.replaceWith(f)})};   // names are plain text in an embed
+    unlink();new MutationObserver(unlink).observe(document.body,{childList:true,subtree:true});
     var foot=document.querySelector('.embed-foot a');
     if(foot){var u=new URL(location.href);u.searchParams.delete('embed');u.searchParams.delete('theme');foot.href=u.href}
     document.addEventListener('click',function(e){   // capture phase: runs before the map's own link handling

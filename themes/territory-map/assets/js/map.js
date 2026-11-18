@@ -223,7 +223,7 @@ window.__tmBoot = async function (soft) {
     if (cover.length) return cover.map(m => person(m, null, acts)).join('');   // an open spot simply shows the regional manager as a normal contact
     if (isOpen(c)) return '';
     const body = `
-      ${acts ? nameHtml(c) : `<strong>${esc(c.name)}</strong>`}
+      ${nameHtml(c)}
       ${c.title ? `<span>${esc(c.title)}</span>` : ''}
       ${links(c)}
       ${acts ? actions(c) : (c.phone || c.email ? copyBtn(vcard(c)) : '')}`;
@@ -568,7 +568,7 @@ window.__tmBoot = async function (soft) {
       W, H, lblPx,
       cards: cards.map(c => {
         const g = geom(c), el = c.el, t = byId[c.id];
-        const people = [...el.querySelectorAll('.contact')].map(ct => [...ct.querySelectorAll('strong, span, a')].filter(n => !n.closest('.copy-btn')).map(n => ({
+        const people = [...el.querySelectorAll('.contact')].map(ct => [...ct.querySelectorAll('strong, span, a')].filter(n => !n.closest('.copy-btn') && !(n.tagName === 'A' && n.closest('strong'))).map(n => ({
           t: n.textContent.trim(), b: n.tagName === 'STRONG', url: n.tagName === 'A' ? n.getAttribute('href') : '' })).filter(l => l.t));
         return { id: c.id, title: t.name, color: t.color, l: g.l, t: g.t, w: c.w, h: c.h, lines: c.lines, people };
       })

@@ -27,7 +27,7 @@
         <p class="mt-map">${esc(x.dv.title)}</p>
         <p class="mt-reg">${esc(x.t.name)}</p>
         <div class="contact mt-contact">
-          <div class="mt-head">${hs}<div><strong>${esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}</div></div>
+          <div class="mt-head">${hs}<div><strong>${sl ? `<a class="ct-name" href="${esc(page)}">${esc(p.name)}</a>` : esc(p.name)}</strong>${p.title ? `<span>${esc(p.title)}</span>` : ''}</div></div>
           <div class="mt-links">${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/[^\d+]/g, ''))}">${esc(p.phone)}</a>` : ''}${p.email ? `<a href="mailto:${esc(p.email)}">${mail(p.email)}</a>` : ''}
           <div class="mt-dsk"><button type="button" class="copy-btn" data-copy="${esc(vc)}" aria-label="Copy ${esc(p.name)}'s contact details">${COPY}<span class="cb-t">Copy</span></button>${sl ? `<button type="button" class="copy-btn pass-btn" ${shareAttrs} aria-label="Share ${esc(p.name)}\u2019s contact page">${shareIc(14)}<span class="cb-t">Share</span></button><a class="copy-btn" href="${esc(page + sl + '.vcf')}" download aria-label="Save ${esc(p.name)} to Contacts">${saveIc}<span class="cb-t">Save</span></a>` : ''}</div></div>
         </div>
