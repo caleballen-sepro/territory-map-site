@@ -85,9 +85,11 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-menu{display:none;padding:.45rem 1rem;border:1px solid var(--hdr-line);border-radius:999px;background:none;color:inherit;font-family:inherit;font-size:.8125rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 @media (max-width:900px){
   .hdr-menu{display:block}
-  .hdr-inner{flex-wrap:wrap;border-radius:30px;padding:.4rem .6rem .4rem 1.1rem;align-content:flex-start}
+  .hdr-inner{border-radius:30px;padding:.4rem .6rem .4rem 1.1rem}
   .hdr-logo{min-height:calc(68px - .8rem)}   /* the logo row keeps the same height open or closed, so the logo doesn't jump when the menu opens */
-  .hdr-collapse{display:none;flex-basis:100%;flex-direction:column;align-items:stretch;gap:.75rem;margin:0 0 .5rem;padding-top:.5rem;border-top:1px solid var(--hdr-line)}
+  /* the open menu floats over the page (nothing below it moves) on its own glass panel */
+  .hdr-collapse{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;box-sizing:border-box;flex-direction:column;align-items:stretch;gap:.75rem;margin:0;padding:.5rem .6rem .75rem;border-radius:24px;max-height:calc(100dvh - 120px);overflow-y:auto;overscroll-behavior:contain;
+    background:color-mix(in srgb,var(--hdr-bg,#ebebeb) 92%,transparent);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--hdr-edge,rgba(255,255,255,.65))}
   .site-header.open .hdr-collapse{display:flex}
 }
 
@@ -213,8 +215,11 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-maps-menu a:hover{background:var(--hdr-hover)}
 .hdr-maps-menu a.current{font-weight:500;background:var(--hdr-hover)}
 @media (max-width:900px){
-  .hdr-maps-btn{padding-left:.75rem}
-  .hdr-maps-menu{position:static;min-width:0;margin-top:.25rem;box-shadow:none}
+  /* phones: no menu inside the menu. The maps are plain rows under a small "Maps" label, always showing */
+  .hdr-maps-btn{display:none}
+  .hdr-maps-menu{display:block;position:static;min-width:0;margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .hdr-maps-menu::before{content:"Maps";display:block;padding:.85rem .75rem .35rem;font-size:.6875rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+  .hdr-maps-menu a{padding:.85rem .75rem;border-radius:999px}   /* the same pill shape as Home and Directory */
 }
 .res-map a{display:flex;align-items:center;gap:.6rem;color:inherit;text-decoration:none;font-weight:500}
 .res-map a::before{content:"";flex:none;width:.65rem;height:.65rem;border-radius:50%;background:var(--bc,var(--fg))}
@@ -604,8 +609,7 @@ html.mt-has .mt-reveal{grid-template-rows:1fr;opacity:1;visibility:visible;trans
 .ct-actions .ct-act:hover,.ct-actions .ct-act:focus-visible,.ct-actions .copy-btn:hover{color:var(--fg);border-color:var(--fg)}
 .ct-actions .ct-act.done{color:var(--fg);border-color:var(--fg)}.ct-actions .ct-act.fail{color:var(--sunset,#fe5b38);border-color:var(--sunset,#fe5b38)}
 .ct-actions .ct-act span{color:inherit;font-size:inherit;display:inline;margin:0}
-.ct-actions .ct-touch,.sp-touch{display:none!important}   /* Call and Text only where a phone can use them */
-@media (hover:none) and (pointer:coarse){.ct-actions .ct-touch,.sp-touch{display:inline-flex!important}.contact .ct-actions .ct-act,.contact .ct-actions .copy-btn{padding:.5rem .9rem;min-height:44px}}
+@media (hover:none) and (pointer:coarse){.contact .ct-actions .ct-act,.contact .ct-actions .copy-btn{padding:.5rem .9rem;min-height:44px}}
 /* ALL contact links (names, phone numbers, email addresses) share one look: grey underline, nearly black (white in dark mode) on hover */
 a.ct-name,.contact a:not(.ct-act):not(.copy-btn),.dir-table td a:not(.copy-btn),.mt-links a,.res a:not(.res-go):not(.copy-btn),.sp-lines a,.sp-roles a{text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:1px;text-underline-offset:.15em;transition:text-decoration-color .15s}
 a.ct-name{color:inherit}
@@ -617,7 +621,7 @@ a.ct-name:hover,a.ct-name:focus-visible,.contact a:not(.ct-act):not(.copy-btn):h
 @media print{.ct-actions,.dir-acts,.pass-btn,.sp-actions{display:none!important}}
 
 .specialist{padding-top:1.5rem;padding-bottom:3rem}
-.sp-card{display:grid;grid-template-columns:minmax(0,17rem) minmax(0,1fr) auto;gap:2rem 2.5rem;align-items:start;padding:2rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r-box)}
+.sp-card{display:grid;grid-template-columns:minmax(0,17rem) minmax(0,1fr);gap:2rem 2.5rem;align-items:start;padding:2rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r-box)}
 .sp-photo{position:relative;width:100%;aspect-ratio:1;border-radius:var(--r-box);overflow:hidden;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--fg) 8%,var(--bg));font-size:4.5rem;font-weight:600;letter-spacing:.04em;color:var(--muted)}
 .sp-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
 .sp-body .eyebrow{margin:0 0 .35rem}
@@ -638,12 +642,9 @@ a.ct-name:hover,a.ct-name:focus-visible,.contact a:not(.ct-act):not(.copy-btn):h
 .sp-btn:hover,.sp-btn:focus-visible{border-color:var(--fg)}
 .sp-btn.primary{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 .sp-btn.done{border-color:var(--fg)}.sp-btn.fail{border-color:var(--sunset,#fe5b38);color:var(--sunset,#fe5b38)}
-.sp-qr{margin:0;text-align:center}
-.sp-qr img{display:block;width:9.5rem;height:auto;border-radius:12px;background:#fff;padding:.5rem;border:1px solid var(--line);image-rendering:pixelated}
-.sp-qr figcaption{margin-top:.5rem;color:var(--muted);font-size:.78rem}
 .sp-back{margin:1.25rem 0 0;font-size:.9rem}.sp-back a{color:var(--muted)}
-@media (max-width:900px){.sp-card{grid-template-columns:minmax(0,14rem) minmax(0,1fr)}.sp-qr{grid-column:1/-1;justify-self:start;display:flex;align-items:center;gap:1rem;text-align:left}.sp-qr figcaption{margin:0}}
-@media (max-width:600px){.sp-card{grid-template-columns:1fr;padding:1.25rem;gap:1.25rem}.sp-photo{max-width:20rem;margin:0 auto;width:80%}.sp-btn{flex:1 1 calc(50% - .6rem)}.sp-btn.primary{flex-basis:100%}.sp-qr{display:none}}   /* (a phone has no use for a QR code of itself) */
+@media (max-width:900px){.sp-card{grid-template-columns:minmax(0,14rem) minmax(0,1fr)}}
+@media (max-width:600px){.sp-card{grid-template-columns:1fr;padding:1.25rem;gap:1.25rem}.sp-photo{max-width:20rem;margin:0 auto;width:80%}.sp-btn{flex:1 1 calc(50% - .6rem)}.sp-btn.primary{flex-basis:100%}}
 
 /* ---- Embedded view: ?embed=1 (an <iframe> on another SEPRO page). Just the page itself and a link to the full site: no header, search or buttons. ---- */
 .embed-foot{display:none}

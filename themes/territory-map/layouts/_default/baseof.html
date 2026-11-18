@@ -153,6 +153,7 @@
   (function(){
     var m=document.getElementById('hdr-menu'),h=document.querySelector('.site-header');
     if(m)m.addEventListener('click',function(){var o=h.classList.toggle('open');m.setAttribute('aria-expanded',String(o))});
+    if(m){var shut=function(){h.classList.remove('open');m.setAttribute('aria-expanded','false')};document.addEventListener('click',function(e){if(h.classList.contains('open')&&!e.target.closest('.site-header'))shut()});document.addEventListener('keydown',function(e){if(e.key==='Escape')shut()});h.addEventListener('click',function(e){if(e.target.closest('#hdr-nav a'))shut()})}   // the phone menu floats over the page: tap outside, Esc or a link closes it
     var mb=document.getElementById('hdr-maps-btn'),mw=document.querySelector('.hdr-maps');
     if(mb){
       var closeMaps=function(){mw.classList.remove('open');mb.setAttribute('aria-expanded','false')};

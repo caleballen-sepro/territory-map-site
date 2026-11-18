@@ -33,13 +33,13 @@
 {{ end }}{{ end }}
 {{ $v = $v | append "END:VCARD" }}
 {{ $vcf := resources.FromString (printf "s/%s/%s.vcf" $slug $slug) (printf "%s\r\n" (delimit $v "\r\n")) }}
-{{ $qr := images.QR .Permalink (dict "level" "medium" "scale" 6) }}
 
 <main class="wrap specialist">
   <article class="sp-card">
     <div class="sp-photo{{ if $f }} has-photo{{ end }}">{{ if $f }}<img src="{{ printf "people/%s" $f | relURL }}" alt="Headshot of {{ $n }}" decoding="async">{{ else }}<span aria-hidden="true">{{ upper (substr (index $parts 0) 0 1) }}{{ if gt (len $parts) 1 }}{{ upper (substr (index $parts (sub (len $parts) 1)) 0 1) }}{{ end }}</span>{{ end }}</div>
     <div class="sp-body">
-      <p class="eyebrow">SEPRO Scientific</p>
+      {{ $eb := "SEPRO Scientific" }}{{ with $roles }}{{ $g := (index . 0).pg.Params.group | default (index . 0).pg.Params.brand }}{{ if eq $g "eutrophix" }}{{ $eb = "EutroPHIX" }}{{ else if eq $g "land" }}{{ $eb = "SEPRO Land" }}{{ else if eq $g "water" }}{{ $eb = "SEPRO Water" }}{{ end }}{{ end }}
+      <p class="eyebrow">{{ $eb }}</p>
       <h1>{{ $n }}</h1>
       {{ with $p.title }}<p class="sp-title">{{ . }}</p>{{ end }}
       {{ if $roles }}<ul class="sp-roles">
@@ -54,10 +54,6 @@
         <button type="button" class="sp-btn pass-btn" data-url="{{ .RelPermalink }}" data-name="{{ $n }}" data-title="{{ $p.title }}">{{ partial "icon.html" "share" }}<span class="cb-t">Share</span></button>
       </div>
     </div>
-    <figure class="sp-qr">
-      <img src="{{ $qr.RelPermalink }}" width="{{ $qr.Width }}" height="{{ $qr.Height }}" alt="QR code for this page">
-      <figcaption>Scan to open this page</figcaption>
-    </figure>
   </article>
   <p class="sp-back"><a href="{{ "directory/" | relURL }}">All specialists in the Directory</a></p>
 </main>

@@ -1,4 +1,4 @@
-{{/* The button row under a contact on the map pages: Call and Text (phones only), Email, Save to Contacts, Share (copies the person's own page link) and Copy.
+{{/* The button row under a contact on the map pages: Save to Contacts, Share (copies the person's own page link) and Copy.
      Usage: partial "ctactions.html" (dict "p" $person "copy" true). Everything is a plain link to the person's page / contact file, so it works without scripting. */}}
 {{ $p := .p }}{{ $sm := partialCached "specmap.html" "all" }}{{ $r := index $sm (strings.TrimSpace $p.name) }}
 {{ if $r }}

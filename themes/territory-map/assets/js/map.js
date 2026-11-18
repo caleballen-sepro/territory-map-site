@@ -199,7 +199,7 @@ window.__tmBoot = async function (soft) {
   Object.values(photos).forEach(f => { new Image().src = peopleBase + f; });   // (warm the cache so the box doesn't flicker when it redraws)
   const initials = n => { const w = String(n || '').trim().split(/\s+/); return ((w[0] || '')[0] || '') + (w.length > 1 ? w[w.length - 1][0] : ''); };
   const headshot = c => `<div class="hs${photos[c.name] ? ' has-photo' : ''}" aria-hidden="true">${photos[c.name] ? `<img src="${esc(peopleBase + photos[c.name])}" alt="" width="160" height="160" decoding="async">` : esc(initials(c.name).toUpperCase())}</div>`;
-  // Contact buttons (Call and Text are for phones, see map.css): each person with a page (data.slugs) gets Email, Save to Contacts (their static .vcf), Share (copies their page link) and Copy
+  // Contact buttons each person with a page (data.slugs) gets Save to Contacts (their static .vcf), Share (copies their page link) and Copy
   const slugs = data.slugs || {}, personBase = data.personBase || 's/';
   const ICON = {
     phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
