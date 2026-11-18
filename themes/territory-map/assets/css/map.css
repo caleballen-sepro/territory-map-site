@@ -178,6 +178,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin
 .hdr-results .res,.hdr-results .res-place{background:transparent}
 .hdr-results .search-count{margin-top:0}
 @media (max-width:900px){
+  .hdr-search{display:none}   /* phones: no search box in the menu (the Directory and My Team search are still there) */
   .hdr-search input,.hdr-search input:focus{width:100%}
   .hdr-search{flex-direction:column;align-items:stretch}
   .hdr-search .ico-search{top:.85rem}

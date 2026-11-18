@@ -30,7 +30,7 @@ The PDF uses the same label positions but Helvetica (browser-built PDFs can't us
 When territories have a `group:` (Water: West / North / South Region), the legend lists each region with its territories under it. Hovering or clicking a region heading highlights all its territories and shows the region manager plus every specialist.
 
 ## Menu search
-The menu bar's search box is 27rem wide (34rem when focused), and its results drop-down is exactly as wide as the box. The old "Request Change" pill was removed from the menu.
+On phones (900px and narrower) the menu has no search box (`.hdr-search{display:none}` in `map.css`; delete that line to bring it back). On larger screens the menu bar's search box is 27rem wide (34rem when focused), and its results drop-down is exactly as wide as the box. The old "Request Change" pill was removed from the menu.
 
 ## Dark mode
 A round floating button at the bottom left of every page switches dark mode. A visitor's choice is saved in their browser; until they choose, the site follows their system setting. Colors are the CSS variables at the top of `map.css` (the dark set appears twice: once for the system setting, once for the switch). The downloaded PDF is always light.
